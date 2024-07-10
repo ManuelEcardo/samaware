@@ -1,3 +1,4 @@
+import 'package:samaware_flutter/modules/Manager/ManagerCreateOrder/ManagerCreateOrder.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 import 'package:samaware_flutter/shared/styles/colors.dart';
 import 'package:string_extensions/string_extensions.dart';
@@ -76,10 +77,12 @@ class ManagerHome extends StatelessWidget {
                               ),
 
 
+                              const Spacer(),
+
                               TextButton(
                                 onPressed: ()
                                 {
-
+                                  navigateTo(context, const ManagerCreateOrder());
                                 },
                                 child: Text(
                                   'Add Now!',
@@ -90,6 +93,7 @@ class ManagerHome extends StatelessWidget {
                                 ),
                               ),
 
+                              const Spacer(),
                             ],
                           ),
                         ),
@@ -136,6 +140,46 @@ class ManagerHome extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsetsDirectional.symmetric(horizontal: 18.0),
                             child: myDivider(color: defaultDarkFontColor),
+                          ),
+
+                          const SizedBox(height: 50,),
+
+                          Padding(
+                            padding: const EdgeInsetsDirectional.only(start: 24.0),
+                            child: Row(
+                              children:
+                              [
+                                Text(
+                                  Localization.translate('add_new_order'),
+                                  style: textStyleBuilder(
+                                    isTitle: true,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 24,
+                                    color: cubit.isDarkTheme? defaultThirdDarkColor : defaultThirdColor,
+
+                                  ),
+                                ),
+
+
+                                const Spacer(),
+
+                                TextButton(
+                                  onPressed: ()
+                                  {
+                                    navigateTo(context, const ManagerCreateOrder());
+                                  },
+                                  child: Text(
+                                    'Add Now!',
+                                    style: textStyleBuilder(
+                                        decoration: TextDecoration.underline,
+                                        isTitle: true
+                                    ),
+                                  ),
+                                ),
+
+                                const Spacer(),
+                              ],
+                            ),
                           ),
 
                         ],

@@ -43,6 +43,12 @@ const Map<String,String> ar={
 
   'add_new_order':'أضف طلباً جديداً:',
 
+  //Create an Order Manager
+
+  'create_an_order_manager':'أضف طلباً جديداً',
+
+  'import_excel':'قم باستيراد ملف إكسل',
+
 
   //Settings Manager
 
@@ -129,6 +135,12 @@ const Map<String,String> en={
   'priceSetter':'Price Setter',
 
   'add_new_order':'Add Order:',
+
+  //Create an Order Manager
+
+  'create_an_order_manager':'Create an Order',
+
+  'import_excel':'Import Excel File',
 
   //Settings Manager
 

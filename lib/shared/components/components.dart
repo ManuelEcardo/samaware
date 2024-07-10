@@ -455,4 +455,24 @@ material.TextStyle textStyleBuilder({
 );
 
 
+///For Headlines builder
+
+material.TextStyle headlineTextStyleBuilder({
+  double fontSize=28,
+  FontWeight fontWeight=FontWeight.w800,
+  bool isTitle=true,
+  Color? color,
+  TextDecoration decoration = TextDecoration.none
+
+})=>TextStyle(
+  fontSize: fontSize,
+  fontWeight: fontWeight,
+  color:color ,
+  decoration: decoration,
+  fontFamily: isTitle?
+  (AppCubit.language =='ar' ? 'Cairo' :'Poppins' )
+      :(AppCubit.language =='ar' ? 'Cairo' : 'Railway'),
+
+);
+
 //------------------------------------------------------------------------------------------\\

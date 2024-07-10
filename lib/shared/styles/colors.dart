@@ -11,7 +11,7 @@ Color defaultHomeColor= HexColor('E3E7D3');
 
 Color defaultSecondaryColor= HexColor('989C94');
 
-Color defaultThirdColor= HexColor('E6E49F');
+Color defaultThirdColor= HexColor('25291C');
 
 Color defaultAlertColor=HexColor('ABABD1');
 
