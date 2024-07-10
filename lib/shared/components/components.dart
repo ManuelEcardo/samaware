@@ -149,7 +149,7 @@ Widget defaultButton(
       Color textColor=Colors.black,
       required void Function()? onTap,
       double width=185,
-      String fontFamily = 'PT_Sans',
+      String fontFamily = 'Railway',
 
     })
 {
@@ -386,7 +386,7 @@ PreferredSizeWidget defaultAppBar({
     Localization.translate('appBar_title_home'),
     style: TextStyle(
       color: cubit.isDarkTheme? defaultDarkColor : defaultColor,
-      fontFamily: AppCubit.language=='ar'? 'Cairo' : 'Railway',
+      fontFamily: AppCubit.language=='ar'? 'Cairo' : 'Poppins',
     ),
   ),
 
@@ -449,8 +449,8 @@ material.TextStyle textStyleBuilder({
   color:color ,
   decoration: decoration,
   fontFamily: isTitle?
-  (AppCubit.language =='ar' ? 'Cairo' :'Railway' )
-  :(AppCubit.language =='ar' ? 'Cairo' : 'PT_Sans'),
+  (AppCubit.language =='ar' ? 'Cairo' :'Poppins' )
+  :(AppCubit.language =='ar' ? 'Cairo' : 'Railway'),
 
 );
 

@@ -115,7 +115,7 @@ class _LoginState extends State<Login> {
                                   Localization.translate('login_title'),
                                   style: TextStyle(
                                     color: appCubit.isDarkTheme? defaultDarkColor : defaultColor,
-                                    fontFamily: AppCubit.language == 'ar'? 'Cairo': 'Railway',
+                                    fontFamily: AppCubit.language == 'ar'? 'Cairo': 'Poppins',
                                     fontWeight: FontWeight.w500,
                                     fontSize: 42,
                                   ),
@@ -129,7 +129,7 @@ class _LoginState extends State<Login> {
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: AppCubit.get(context).isDarkTheme? defaultDarkFontColor : defaultFontColor,
-                                    fontFamily: AppCubit.language == 'ar'? 'Cairo': 'PT_Sans',
+                                    fontFamily: AppCubit.language == 'ar'? 'Cairo': 'Railway',
                                     fontWeight: FontWeight.w400
                                   ),
                                 ),
@@ -275,7 +275,7 @@ class _LoginState extends State<Login> {
                                         color: appCubit.isDarkTheme? defaultDarkColor : defaultColor,
                                         textColor: appCubit.isDarkTheme? Colors.black : Colors.white,
                                         title: Localization.translate('submit_button_login'),
-                                        fontFamily: AppCubit.language == 'ar'? 'Cairo': 'PT_Sans',
+                                        fontFamily: AppCubit.language == 'ar'? 'Cairo': 'Poppins',
                                         letterSpacing:0,
                                         onTap: ()
                                         {
@@ -314,7 +314,7 @@ class _LoginState extends State<Login> {
                                     Localization.translate('login_title'),
                                     style: TextStyle(
                                       color: appCubit.isDarkTheme? defaultDarkColor : defaultColor,
-                                      fontFamily: AppCubit.language == 'ar'? 'Cairo': 'Railway',
+                                      fontFamily: AppCubit.language == 'ar'? 'Cairo': 'Poppins',
                                       fontWeight: FontWeight.w500,
                                       fontSize: 42,
                                     ),
@@ -328,7 +328,7 @@ class _LoginState extends State<Login> {
                                     style: TextStyle(
                                         fontSize: 16,
                                         color: AppCubit.get(context).isDarkTheme? defaultDarkFontColor : defaultFontColor,
-                                        fontFamily: AppCubit.language == 'ar'? 'Cairo': 'PT_Sans',
+                                        fontFamily: AppCubit.language == 'ar'? 'Cairo': 'Poppins',
                                         fontWeight: FontWeight.w400
                                     ),
                                   ),
@@ -471,7 +471,7 @@ class _LoginState extends State<Login> {
                                         color: appCubit.isDarkTheme? defaultDarkColor : defaultColor,
                                         textColor: appCubit.isDarkTheme? Colors.black : Colors.white,
                                         title: Localization.translate('submit_button_login'),
-                                        fontFamily: AppCubit.language == 'ar'? 'Cairo': 'PT_Sans',
+                                        fontFamily: AppCubit.language == 'ar'? 'Cairo': 'Poppins',
                                         letterSpacing:0,
                                         onTap: ()
                                         {

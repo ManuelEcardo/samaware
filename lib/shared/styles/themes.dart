@@ -123,7 +123,7 @@ ThemeData lightTheme(context) => ThemeData(
   ),
 
   textTheme: Theme.of(context).textTheme.apply(
-    fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'PT_Sans',
+    fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'Railway',
     bodyColor: Colors.black,
     displayColor: Colors.black,),
 
@@ -278,7 +278,7 @@ ThemeData darkTheme(context)=> ThemeData(
 
   textTheme: Theme.of(context).textTheme.apply(
     bodyColor: Colors.white,
-    fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'PT_Sans',
+    fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'Poppins',
     displayColor: Colors.white,
     decorationColor: Colors.white
   ),

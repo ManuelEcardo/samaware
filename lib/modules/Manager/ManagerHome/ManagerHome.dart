@@ -41,7 +41,7 @@ class ManagerHome extends StatelessWidget {
                               child: Text(
                                 '${AppCubit.userData!.name!.capitalize} ${AppCubit.userData!.lastName!.capitalize} \n${Localization.translate(AppCubit.userData!.role!)}',
                                 style: textStyleBuilder(
-                                  fontSize: 24,
+                                  fontSize: 22,
                                   fontWeight: FontWeight.bold,
                                   isTitle: true,
                                 ),
@@ -84,7 +84,8 @@ class ManagerHome extends StatelessWidget {
                                 child: Text(
                                   'Add Now!',
                                   style: textStyleBuilder(
-                                    decoration: TextDecoration.underline
+                                    decoration: TextDecoration.underline,
+                                    isTitle: true
                                   ),
                                 ),
                               ),
@@ -121,9 +122,9 @@ class ManagerHome extends StatelessWidget {
                                 child: Text(
                                   '${AppCubit.userData!.name!.capitalize} ${AppCubit.userData!.lastName!.capitalize} \n${Localization.translate(AppCubit.userData!.role!)}',
                                   style: TextStyle(
-                                      fontSize: 24,
+                                      fontSize: 22,
                                       fontWeight: FontWeight.bold,
-                                      fontFamily: AppCubit.language =='ar'? 'Cairo' : 'Railway'
+                                      fontFamily: AppCubit.language =='ar'? 'Cairo' : 'Poppins'
                                   ),
                                 ),
                               ),

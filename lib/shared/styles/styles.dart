@@ -5,7 +5,7 @@ TextStyle defaultHeadlineTextStyle= const TextStyle(
   fontSize: 26,
   fontStyle: FontStyle.normal,
   fontWeight: FontWeight.w600,
-  fontFamily: 'PT_Sans',
+  fontFamily: 'Railway',
 
 ); //A Style for Headlines.
 

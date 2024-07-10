@@ -75,7 +75,7 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                                   child: DropdownButton<String>(
                                     style: TextStyle(
                                       color: AppCubit.get(context).isDarkTheme? defaultDarkColor : defaultColor,
-                                      fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'PT_Sans'
+                                      fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'Railway'
                                     ),
                                     value: currentLanguage,
                                     isDense: true,
