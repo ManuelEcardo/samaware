@@ -21,14 +21,15 @@ class ManagerHome extends StatelessWidget {
               if(orientation == Orientation.portrait)
                 {
                   return Padding(
-                    padding: const EdgeInsetsDirectional.only(top:24.0, bottom: 24.0, end: 24.0),
+                    padding: const EdgeInsetsDirectional.only(top:24.0, bottom: 24.0, end: 24.0 ),
                     child: Column(
+                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children:
                       [
                         Row(
                           children:
                           [
-                             const Expanded(
+                           const Expanded(
                               child: CircleAvatar(
                                 backgroundImage: AssetImage('assets/images/profile/maleFigure.jpg'),
                                 radius: 50,
@@ -38,11 +39,11 @@ class ManagerHome extends StatelessWidget {
 
                             Expanded(
                               child: Text(
-                                '${AppCubit.userData!.name!} ${AppCubit.userData!.lastName!} \n${Localization.translate(AppCubit.userData!.role!)}',
-                                style: TextStyle(
+                                '${AppCubit.userData!.name!.capitalize} ${AppCubit.userData!.lastName!.capitalize} \n${Localization.translate(AppCubit.userData!.role!)}',
+                                style: textStyleBuilder(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
-                                  fontFamily: AppCubit.language =='ar'? 'Cairo' : 'Railway'
+                                  isTitle: true,
                                 ),
                               ),
                             ),
@@ -54,6 +55,42 @@ class ManagerHome extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsetsDirectional.symmetric(horizontal: 18.0),
                           child: myDivider(color: defaultDarkFontColor),
+                        ),
+
+                        const SizedBox(height: 50,),
+
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(start: 24.0),
+                          child: Row(
+                            children:
+                            [
+                              Text(
+                                Localization.translate('add_new_order'),
+                                style: textStyleBuilder(
+                                  isTitle: true,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 24,
+                                  color: cubit.isDarkTheme? defaultThirdDarkColor : defaultThirdColor,
+
+                                ),
+                              ),
+
+
+                              TextButton(
+                                onPressed: ()
+                                {
+
+                                },
+                                child: Text(
+                                  'Add Now!',
+                                  style: textStyleBuilder(
+                                    decoration: TextDecoration.underline
+                                  ),
+                                ),
+                              ),
+
+                            ],
+                          ),
                         ),
 
                       ],
@@ -82,7 +119,7 @@ class ManagerHome extends StatelessWidget {
 
                               Expanded(
                                 child: Text(
-                                  '${AppCubit.userData!.name!} ${AppCubit.userData!.lastName!} \n${Localization.translate(AppCubit.userData!.role!)}',
+                                  '${AppCubit.userData!.name!.capitalize} ${AppCubit.userData!.lastName!.capitalize} \n${Localization.translate(AppCubit.userData!.role!)}',
                                   style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,

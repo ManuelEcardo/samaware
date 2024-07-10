@@ -41,6 +41,8 @@ const Map<String,String> ar={
 
   'priceSetter':'مسعر',
 
+  'add_new_order':'أضف طلباً جديداً:',
+
 
   //Settings Manager
 
@@ -126,6 +128,7 @@ const Map<String,String> en={
 
   'priceSetter':'Price Setter',
 
+  'add_new_order':'Add Order:',
 
   //Settings Manager
 

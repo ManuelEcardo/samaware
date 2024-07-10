@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +13,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../layout/cubit/cubit.dart';
 import '../styles/colors.dart';
 import 'Localization/Localization.dart';
+
+import 'package:flutter/material.dart' as material;
 
 ///Default FormField Styling
 Widget defaultFormField({
@@ -428,3 +432,27 @@ TextDirection appDirectionality()
   return AppCubit.language=='ar' ? TextDirection.rtl : TextDirection.ltr;
 }
 
+//------------------------------------------------------------------------------------------\\
+
+///Text Style builder
+
+material.TextStyle textStyleBuilder({
+  double fontSize=20,
+  FontWeight fontWeight=FontWeight.normal,
+  bool isTitle=false,
+  Color? color,
+  TextDecoration decoration = TextDecoration.none
+
+})=>TextStyle(
+  fontSize: fontSize,
+  fontWeight: fontWeight,
+  color:color ,
+  decoration: decoration,
+  fontFamily: isTitle?
+  (AppCubit.language =='ar' ? 'Cairo' :'Railway' )
+  :(AppCubit.language =='ar' ? 'Cairo' : 'PT_Sans'),
+
+);
+
+
+//------------------------------------------------------------------------------------------\\

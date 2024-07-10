@@ -280,7 +280,7 @@ ThemeData darkTheme(context)=> ThemeData(
     bodyColor: Colors.white,
     fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'PT_Sans',
     displayColor: Colors.white,
-
+    decorationColor: Colors.white
   ),
 
 
