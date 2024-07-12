@@ -490,7 +490,7 @@ material.TextStyle headlineTextStyleBuilder({
 
 Future <PlatformFile?> pickFile() async
 {
-  FilePickerResult? result=await FilePicker.platform.pickFiles(allowMultiple: false, allowedExtensions: allowedFiles, type: FileType.custom );
+  FilePickerResult? result=await FilePicker.platform.pickFiles(allowMultiple: false, allowedExtensions: allowedFiles, type: FileType.custom, withData: kIsWeb? true: false,  );
 
     return result?.files.first;
 

@@ -1,5 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter_excel/excel.dart';
+import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
+import 'package:samaware_flutter/models/WorkerModel/WorkerModel.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorHome/InspectorHome.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorPreviousOrders/InspectorPreviousOrders.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorSettings/InspectorSettings.dart';
@@ -20,6 +25,7 @@ import 'package:samaware_flutter/shared/components/Imports/conditional_import_io
 import 'package:samaware_flutter/shared/components/constants.dart';
 import 'package:samaware_flutter/shared/network/end_points.dart';
 import 'package:samaware_flutter/shared/network/local/cache_helper.dart';
+import 'package:file_picker/file_picker.dart';
 
 class AppCubit extends Cubit<AppStates>
 {
@@ -260,6 +266,291 @@ class AppCubit extends Cubit<AppStates>
       });
     }
   }
+
+
+  WorkerModel? workers;
+  ///Gets the workers data for manager
+  void getWorkers()
+  {
+    if(token!='')
+      {
+        emit(AppGetWorkersLoadingState());
+
+        MainDioHelper.getData(
+          url: workersForManager,
+          token: token,
+        ).then((value)
+        {
+          print('Got Workers Data...');
+
+          workers = WorkerModel.fromJson(value.data);
+
+          setChosenWorker(w:workers?.workers?[0]);
+
+          emit(AppGetWorkerSuccessState());
+        }).catchError((error)
+        {
+          print("COULDN'T GET WORKERS DATA FROM getWorkers, ${error.toString()}");
+          emit(AppGetWorkersErrorState());
+        });
+      }
+  }
+
+  //--------------------------------------------------------\\
+
+  //Order File created by manager
+  OrderModel? orderFromExcel;
+
+  PlatformFile? excelFile;
+
+
+  ///Set the picked file for the excelFile
+  void setExcelFile(PlatformFile file)
+  {
+    excelFile=file;
+
+    emit(AppSetExcelFileState());
+  }
+
+  ///Reading the excel file and serializing it to object
+  void readFileAndExtractData(PlatformFile file)
+  {
+    try {
+
+      emit(AppExtractExcelFileLoadingState());
+
+      var bytes = getFilePathOrBytes(file);
+
+      var excel = Excel.decodeBytes(bytes);
+
+      for (var table in excel.tables.keys)
+      {
+
+        if (excel.tables[table] != null)
+        {
+          final sheet = excel.tables[table]!;
+
+          //print("Rows Number: ${sheet.maxRows}");
+
+          int id=0;
+          String registrationDate='';
+          String shippingDate='';
+
+          List<OrderItem>? items=[];
+
+          // Extracting the first row for order information
+          final firstRow = sheet.row(0);
+
+          //Get Order date and registration data
+          for (var cellIndex = 0; cellIndex < firstRow.length; cellIndex++)
+          {
+            final cell = firstRow[cellIndex];
+            if (cell != null)
+            {
+              if (cell.value.toString().contains('رقم الطلب'))
+              {
+                String cellValue = cell.value.toString();
+                RegExp regExp = RegExp(r'\d+');
+                Match? match = regExp.firstMatch(cellValue);
+                if (match != null)
+                {
+
+                  //Set Id
+                  id= (int.tryParse(match.group(0) ?? '0') ?? 0) ;
+
+
+                  if (cellValue.contains('تاريخ التسجيل')) {
+                    final parts = cellValue.split('تاريخ التسجيل');
+                    if (parts.length > 1) {
+                      final remaining = parts[1];
+                      final dateParts = remaining.split('تاريخ التسليم');
+
+                      //print('Registration Date: ${dateParts[0].trim()}');
+
+                      registrationDate = dateParts[0].trim();
+                    }
+                  }
+
+                  if (cellValue.contains('تاريخ التسليم')) {
+                    final parts = cellValue.split('تاريخ التسليم');
+                    if (parts.length > 1){
+                      //print('Shipping Date: ${parts[1].trim()}');
+
+                      shippingDate=parts[1].trim();
+                    }
+                  }
+
+                }
+              }
+
+            }
+          }
+
+          //Get Items
+          for (var rowIndex = 4; rowIndex < sheet.maxRows; rowIndex++) {
+            final row = sheet.row(rowIndex);
+
+            final id = row[1];
+            final itemName = row[2];
+            final quantity = row[3];
+            final type = row[4];
+
+            if (id != null && itemName != null && quantity != null && type != null)
+            {
+              final item = OrderItem(
+                itemId: id.value.toString(),
+                name: itemName.value.toString(),
+                quantity: double.tryParse(quantity.value.toString()) ?? 0,
+                type: type.value.toString(),
+              );
+
+              bool isFound=false;
+              //If any redundant item was found => just change the quantity
+              for(var i in items)
+              {
+                if(item.name == i.name && item.type == i.type)
+                  {
+                    i.setQuantity(i.quantity! + item.quantity!);
+                    isFound=true;
+
+                    break;
+                  }
+              }
+              if(!isFound)
+              {
+                items.add(item);
+              }
+
+
+            }
+          }
+          print('Items number is ${items.length}');
+          orderFromExcel= OrderModel.create(id: '$id', regDate: registrationDate, shipDate: shippingDate, itemList: items,);
+          emit(AppExtractExcelFileSuccessState());
+        }
+
+
+      }
+    }
+    catch (e, stackTrace)
+    {
+      print("Error while manipulating the excel file, $e");
+      print(stackTrace.toString());
+
+      emit(AppExtractExcelFileErrorState());
+    }
+  }
+
+
+  ///Clear Order & ExcelFiles
+  void clearOrder()
+  {
+    orderFromExcel=null;
+    excelFile=null;
+
+    emit(AppClearOrderState());
+  }
+
+
+  ///Change an Item Quantity
+  void changeQuantity({required OrderItem item, bool isLongPressed=false, bool isIncrease=true})
+  {
+        orderFromExcel!.items?.forEach((i)
+        {
+          if(item.itemId! == i.itemId!)
+          {
+
+            // isLongPressed
+            // ?(isIncrease
+            //     ?(i.setQuantity(i.quantity!+0.5))
+            //     :(i.setQuantity(i.quantity!-0.5))
+            // )
+            // :(isIncrease
+            //     ?(i.setQuantity(i.quantity!+1))
+            //     :(i.setQuantity(i.quantity!-1))
+            // );
+
+            if(isIncrease)
+              {
+                if(isLongPressed)
+                  {
+                    i.setQuantity(i.quantity!+0.5);
+                  }
+                else
+                  {
+                    i.setQuantity(i.quantity!+1);
+                  }
+              }
+
+            else
+              {
+                if(isLongPressed)
+                {
+                  i.quantity!>0.5? i.setQuantity(i.quantity!-0.5) : null ;
+                }
+                else
+                {
+                  i.quantity!>1? i.setQuantity(i.quantity!-1) : null ;
+                }
+              }
+
+            emit(AppChangeItemQuantityState());
+          }
+        });
+  }
+
+
+  ///Remove an item from list
+
+  void removeItemFromOrder(OrderItem item)
+  {
+    orderFromExcel?.items?.remove(item);
+
+    emit(AppRemoveItemState());
+  }
+
+  ///Returns Path for Android and Bytes for Web/IOS
+  getFilePathOrBytes(PlatformFile file)
+  {
+    if(kIsWeb)
+      {
+        return file.bytes;
+      }
+    return File(file.path!).readAsBytesSync();
+  }
+
+  //The Worker chosen to do the order
+  UserData? chosenWorker;
+
+  ///Sets the chosen worker for this job
+  void setChosenWorker({String? id, UserData? w})
+  {
+    if(id !=null)
+      {
+        for(var worker in workers?.workers??[])
+        {
+          if (worker.id == id)
+          {
+            chosenWorker = worker;
+            emit(AppSetChosenWorkerState());
+            break; // Break out of the loop when the worker is found
+          }
+        }
+        // workers?.workers?.forEach((worker)
+        // {
+        //   if(worker.id == id)
+        //     {
+        //       chosenWorker=worker;
+        //     }
+        // });
+      }
+    else
+      {
+        chosenWorker=w;
+      }
+    emit(AppSetChosenWorkerState());
+  }
+
 
 
 

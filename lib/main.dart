@@ -64,8 +64,8 @@ void main() async {
   bool? isDark = CacheHelper.getData(key: 'isDarkTheme'); //Getting the last Cached ThemeMode
   isDark ??= true;
 
-  bool? onBoarding = CacheHelper.getData(key: 'onBoarding'); //To get if OnBoarding screen has been shown before, if true then straight to Login Screen.
-  onBoarding ??= false;
+  // bool? onBoarding = CacheHelper.getData(key: 'onBoarding'); //To get if OnBoarding screen has been shown before, if true then straight to Login Screen.
+  // onBoarding ??= false;
 
   if (CacheHelper.getData(key: 'token') != null) {
     token = CacheHelper.getData(key: 'token'); // Get User Token
@@ -73,9 +73,6 @@ void main() async {
 
   Widget widget; //to figure out which widget to send (login, onBoarding or HomePage) we use a widget and set the value in it depending on the token.
 
-
-  if(onBoarding==true)
-  {
     if (token.isNotEmpty) //Token is there, so Logged in before
     {
       widget = const HomeLayout(); //Straight to Home Page.
@@ -85,13 +82,6 @@ void main() async {
     {
       widget= const Login();
     }
-  }
-
-  else //OnBoarding has been shown before but the token is empty => Login is required.
-  {
-
-    widget = const OnBoardingScreen();
-  }
 
 
   runApp(MyApp(isDark: isDark, homeWidget: widget, wsChannel: wsChannel!,));
@@ -112,7 +102,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
         providers:
         [
-          BlocProvider(create: (BuildContext context) => AppCubit(wsChannel)..setListener()..changeTheme(themeFromState: isDark)..getUserData()),
+          BlocProvider(create: (BuildContext context) => AppCubit(wsChannel)..setListener()..changeTheme(themeFromState: isDark)..getUserData()
+              ..getWorkers()
+          ),
         ],
         child: BlocConsumer<AppCubit,AppStates>(
           listener: (context,state){},

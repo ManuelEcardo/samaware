@@ -64,7 +64,8 @@ class _LoginState extends State<Login> {
                 //GET DATA NEEDED
                 cubit.getUserData();
 
-
+                //Get Workers Data
+                cubit.getWorkers();
 
                 navigateAndFinish(context,const HomeLayout());
 

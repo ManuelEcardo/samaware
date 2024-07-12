@@ -71,6 +71,14 @@ const Map<String,String> ar={
 
   'order_ship_dialog':'تاريخ شحن الطلبية:',
 
+  'remove_an_item_swap':'تم حذف العنصر بنجاح',
+
+  'worker_assignment':'اختر عاملاً',
+
+  'delete_item_dialog_title':'هل انت متأكد؟',
+
+  'delete_item_secondary_title':'هل تريد حذف العنصر؟',
+
 
 
 
@@ -186,6 +194,14 @@ const Map<String,String> en={
   'order_reg_dialog':'Registration Date: ',
 
   'order_ship_dialog':'Shipping Date: ',
+
+  'remove_an_item_swap':'Removed Successfully',
+
+  'worker_assignment':'Choose a Worker',
+
+  'delete_item_dialog_title':'Are You Sure?',
+
+  'delete_item_secondary_title':'Do you want to delete this item?',
 
 
 

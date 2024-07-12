@@ -1,0 +1,24 @@
+{
+    "workers": [
+        {
+            "_id": "668d0b960ee32e937a6c88a2",
+            "name": "slave1",
+            "last_name": "ni",
+            "email": "slave1@test.com",
+            "role": "worker",
+            "createdAt": "2024-07-09T10:06:14.746Z",
+            "updatedAt": "2024-07-10T10:26:38.252Z",
+            "__v": 3
+        },
+        {
+            "_id": "668d0b9f0ee32e937a6c88a8",
+            "name": "slave2",
+            "last_name": "ni",
+            "email": "slave2@test.com",
+            "role": "worker",
+            "createdAt": "2024-07-09T10:06:23.156Z",
+            "updatedAt": "2024-07-09T10:06:23.177Z",
+            "__v": 1
+        }
+    ]
+}

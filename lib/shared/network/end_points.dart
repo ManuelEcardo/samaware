@@ -11,3 +11,5 @@ const String webSocketLocalHost= kIsWeb? 'ws://localhost:3000/webSocket' : 'ws:/
 const login='users/login';
 
 const userDataByToken='users/me';
+
+const workersForManager='workers/';
