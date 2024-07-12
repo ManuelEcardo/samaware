@@ -43,6 +43,8 @@ const Map<String,String> ar={
 
   'add_new_order':'أضف طلباً جديداً:',
 
+  'add_new_order_now':'أضف الآن',
+
   //Create an Order Manager
 
   'create_an_order_manager':'أضف طلباً جديداً',
@@ -135,6 +137,8 @@ const Map<String,String> en={
   'priceSetter':'Price Setter',
 
   'add_new_order':'Add Order:',
+
+  'add_new_order_now':'Add Now!',
 
   //Create an Order Manager
 

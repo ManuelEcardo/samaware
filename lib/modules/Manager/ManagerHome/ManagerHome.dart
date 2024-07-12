@@ -85,7 +85,7 @@ class ManagerHome extends StatelessWidget {
                                   navigateTo(context, const ManagerCreateOrder());
                                 },
                                 child: Text(
-                                  'Add Now!',
+                                  Localization.translate('add_new_order_now'),
                                   style: textStyleBuilder(
                                     decoration: TextDecoration.underline,
                                     isTitle: true
