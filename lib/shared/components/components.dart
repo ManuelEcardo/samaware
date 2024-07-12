@@ -1,14 +1,17 @@
 import 'dart:ui';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_excel/excel.dart';
 
 import 'package:fluttertoast/fluttertoast.dart'
 ;
 import 'package:intl/intl.dart' as intl;
 import 'package:material_dialogs/dialogs.dart';
+import 'package:samaware_flutter/shared/components/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../layout/cubit/cubit.dart';
 import '../styles/colors.dart';
@@ -149,7 +152,7 @@ Widget defaultButton(
       Color textColor=Colors.black,
       required void Function()? onTap,
       double width=185,
-      String fontFamily = 'Railway',
+      String? fontFamily,
 
     })
 {
@@ -169,7 +172,7 @@ Widget defaultButton(
           fontSize: 18,
           fontWeight: FontWeight.w500,
           color: textColor,
-          fontFamily: fontFamily,
+          fontFamily: AppCubit.language =='ar'? 'Cairo':'Poppins',
           letterSpacing: letterSpacing,
         ),
       ),
@@ -355,15 +358,15 @@ Widget defaultAlertDialog(
     contentTextStyle: TextStyle(
         fontSize: 16,
         color:  AppCubit.get(context).isDarkTheme? Colors.white: Colors.black,
-        fontFamily: 'WithoutSans',
+        fontFamily: AppCubit.language =='ar'? 'Cairo' :'Railway',
         fontWeight: FontWeight.w400
     ),
 
     titleTextStyle: TextStyle(
-      fontSize: 22,
+      fontSize: 24,
       color:  AppCubit.get(context).isDarkTheme? Colors.white: Colors.black,
-      fontWeight: FontWeight.w500,
-      fontFamily: 'Neology',
+      fontWeight: FontWeight.w800,
+      fontFamily: AppCubit.language =='ar'? 'Cairo' :'Poppins',
     ),
 
     backgroundColor: AppCubit.get(context).isDarkTheme? defaultAlertDarkColor: defaultHomeColor,
@@ -439,6 +442,7 @@ TextDirection appDirectionality()
 material.TextStyle textStyleBuilder({
   double fontSize=20,
   FontWeight fontWeight=FontWeight.normal,
+  String? fontFamily,
   bool isTitle=false,
   Color? color,
   TextDecoration decoration = TextDecoration.none
@@ -448,9 +452,13 @@ material.TextStyle textStyleBuilder({
   fontWeight: fontWeight,
   color:color ,
   decoration: decoration,
-  fontFamily: isTitle?
-  (AppCubit.language =='ar' ? 'Cairo' :'Poppins' )
-  :(AppCubit.language =='ar' ? 'Cairo' : 'Railway'),
+
+  fontFamily: fontFamily !=null
+  ? (fontFamily)
+  :(isTitle
+      ?(AppCubit.language =='ar' ? 'Cairo' :'Poppins')
+      : (AppCubit.language =='ar' ? 'Cairo' : 'Railway')
+  ),
 
 );
 
@@ -476,3 +484,14 @@ material.TextStyle headlineTextStyleBuilder({
 );
 
 //------------------------------------------------------------------------------------------\\
+
+
+///File picker
+
+Future <PlatformFile?> pickFile() async
+{
+  FilePickerResult? result=await FilePicker.platform.pickFiles(allowMultiple: false, allowedExtensions: allowedFiles, type: FileType.custom );
+
+    return result?.files.first;
+
+}

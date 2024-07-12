@@ -41,7 +41,7 @@ Color defaultCanvasDarkColor = HexColor('989C94');
 
 Color defaultThirdDarkColor= HexColor('E6E49F');
 
-Color defaultBoxDarkColor=HexColor('323232');
+Color defaultBoxDarkColor=HexColor('4E4A4A');
 
 Color defaultBottomNavBarDarkColor= HexColor('3A3F35');
 

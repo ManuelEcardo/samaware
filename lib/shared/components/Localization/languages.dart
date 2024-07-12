@@ -2,7 +2,7 @@ const Map<String,String> ar={
 
   //Global
 
-  'submit_button':'تقدم',
+  'submit_button':'ثّبت',
   'upload_button':'ارفع',
 
 
@@ -45,11 +45,33 @@ const Map<String,String> ar={
 
   'add_new_order_now':'أضف الآن',
 
+
   //Create an Order Manager
 
   'create_an_order_manager':'أضف طلباً جديداً',
 
   'import_excel':'قم باستيراد ملف إكسل',
+
+  'error_importing_file':'حدث خطأ أثناء اختيار الملف',
+
+  'order_number':'رقم الطلبية:  ',
+
+  'dozen':'دزينة',
+
+  'piece':'قطعة',
+
+
+  'order_description_dialog':'توصيف الطلبية',
+
+  'order_id_dialog':'رقم الطلبية: ',
+
+  'order_items_number_dialog':'عدد العناصر:',
+
+  'order_reg_dialog':'تاريخ تسحيل الطلبية:',
+
+  'order_ship_dialog':'تاريخ شحن الطلبية:',
+
+
 
 
   //Settings Manager
@@ -145,6 +167,27 @@ const Map<String,String> en={
   'create_an_order_manager':'Create an Order',
 
   'import_excel':'Import Excel File',
+
+  'error_importing_file':'Error while importing file',
+
+  'order_number':'Order Number: ',
+
+  'dozen':'Dozen',
+
+  'piece':'Piece',
+
+
+  'order_description_dialog':'Order Description',
+
+  'order_id_dialog':'Order Number: ',
+
+  'order_items_number_dialog':'Items Number: ',
+
+  'order_reg_dialog':'Registration Date: ',
+
+  'order_ship_dialog':'Shipping Date: ',
+
+
 
   //Settings Manager
 
