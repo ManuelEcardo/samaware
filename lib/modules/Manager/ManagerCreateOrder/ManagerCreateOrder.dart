@@ -141,8 +141,12 @@ class _ManagerCreateOrderState extends State<ManagerCreateOrder> {
               ),
 
               body: Scrollbar(
+
                 controller: scrollController,
+                trackVisibility: true,
+                thumbVisibility: true,
                 child: SingleChildScrollView(
+                  controller: scrollController,
                   child: Padding(
                     padding: const EdgeInsetsDirectional.all(24.0),
                     child: ConditionalBuilder(
