@@ -29,23 +29,30 @@ Color defaultRespondMessageColor=HexColor('C2C3C4');
 
 //DARK MODE
 
+///Beige
 MaterialColor defaultDarkColor= getMaterialColor(HexColor('E3E7D3'));
 
+///Black Olive
 Color defaultHomeDarkColor = HexColor('25291C');
+
 
 Color defaultAlertDarkColor= HexColor('323232');
 
-Color defaultSecondaryDarkColor= HexColor('A1A69B');
+///Cerulean
+Color defaultSecondaryDarkColor= HexColor('077187');
 
+///
 Color defaultCanvasDarkColor = HexColor('989C94');
 
+///Vanilla
 Color defaultThirdDarkColor= HexColor('E6E49F');
 
-Color defaultBoxDarkColor=HexColor('4E4A4A');
+
+Color defaultBoxDarkColor=HexColor('D1D1D1');
 
 Color defaultBottomNavBarDarkColor= HexColor('3A3F35');
 
-Color defaultDarkFontColor= Colors.white;
+Color defaultDarkFontColor= Colors.black;
 
 Color defaultRespondMessageDarkColor=HexColor('323232');
 

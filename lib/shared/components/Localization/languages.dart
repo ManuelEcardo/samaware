@@ -79,6 +79,54 @@ const Map<String,String> ar={
 
   'delete_item_secondary_title':'هل تريد حذف العنصر؟',
 
+  'order_submit_loading_toast':'يتم إرسال الطلب الآن',
+
+  'order_submit_done_toast':'تمت إضافة الطلب بنجاح',
+
+  'order_submit_error_toast':'حدث خطأ أثناء تثبيت الطلب,  ',
+
+  //ORDER STATES
+
+  'waiting_to_be_prepared':'تنتظر أن تُحضر',
+
+  'being_prepared':'يتم التحضير الآن',
+
+  'prepared':'تم تحضيرها',
+
+  'being_priced':'يتم تسعيرها',
+
+  'priced':'تم تسعيرها',
+
+  'being_verified':'يتم التوثيق',
+
+  'verified':'تم توثيقها',
+
+  're_prepare':'تحتاج لإعادة تحضير',
+
+  'waiting_to_ship':'تتنظر أن يتم شحنها',
+
+  'stored':'مُخزنة',
+
+  'shipped':'تم شحنها',
+
+  'failed':'فشلت',
+
+  //ORDER DATES
+
+
+
+  //Order Page Manager
+
+  'available_order_title':'الطلبيات المتاحة: ',
+
+  //Order Details Manager
+
+  'chosen_worker':'الموظف المختار: ',
+
+  'view_items_details':'عرض المواد: ',
+
+  'items_details_title':'عناصر هذه الطلبية',
+
 
 
 
@@ -202,6 +250,78 @@ const Map<String,String> en={
   'delete_item_dialog_title':'Are You Sure?',
 
   'delete_item_secondary_title':'Do you want to delete this item?',
+
+  'order_submit_loading_toast':'Order is being submitted',
+
+  'order_submit_done_toast':'Order has been submitted successfully',
+
+  'order_submit_error_toast':'Error while submitting order, ',
+
+  //ORDER STATES
+
+  'waiting_to_be_prepared':'Waiting to be prepared',
+
+  'being_prepared':'Being prepared',
+
+  'prepared':'Prepared',
+
+  'being_priced':'Being priced',
+
+  'priced':'Priced',
+
+  'being_verified':'Being verified',
+
+  'verified':'Verified',
+
+  're_prepare':'Re prepare',
+
+  'waiting_to_ship':'Waiting to ship',
+
+  'stored':'Stored',
+
+  'shipped':'Shipped',
+
+  'failed':'Failed',
+
+
+  //ORDER DATES
+
+  // 'waiting_to_be_prepared_date':'Waiting to be prepared date: ',
+  //
+  // 'being_prepared_date':'Being prepared date: ',
+  //
+  // 'prepared_date':'Prepared date: ',
+  //
+  // 'being_priced_date':'Being priced date: ',
+  //
+  // 'priced_date':'Priced date: ',
+  //
+  // 'being_verified_date':'Being verified date: ',
+  //
+  // 'verified_date':'Verified date: ',
+  //
+  // 're_prepare_date':'Re prepare date: ',
+  //
+  // 'waiting_to_ship_date':'Waiting to ship date: ',
+  //
+  // 'stored_date':'Stored date: ',
+  //
+  // 'shipped_date':'Shipped date: ',
+  //
+  // 'failed_date':'Failed date: ',
+
+
+  //Order Page Manager
+
+  'available_order_title':'Available Orders: ',
+
+  //Order Details Manager
+
+  'chosen_worker':'Chosen Worker: ',
+
+  'view_items_details':'View Items',
+
+  'items_details_title':'This Order Items: ',
 
 
 

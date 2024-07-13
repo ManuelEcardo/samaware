@@ -13,3 +13,11 @@ const login='users/login';
 const userDataByToken='users/me';
 
 const workersForManager='workers/';
+
+
+
+//ORDER ENDPOINTS
+
+const createAnOrder= 'orders/create';
+
+const notReadyOrders='orders/nonReady';

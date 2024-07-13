@@ -50,4 +50,24 @@ class AppChangeItemQuantityState extends AppStates{}
 class AppRemoveItemState extends AppStates{}
 
 class AppSetChosenWorkerState extends AppStates{}
+
 //------------------------------------
+
+
+// CREATE AN ORDER
+
+class AppCreateOrderLoadingState extends AppStates{}
+
+class AppCreateOrderErrorState extends AppStates{}
+
+class AppCreateOrderSuccessState extends AppStates{}
+
+//------------------------------------
+
+// GET NON-READY ORDERS
+
+class AppGetNonReadyOrdersLoadingState extends AppStates{}
+
+class AppGetNonReadyOrdersErrorState extends AppStates{}
+
+class AppGetNonReadyOrdersSuccessState extends AppStates{}

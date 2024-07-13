@@ -61,14 +61,26 @@ class _LoginState extends State<Login> {
                 var cubit= AppCubit.get(context);
                 token=state.loginModel.token!;
 
-                //GET DATA NEEDED
                 cubit.getUserData();
 
-                //Get Workers Data
-                cubit.getWorkers();
+                CacheHelper.saveData(key: 'role', value: state.loginModel.user?.role).then((value)
+                {
+                  cubit.getMyAPI();
+                  navigateAndFinish(context,const HomeLayout());
 
-                navigateAndFinish(context,const HomeLayout());
+                }).catchError((error)
+                {
+                  print('COULD NOT CACHE ROLE TYPE, ${error.toString()}');
+                });
 
+                // //GET DATA NEEDED
+                // cubit.getUserData();
+                //
+                // //Get Workers Data
+                // cubit.getWorkers();
+                //
+                // //Get Pending Orders
+                // cubit.getNonReadyOrders();
               }).catchError((error)
               {
                 print('ERROR WHILE CACHING USER TOKEN IN LOGIN, ${error.toString()}');
@@ -129,7 +141,7 @@ class _LoginState extends State<Login> {
                                   Localization.translate('login_second_title'),//'Login Now and Start Revealing the Truth',
                                   style: TextStyle(
                                     fontSize: 16,
-                                    color: AppCubit.get(context).isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                                    color: AppCubit.get(context).isDarkTheme? Colors.white : defaultFontColor,
                                     fontFamily: AppCubit.language == 'ar'? 'Cairo': 'Railway',
                                     fontWeight: FontWeight.w400
                                   ),

@@ -103,14 +103,13 @@ Widget defaultBox(
       bool paddingOptions=true,
       required Widget child,
       required void Function()? onTap,
-
       bool manualBorderColor=false,
       Color borderColor=Colors.white,
-
+      Color? highlightColor,
       double? containerWidth,
 
-    })=>GestureDetector(
-
+    })=>InkWell(
+  highlightColor: highlightColor ,
   onTap: onTap,
   child:  Container(
 
@@ -494,4 +493,19 @@ Future <PlatformFile?> pickFile() async
 
     return result?.files.first;
 
+}
+
+
+//------------------------------------------------------------------------------------------\\
+
+///Converts Arabic itemType into English
+String orderItemTypeFormatter(String t)
+{
+  return t=='قطعة'? 'piece' : 'dozen';
+}
+
+///Translates the word
+String translateWord(String w)
+{
+  return Localization.translate(w);
 }

@@ -102,8 +102,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
         providers:
         [
-          BlocProvider(create: (BuildContext context) => AppCubit(wsChannel)..setListener()..changeTheme(themeFromState: isDark)..getUserData()
-              ..getWorkers()
+          BlocProvider(create: (BuildContext context) => AppCubit(wsChannel)..setListener()..changeTheme(themeFromState: isDark)..getUserData()..getMyAPI()
           ),
         ],
         child: BlocConsumer<AppCubit,AppStates>(
@@ -114,7 +113,6 @@ class MyApp extends StatelessWidget {
             var cubit=AppCubit.get(context);
 
             return MaterialApp(
-
               debugShowCheckedModeBanner: false,
               theme: lightTheme(context),
               darkTheme: darkTheme(context),

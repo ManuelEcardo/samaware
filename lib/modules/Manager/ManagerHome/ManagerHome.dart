@@ -55,7 +55,7 @@ class ManagerHome extends StatelessWidget {
 
                         Padding(
                           padding: const EdgeInsetsDirectional.symmetric(horizontal: 18.0),
-                          child: myDivider(color: defaultDarkFontColor),
+                          child: myDivider(color: defaultCanvasDarkColor),
                         ),
 
                         const SizedBox(height: 50,),

@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_excel/excel.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
+import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/models/WorkerModel/WorkerModel.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorHome/InspectorHome.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorPreviousOrders/InspectorPreviousOrders.dart';
@@ -233,6 +233,46 @@ class AppCubit extends Cubit<AppStates>
   }
 
 
+  //----------------------------------------------------\\
+
+  ///Will Get the required data depending on the user's role
+  void getMyAPI()
+  {
+    if(token !='')
+    {
+      switch(CacheHelper.getData(key: 'role'))
+      {
+        case 'manager':
+          print('Manager Role...');
+          getWorkers();
+          getNonReadyOrders();
+
+          break;
+
+        case 'worker':
+          print('Worker Role...');
+          break;
+
+        case 'priceSetter':
+          print('Price Setter Role...');
+          break;
+
+        case 'inspector':
+          print('Inspector Role...');
+          break;
+
+        default:
+          print('Default Role...');
+          break;
+      }
+    }
+    else
+    {
+      print('No Token was found');
+      defaultToast(msg: 'No Token was Found');
+    }
+  }
+
   //--------------------------------------------------\\
 
   //USER APIS
@@ -296,10 +336,100 @@ class AppCubit extends Cubit<AppStates>
       }
   }
 
+
+  //--------------------------------------------------\\
+
+  //ORDER API
+
+  ///Create an Order
+  void createOrder(SubmitOrderModel? order, BuildContext context)
+  {
+    print('Creating Order...');
+    emit(AppCreateOrderLoadingState());
+
+    defaultToast(msg: Localization.translate('order_submit_loading_toast'));
+
+    print('Current Order: ${order.toString()}');
+
+    List<Map<String,dynamic>> orderItems=[];
+
+    order?.items?.forEach((item)
+    {
+      orderItems.add({
+        'itemId':'${item.itemId}',
+        'quantity':'${item.quantity}',
+        'type':orderItemTypeFormatter(item.type!),
+      });
+    });
+
+    MainDioHelper.postData(
+      url: createAnOrder,
+      data:
+      {
+        'orderId':order?.orderId,
+        'registration_date':order?.registrationDate,
+        'shipping_date':order?.shippingDate,
+        'workerId':order?.workerId,
+        'clientId':order?.clientId,
+        'waiting_to_be_prepared_date': defaultDateFormatter.format(DateTime.now()),
+
+        'items':orderItems,
+      },
+      token: token,
+    ).then((value)
+    {
+      print('Got createOrder data...');
+
+      defaultToast(msg: Localization.translate('order_submit_done_toast'));
+
+      emit(AppCreateOrderSuccessState());
+
+      Navigator.of(context).pop(true);
+
+    }).catchError((error)
+    {
+      print('ERROR WHILE CREATING AN ORDER, ${error.toString()}');
+
+      defaultToast(msg: '${Localization.translate('order_submit_error_toast')}, ${error.toString()}');
+
+      emit(AppCreateOrderErrorState());
+    });
+  }
+
+
+  OrdersModel? nonReadyOrders;
+  ///Get Non-Ready Orders; anything not Shipped, Stored or Failed
+  void getNonReadyOrders()
+  {
+    if(token !='')
+      {
+        print('Getting Non-Ready Orders...');
+
+        emit(AppGetNonReadyOrdersLoadingState());
+
+        MainDioHelper.getData(
+          url: notReadyOrders,
+          token: token,
+        ).then((value)
+        {
+          print('Got Non Ready Orders data...');
+
+          nonReadyOrders = OrdersModel.fromJson(value.data);
+
+          emit(AppGetNonReadyOrdersSuccessState());
+        }).catchError((error, stackTrace)
+        {
+          print('COULD NOT GET NON READY ORDERS, ${error.toString()}');
+
+          print(stackTrace);
+          emit(AppGetNonReadyOrdersErrorState());
+        });
+      }
+  }
   //--------------------------------------------------------\\
 
   //Order File created by manager
-  OrderModel? orderFromExcel;
+  SubmitOrderModel? orderFromExcel;
 
   PlatformFile? excelFile;
 
@@ -425,7 +555,7 @@ class AppCubit extends Cubit<AppStates>
             }
           }
           print('Items number is ${items.length}');
-          orderFromExcel= OrderModel.create(id: '$id', regDate: registrationDate, shipDate: shippingDate, itemList: items,);
+          orderFromExcel= SubmitOrderModel.create(id: '$id', regDate: registrationDate, shipDate: shippingDate, itemList: items,);
           emit(AppExtractExcelFileSuccessState());
         }
 
@@ -532,6 +662,8 @@ class AppCubit extends Cubit<AppStates>
           if (worker.id == id)
           {
             chosenWorker = worker;
+            orderFromExcel?.workerId=worker.id;
+
             emit(AppSetChosenWorkerState());
             break; // Break out of the loop when the worker is found
           }
@@ -547,6 +679,8 @@ class AppCubit extends Cubit<AppStates>
     else
       {
         chosenWorker=w;
+
+        orderFromExcel?.workerId=w?.id;
       }
     emit(AppSetChosenWorkerState());
   }
