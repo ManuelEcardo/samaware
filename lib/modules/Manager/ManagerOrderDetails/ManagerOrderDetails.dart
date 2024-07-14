@@ -1,13 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:samaware_flutter/layout/cubit/cubit.dart';
-import 'package:samaware_flutter/layout/cubit/states.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerOrderDetails/ManagerOrderItemsDetails.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
-import 'package:samaware_flutter/shared/components/Localization/Localization.dart';
-import 'package:samaware_flutter/shared/components/components.dart';
 import 'package:samaware_flutter/shared/styles/colors.dart';
 
 class ManagerOrderDetails extends StatelessWidget {

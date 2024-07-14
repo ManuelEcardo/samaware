@@ -117,7 +117,7 @@ const Map<String,String> ar={
 
   //Order Page Manager
 
-  'available_order_title':'الطلبيات المتاحة: ',
+  'available_order_title':'الطلبيات في انتظار التحضير: ',
 
   //Order Details Manager
 
@@ -149,6 +149,14 @@ const Map<String,String> ar={
   //Settings Manager: Workers
 
   'workers_details_settings_title':'العمال وتفاصيلهم: ',
+
+  'workers_details_order_number':'الطبيات المتاحة: ',
+
+  //Settings Manager: Orders
+
+  'orders_details_settings_title':'جميع الطلبات',
+
+  'getting_all_orders_toast':'يتم جلب جميع الطلبات',
 
 
 
@@ -323,7 +331,7 @@ const Map<String,String> en={
 
   //Order Page Manager
 
-  'available_order_title':'Available Orders: ',
+  'available_order_title':'Waiting Orders: ',
 
   //Order Details Manager
 
@@ -356,6 +364,14 @@ const Map<String,String> en={
   //Settings Manager: Workers
 
   'workers_details_settings_title':'Workers With Details',
+
+  'workers_details_order_number':'Total Assigned Orders:',
+
+  //Settings Manager: Orders
+
+  'orders_details_settings_title':'All Orders',
+
+  'getting_all_orders_toast':'Getting all orders...',
 
 
 

@@ -87,6 +87,12 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                                   text: Localization.translate('orders_settings_title'),
                                   onTap: ()
                                   {
+                                    if(cubit.allOrders==null)
+                                    {
+                                      print('getting all orders after press from settings...');
+                                      cubit.getAllOrders();
+                                    }
+
                                     navigateTo(context, const ManagerOrdersSettings());
                                   }
                               ),
@@ -109,145 +115,64 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+
                       children:
                       [
-                        Row(
-                          children:
-                          [
-                            const Icon(
-                              Icons.language,
-                              size: 22,
-                            ),
-
-                            const SizedBox(width: 10,),
-
-                            Expanded(
-                              child: Text(
-                                Localization.translate('language_name_general_settings'),
-                                maxLines: 1,
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    overflow: TextOverflow.ellipsis
+                        defaultBox(
+                            padding: 15,
+                            paddingOptions: false,
+                            cubit: cubit,
+                            boxColor: null, //cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                            child: Column(
+                              children:
+                              [
+                                itemBuilder(
+                                    icon: Icons.settings_outlined,
+                                    cubit: cubit,
+                                    text: Localization.translate('general_settings_title'),
+                                    onTap: ()
+                                    {
+                                      navigateTo(context, const ManagerGeneralSettings());
+                                    }
                                 ),
-                              ),
+
+                                const SizedBox(height: 10),
+
+                                myDivider(color: Colors.white),
+
+                                itemBuilder(
+                                    icon: Icons.person_outline_rounded,
+                                    cubit: cubit,
+                                    text: Localization.translate('workers_settings_title'),
+                                    onTap: ()
+                                    {
+                                      navigateTo(context, const ManagerWorkersSettings());
+                                    }
+                                ),
+
+                                const SizedBox(height: 10),
+
+                                myDivider(color: Colors.white),
+
+                                itemBuilder(
+                                    icon: Icons.reorder,
+                                    cubit: cubit,
+                                    text: Localization.translate('orders_settings_title'),
+                                    onTap: ()
+                                    {
+                                      navigateTo(context, const ManagerOrdersSettings());
+                                    }
+                                ),
+                              ],
                             ),
-
-                            //const Spacer(),
-
-                            Expanded(
-                              child: FormField<String>(
-                                builder: (FormFieldState<String> state) {
-                                  return InputDecorator(
-                                    decoration: InputDecoration(
-                                      enabledBorder: InputBorder.none,
-                                      border: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      errorStyle:const TextStyle(color: Colors.redAccent, fontSize: 16.0),
-                                      labelText: Localization.translate('language_name_general_settings'),
-                                    ),
-
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton<String>(
-                                        style: TextStyle(
-                                            color: AppCubit.get(context).isDarkTheme? defaultDarkColor : defaultColor,
-                                            fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'Railway'
-                                        ),
-                                        value: currentLanguage,
-                                        isDense: true,
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            print('Current Language is: $newValue');
-                                            currentLanguage = newValue!;
-                                            state.didChange(newValue);
-
-                                            CacheHelper.saveData(key: 'language', value: newValue).then((value){
-
-                                              //defaultToast(msg: 'App Will Restart Now to take effect');
-                                              cubit.changeLanguage(newValue);
-                                              Localization.load(Locale(newValue));
-
-                                              // Timer(const Duration(seconds: 2), ()
-                                              // {
-                                              //   PhoenixNative.restartApp();
-                                              // });
-
-                                            }).catchError((error)
-                                            {
-                                              print('ERROR WHILE SWITCHING LANGUAGES, ${error.toString()}');
-                                              defaultToast(msg: error.toString());
-                                            });
-
-
-                                          });
-                                        },
-                                        items: listOfLanguages.map((String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  value == 'ar' ? Localization.translate('arabic_general_settings') : Localization.translate('english_general_settings'),
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 1,
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }).toList(),
-
-
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-
-                          ],
+                            onTap: (){},
+                            manualBorderColor: true,
+                            borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor
                         ),
 
                         const SizedBox(height: 20,),
-
-                        Row(
-                          children:
-                          [
-                            Icon(
-                              cubit.isDarkTheme? Icons.sunny : Icons.brightness_3_rounded,
-                              size: 22,
-                            ),
-
-                            const SizedBox(width: 10,),
-
-                            Text(
-                              Localization.translate('dark_mode_appearance'),
-                              style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500
-                              ),
-                            ),
-
-                            const Spacer(),
-
-                            Switch(
-                              value: cubit.isDarkTheme,
-                              onChanged: (bool newValue)
-                              {
-                                cubit.changeTheme();
-                              },
-                              activeColor: cubit.isDarkTheme? defaultDarkColor : defaultColor,
-                              inactiveTrackColor: cubit.isDarkTheme? Colors.white: null,
-                              activeTrackColor: cubit.isDarkTheme? defaultDarkColor.withOpacity(0.5) : defaultColor.withOpacity(0.5),
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 20,),
-
-                        TextButton(onPressed: ()
-                        {
-                          navigateTo(context, ManagerGeneralSettings());
-                        }, child: Text('a')),
 
                       ],
                     ),

@@ -458,6 +458,37 @@ class AppCubit extends Cubit<AppStates>
         });
       }
   }
+
+
+  OrdersModel? allOrders;
+  ///Get All Orders in the system
+  void getAllOrders()
+  {
+    if(token!='')
+    {
+      print('In getAllOrders...');
+
+      emit(AppGetAllOrdersLoadingState());
+
+      MainDioHelper.getData(
+        url: AllOrders,
+        token: token
+      ).then((value)
+      {
+        print('Got all orders...');
+
+        allOrders=OrdersModel.fromJson(value.data);
+
+        emit(AppGetAllOrdersSuccessState());
+
+      }).catchError((error)
+      {
+        print("ERROR WHILE GETTING ALL ORDERS, ${error.toString()}");
+
+        emit(AppGetAllOrdersErrorState());
+      });
+    }
+  }
   //--------------------------------------------------------\\
 
   //Order File created by manager

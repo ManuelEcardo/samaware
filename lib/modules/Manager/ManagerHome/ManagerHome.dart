@@ -31,9 +31,14 @@ class ManagerHome extends StatelessWidget {
                           children:
                           [
                            const Expanded(
-                              child: CircleAvatar(
-                                backgroundImage: AssetImage('assets/images/profile/maleFigure.jpg'),
-                                radius: 50,
+                              child: Column(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundImage: AssetImage('assets/images/profile/maleFigure.jpg'),
+                                    radius: 55,
+
+                                  ),
+                                ],
                               ),
                             ),
 

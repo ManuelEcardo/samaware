@@ -6,6 +6,7 @@ import 'package:samaware_flutter/layout/cubit/states.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/models/WorkerDetailsModel/WorkerDetailsModel.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerOrderDetails/ManagerOrderDetails.dart';
+import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerWorkersSettings/WorkerDetailsPage.dart';
 import 'package:samaware_flutter/shared/components/Localization/Localization.dart';
 import 'package:samaware_flutter/shared/components/components.dart';
 import 'package:samaware_flutter/shared/styles/colors.dart';
@@ -108,7 +109,7 @@ class ManagerWorkersSettings extends StatelessWidget {
       highlightColor: cubit.isDarkTheme? defaultDarkColor.withOpacity(0.2) : defaultColor.withOpacity(0.2),
       onTap: ()
       {
-
+        navigateTo(context, WorkerDetailsPage(worker: worker!,));
       },
       boxColor: null,
       borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor,

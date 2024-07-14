@@ -22,3 +22,5 @@ const workersWithDetail='workers/details';
 const createAnOrder= 'orders/create';
 
 const notReadyOrders='orders/nonReady';
+
+const AllOrders='orders';
