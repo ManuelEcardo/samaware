@@ -29,20 +29,6 @@ void main() async {
 
   WebSocketChannel wsChannel = getWebSocketChannel(webSocketLocalHost); //Connecting to wsChannel through conditional imports
 
-  //WebSocketChannel wsChannel;
-
-  //Check for web support
-
-  // if(!kIsWeb)
-  //   {
-  //     wsChannel= IOWebSocketChannel.connect(Uri.parse(webSocketLocalHost), pingInterval: const Duration(seconds: 15));
-  //   }
-  //  else
-  //    {
-  //      wsChannel= HtmlWebSocketChannel.connect(Uri.parse(webSocketLocalHost));
-  //    }
-
-
   //Fire Flutter Errors into Run Terminal
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.dumpErrorToConsole(details);
@@ -63,9 +49,6 @@ void main() async {
 
   bool? isDark = CacheHelper.getData(key: 'isDarkTheme'); //Getting the last Cached ThemeMode
   isDark ??= true;
-
-  // bool? onBoarding = CacheHelper.getData(key: 'onBoarding'); //To get if OnBoarding screen has been shown before, if true then straight to Login Screen.
-  // onBoarding ??= false;
 
   if (CacheHelper.getData(key: 'token') != null) {
     token = CacheHelper.getData(key: 'token'); // Get User Token

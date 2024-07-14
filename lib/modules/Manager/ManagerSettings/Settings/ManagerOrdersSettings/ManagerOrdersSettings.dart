@@ -7,6 +7,7 @@ import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerOrderDetails/ManagerOrderDetails.dart';
 import 'package:samaware_flutter/shared/components/Localization/Localization.dart';
 import 'package:samaware_flutter/shared/components/components.dart';
+import 'package:samaware_flutter/shared/components/constants.dart';
 import 'package:samaware_flutter/shared/styles/colors.dart';
 import 'package:string_extensions/string_extensions.dart';
 
@@ -34,53 +35,17 @@ class ManagerOrdersSettings extends StatelessWidget {
                   {
                     if(orientation == Orientation.portrait)
                     {
-                      return RefreshIndicator(
-                        onRefresh: ()async
-                        {
-                          cubit.getAllOrders();
-                          defaultToast(msg: Localization.translate('getting_all_orders_toast'));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(24.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children:
-                            [
-                              Align(
-                                alignment: AlignmentDirectional.topStart,
-                                child: Text(
-                                  Localization.translate('orders_details_settings_title'),
-                                  style: headlineTextStyleBuilder(),
-                                ),
-                              ),
-
-                              const SizedBox(height: 25,),
-
-                              Expanded(
-                                child: ListView.separated(
-                                  //physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, order: cubit.allOrders?.orders?[index]),
-                                  separatorBuilder: (context,index)=> const SizedBox(height: 20,),
-                                  itemCount: cubit.allOrders!.orders!.length,
-                                ),
-                              ),
-                            ],
-                          ),
+                      return ScrollConfiguration(
+                        behavior: ScrollConfiguration.of(context).copyWith(
+                          physics: const BouncingScrollPhysics(),
+                          dragDevices: dragDevices,
                         ),
-                      );
-                    }
-
-                    else
-                    {
-                      return RefreshIndicator(
-                        onRefresh: ()async
-                        {
-                          cubit.getAllOrders();
-                          defaultToast(msg: Localization.translate('getting_all_orders_toast'));
-                        },
-                        child: SingleChildScrollView(
-                          physics: const AlwaysScrollableScrollPhysics(),
+                        child: RefreshIndicator(
+                          onRefresh: ()async
+                          {
+                            cubit.getAllOrders();
+                            defaultToast(msg: Localization.translate('getting_all_orders_toast'));
+                          },
                           child: Padding(
                             padding: const EdgeInsets.all(24.0),
                             child: Column(
@@ -97,14 +62,62 @@ class ManagerOrdersSettings extends StatelessWidget {
 
                                 const SizedBox(height: 25,),
 
-                                ListView.separated(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, order: cubit.allOrders?.orders?[index]),
-                                  separatorBuilder: (context,index)=> const SizedBox(height: 20,),
-                                  itemCount: cubit.allOrders!.orders!.length,
+                                Expanded(
+                                  child: ListView.separated(
+                                    //physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, order: cubit.allOrders?.orders?[index]),
+                                    separatorBuilder: (context,index)=> const SizedBox(height: 20,),
+                                    itemCount: cubit.allOrders!.orders!.length,
+                                  ),
                                 ),
                               ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    else
+                    {
+                      return ScrollConfiguration(
+                        behavior: ScrollConfiguration.of(context).copyWith(
+                          physics: const BouncingScrollPhysics(),
+                          dragDevices: dragDevices,
+                        ),
+                        child: RefreshIndicator(
+                          onRefresh: ()async
+                          {
+                            cubit.getAllOrders();
+                            defaultToast(msg: Localization.translate('getting_all_orders_toast'));
+                          },
+                          child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            child: Padding(
+                              padding: const EdgeInsets.all(24.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children:
+                                [
+                                  Align(
+                                    alignment: AlignmentDirectional.topStart,
+                                    child: Text(
+                                      Localization.translate('orders_details_settings_title'),
+                                      style: headlineTextStyleBuilder(),
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 25,),
+
+                                  ListView.separated(
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, order: cubit.allOrders?.orders?[index]),
+                                    separatorBuilder: (context,index)=> const SizedBox(height: 20,),
+                                    itemCount: cubit.allOrders!.orders!.length,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

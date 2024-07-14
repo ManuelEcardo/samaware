@@ -149,168 +149,343 @@ class _ManagerCreateOrderState extends State<ManagerCreateOrder> {
                   builder: (BuildContext context)
                   {
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      mainAxisSize: MainAxisSize.min,
-                      children:
-                      [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                    return OrientationBuilder(
+                      builder: (context,orientation)
+                      {
+                        if(orientation == Orientation.portrait)
+                        {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisSize: MainAxisSize.min,
+                            children:
+                            [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
 
-                          children: [
-                            Expanded(
-                              child: Text(
-                                Localization.translate('order_number'),
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      Localization.translate('order_number'),
 
-                                style: headlineTextStyleBuilder(),
+                                      style: headlineTextStyleBuilder(),
+                                    ),
+                                  ),
+
+                                  Align(
+                                    alignment: AlignmentDirectional.topEnd,
+                                    child: Text(
+                                      '${cubit.orderFromExcel?.orderId}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: headlineTextStyleBuilder(),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
 
-                            Align(
-                              alignment: AlignmentDirectional.topEnd,
-                              child: Text(
-                                '${cubit.orderFromExcel?.orderId}',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: headlineTextStyleBuilder(),
+                              const SizedBox(height: 20,),
+
+                              Padding(
+                                padding: const EdgeInsetsDirectional.symmetric(horizontal: 12.0),
+                                child: myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
                               ),
-                            ),
-                          ],
-                        ),
 
-                        const SizedBox(height: 20,),
+                              const SizedBox(height: 35,),
 
-                        Padding(
-                          padding: const EdgeInsetsDirectional.symmetric(horizontal: 12.0),
-                          child: myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
-                        ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
 
-                        const SizedBox(height: 35,),
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      Localization.translate('worker_assignment'),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                                      style: headlineTextStyleBuilder(),
+                                    ),
+                                  ),
 
-                          children: [
-                            Expanded(
-                              child: Text(
-                                Localization.translate('worker_assignment'),
+                                  Expanded(
+                                    child: FormField<String>(
+                                      builder: (FormFieldState<String> state) {
+                                        return InputDecorator(
+                                          decoration: const InputDecoration(
+                                            enabledBorder: InputBorder.none,
+                                            border: InputBorder.none,
+                                            focusedBorder: InputBorder.none,
+                                            errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                                          ),
 
-                                style: headlineTextStyleBuilder(),
+                                          child: DropdownButtonHideUnderline(
+                                            child: DropdownButton<String>(
+                                              style: TextStyle(
+                                                  color: AppCubit.get(context).isDarkTheme? defaultDarkColor : defaultColor,
+                                                  fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'Railway'
+                                              ),
+                                              value: cubit.chosenWorker!.id,
+                                              isDense: true,
+                                              onChanged: (newValue)
+                                              {
+                                                cubit.setChosenWorker(id: newValue);
+                                              },
+                                              items: cubit.workers?.workers?.map((value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value.id,
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        value.name!,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        maxLines: 1,
+
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              }).toList(),
+
+
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
 
-                            Expanded(
-                              child: FormField<String>(
-                                builder: (FormFieldState<String> state) {
-                                  return InputDecorator(
-                                    decoration: const InputDecoration(
-                                      enabledBorder: InputBorder.none,
-                                      border: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                              const SizedBox(height: 20,),
+
+                              Padding(
+                                padding: const EdgeInsetsDirectional.symmetric(horizontal: 12.0),
+                                child: myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
+                              ),
+
+                              const SizedBox(height: 35,),
+
+                              Expanded(
+                                child: Scrollbar(
+                                  controller: scrollController,
+                                  thumbVisibility: true,
+                                  scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
+                                  interactive: true,
+                                  child: ListView.separated(
+                                      controller: scrollController,
+                                      scrollDirection: Axis.vertical,
+                                      itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: cubit.orderFromExcel!.items![index]),
+                                      separatorBuilder: (context, index)
+                                      {
+                                        return Column(
+                                          children: [
+
+                                            const SizedBox(height: 20,),
+
+                                            Padding(
+                                              padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
+                                              child: myDivider(
+                                                  color: cubit.isDarkTheme? defaultDarkColor : defaultColor
+                                              ),
+                                            ),
+
+                                            const SizedBox(height: 20,),
+                                          ],
+                                        );
+                                      },
+                                      itemCount: cubit.orderFromExcel!.items!.length
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 15,),
+
+                              Center(
+                                child: defaultButton(
+                                  title: Localization.translate('submit_button'),
+                                  color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                                  textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                                  onTap: ()
+                                  {
+
+                                    //This was written for if the user didn't choose a worker=> it will stay the number one but it won't be set at the orderFromExcel since it wasn't created yet
+                                    cubit.setChosenWorker(w:cubit.chosenWorker);
+
+                                    cubit.createOrder(cubit.orderFromExcel, context);
+                                  },
+                                ),
+                              ),
+
+                            ],
+                          );
+                        }
+
+                        else
+                        {
+                          return SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisSize: MainAxisSize.min,
+                              children:
+                              [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        Localization.translate('order_number'),
+
+                                        style: headlineTextStyleBuilder(),
+                                      ),
                                     ),
 
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton<String>(
-                                        style: TextStyle(
-                                            color: AppCubit.get(context).isDarkTheme? defaultDarkColor : defaultColor,
-                                            fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'Railway'
-                                        ),
-                                        value: cubit.chosenWorker!.id,
-                                        isDense: true,
-                                        onChanged: (newValue)
-                                        {
-                                          cubit.setChosenWorker(id: newValue);
-                                        },
-                                        items: cubit.workers?.workers?.map((value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value.id,
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  value.name!,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 1,
+                                    Align(
+                                      alignment: AlignmentDirectional.topEnd,
+                                      child: Text(
+                                        '${cubit.orderFromExcel?.orderId}',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: headlineTextStyleBuilder(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
 
+                                const SizedBox(height: 20,),
+
+                                Padding(
+                                  padding: const EdgeInsetsDirectional.symmetric(horizontal: 12.0),
+                                  child: myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
+                                ),
+
+                                const SizedBox(height: 35,),
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        Localization.translate('worker_assignment'),
+
+                                        style: headlineTextStyleBuilder(),
+                                      ),
+                                    ),
+
+                                    Expanded(
+                                      child: FormField<String>(
+                                        builder: (FormFieldState<String> state) {
+                                          return InputDecorator(
+                                            decoration: const InputDecoration(
+                                              enabledBorder: InputBorder.none,
+                                              border: InputBorder.none,
+                                              focusedBorder: InputBorder.none,
+                                              errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                                            ),
+
+                                            child: DropdownButtonHideUnderline(
+                                              child: DropdownButton<String>(
+                                                style: TextStyle(
+                                                    color: AppCubit.get(context).isDarkTheme? defaultDarkColor : defaultColor,
+                                                    fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'Railway'
                                                 ),
-                                              ],
+                                                value: cubit.chosenWorker!.id,
+                                                isDense: true,
+                                                onChanged: (newValue)
+                                                {
+                                                  cubit.setChosenWorker(id: newValue);
+                                                },
+                                                items: cubit.workers?.workers?.map((value) {
+                                                  return DropdownMenuItem<String>(
+                                                    value: value.id,
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          value.name!,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          maxLines: 1,
+
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                }).toList(),
+
+
+                                              ),
                                             ),
                                           );
-                                        }).toList(),
-
-
+                                        },
                                       ),
                                     ),
-                                  );
-                                },
-                              ),
+                                  ],
+                                ),
+
+                                const SizedBox(height: 20,),
+
+                                Padding(
+                                  padding: const EdgeInsetsDirectional.symmetric(horizontal: 12.0),
+                                  child: myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
+                                ),
+
+                                const SizedBox(height: 35,),
+
+                                Scrollbar(
+                                  controller: scrollController,
+                                  thumbVisibility: true,
+                                  scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
+                                  interactive: true,
+                                  child: ListView.separated(
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      controller: scrollController,
+                                      scrollDirection: Axis.vertical,
+                                      itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: cubit.orderFromExcel!.items![index]),
+                                      separatorBuilder: (context, index)
+                                      {
+                                        return Column(
+                                          children: [
+
+                                            const SizedBox(height: 20,),
+
+                                            Padding(
+                                              padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
+                                              child: myDivider(
+                                                  color: cubit.isDarkTheme? defaultDarkColor : defaultColor
+                                              ),
+                                            ),
+
+                                            const SizedBox(height: 20,),
+                                          ],
+                                        );
+                                      },
+                                      itemCount: cubit.orderFromExcel!.items!.length
+                                  ),
+                                ),
+
+                                const SizedBox(height: 15,),
+
+                                Center(
+                                  child: defaultButton(
+                                    title: Localization.translate('submit_button'),
+                                    color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                                    textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                                    onTap: ()
+                                    {
+
+                                      //This was written for if the user didn't choose a worker=> it will stay the number one but it won't be set at the orderFromExcel since it wasn't created yet
+                                      cubit.setChosenWorker(w:cubit.chosenWorker);
+
+                                      cubit.createOrder(cubit.orderFromExcel, context);
+                                    },
+                                  ),
+                                ),
+
+                              ],
                             ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 20,),
-
-                        Padding(
-                          padding: const EdgeInsetsDirectional.symmetric(horizontal: 12.0),
-                          child: myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
-                        ),
-
-                        const SizedBox(height: 35,),
-
-                        Expanded(
-                          child: Scrollbar(
-                            controller: scrollController,
-                            thumbVisibility: true,
-                            scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
-                            interactive: true,
-                            child: ListView.separated(
-                                controller: scrollController,
-                                scrollDirection: Axis.vertical,
-                                itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: cubit.orderFromExcel!.items![index]),
-                                separatorBuilder: (context, index)
-                                {
-                                  return Column(
-                                    children: [
-
-                                      const SizedBox(height: 20,),
-
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
-                                        child: myDivider(
-                                            color: cubit.isDarkTheme? defaultDarkColor : defaultColor
-                                        ),
-                                      ),
-
-                                      const SizedBox(height: 20,),
-                                    ],
-                                  );
-                                },
-                                itemCount: cubit.orderFromExcel!.items!.length
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 15,),
-
-                        Center(
-                          child: defaultButton(
-                            title: Localization.translate('submit_button'),
-                            color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
-                            textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
-                            onTap: ()
-                            {
-
-                              //This was written for if the user didn't choose a worker=> it will stay the number one but it won't be set at the orderFromExcel since it wasn't created yet
-                              cubit.setChosenWorker(w:cubit.chosenWorker);
-
-                              cubit.createOrder(cubit.orderFromExcel, context);
-                            },
-                          ),
-                        ),
-
-                      ],
-                    );
+                          );
+                        }
+                      });
                   },
 
                   fallback: (BuildContext context)=>Column(

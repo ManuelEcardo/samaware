@@ -340,7 +340,7 @@ class _LoginState extends State<Login> {
                                     Localization.translate('login_second_title'),//'Login Now and Start Revealing the Truth',
                                     style: TextStyle(
                                         fontSize: 16,
-                                        color: AppCubit.get(context).isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                                        color: AppCubit.get(context).isDarkTheme? Colors.white : defaultFontColor,
                                         fontFamily: AppCubit.language == 'ar'? 'Cairo': 'Poppins',
                                         fontWeight: FontWeight.w400
                                     ),

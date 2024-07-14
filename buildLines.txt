@@ -1,0 +1,4 @@
+flutter build apk --obfuscate --release --split-debug-info=D:\Mohammad\Documents\Work\Alsamah\SamaWare\samaware_flutter\obfuscateFiles
+
+
+ngrok http 3000 --domain conversely-inviting-gelding.ngrok-free.app

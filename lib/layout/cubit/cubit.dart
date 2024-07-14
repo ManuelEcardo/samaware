@@ -36,12 +36,41 @@ class AppCubit extends Cubit<AppStates>
 
   static AppCubit get(context)=> BlocProvider.of(context);
 
-  ///SET LISTENER FOR WEB SOCKETS, DEFAULT CALLED BY MAIN  //IOWebSocketChannel awsChannel
+  ///SET LISTENER FOR WEB SOCKETS, DEFAULT CALLED BY MAIN
   void setListener() {
     wsChannel.stream.listen((message)
     {
       //Parse JSON from String
       var jsonMessage= jsonDecode(message);
+
+      if(jsonMessage['type'] !=null)
+      {
+        try
+        {
+          emit(AppWSOrderUpdateLoadingState());
+
+          print('Got WS Message!, Type: ${jsonMessage['type']}');
+
+          switch(jsonMessage['type'])
+          {
+            case 'order':
+              getMyAPI(getAll: true);
+              break;
+
+            default:
+              break;
+          }
+
+          emit(AppWSOrderUpdateSuccessState());
+        }
+
+        catch (error)
+        {
+          print('ERROR WHILE RECEIVING WS MESSAGE, ${error.toString()}');
+          emit(AppWSOrderUpdateErrorState());
+        }
+
+      }
 
       // if(jsonMessage['posts']!=null)
       // {
@@ -118,9 +147,39 @@ class AppCubit extends Cubit<AppStates>
       print('Reconnecting WSChannel, app is Active ');
       wsChannel= getWebSocketChannel(webSocketLocalHost); //IOWebSocketChannel.connect(webSocketLocalHost);
       setListener();  //wsChannel
+
+      wsRegister(clientId: userData?.id); //re registering for web sockets
     }
   }
 
+
+  /// Register the client in ws
+  void wsRegister({required String? clientId})
+  {
+    if(wsChannel.closeCode != null || wsChannel.closeReason !=null)
+    {
+      _reConnectWsChannel();
+    }
+
+    if(token !='')
+    {
+      Map<String,dynamic> data=
+      {
+        "type":"register",
+        "clientId":clientId,
+        "token":token,
+      };
+
+      wsChannel.sink.add(jsonEncode(data));
+      print('Registered in ws');
+    }
+    else
+    {
+      print('No token yet, cannot register ws');
+    }
+  }
+
+  //------------------------------------\\
 
   ///List of BottomBarWidgets, Home, TextFiles, ChatBot and Profile
   List<Widget> bottomBarWidgets=
@@ -237,7 +296,7 @@ class AppCubit extends Cubit<AppStates>
   //----------------------------------------------------\\
 
   ///Will Get the required data depending on the user's role
-  void getMyAPI()
+  void getMyAPI({bool? getAll})
   {
     if(token !='')
     {
@@ -245,9 +304,12 @@ class AppCubit extends Cubit<AppStates>
       {
         case 'manager':
           print('Manager Role...');
+
           getWorkers();
           getNonReadyOrders();
           getWorkersDetails();
+          getAll?? getAllOrders();
+
           break;
 
         case 'worker':
@@ -301,6 +363,8 @@ class AppCubit extends Cubit<AppStates>
         userData= UserData.fromJson(value.data);
 
         alterBottomNavBarItems(userData?.role);
+
+        wsRegister(clientId: userData?.id);
 
         emit(AppGetUserDataSuccessState());
       }).catchError((error)
@@ -489,6 +553,7 @@ class AppCubit extends Cubit<AppStates>
       });
     }
   }
+
   //--------------------------------------------------------\\
 
   //Order File created by manager

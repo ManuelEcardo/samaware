@@ -1,9 +1,14 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 String localhost= kIsWeb? 'http://localhost:3000/' : 'http://10.0.2.2:3000/';
+const String webSocketLocalHost= kIsWeb? 'ws://localhost:3000/webSocket' : 'ws://10.0.2.2:3000/webSocket';
 
-const String webSocketLocalHost= kIsWeb? 'ws://localhost:3000/webSocket' : 'ws://10.0.2.2:3000/webSocket';  // ws://192.168.1.1:3000/webSocket
 
+//String localhost= 'http://192.168.1.1:3000/';
+//String webSocketLocalHost = 'ws://192.168.1.1:3000/webSocket';
+
+//String localhost= 'https://conversely-inviting-gelding.ngrok-free.app/'; //'http://192.168.1.1:3000/';
+//String webSocketLocalHost = 'ws://conversely-inviting-gelding.ngrok-free.app/webSocket'; // 'ws://192.168.1.1:3000/webSocket';
 
 
 //USER ENDPOINTS

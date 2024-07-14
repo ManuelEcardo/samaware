@@ -92,3 +92,11 @@ class AppGetAllOrdersErrorState extends AppStates{}
 
 class AppGetAllOrdersSuccessState extends AppStates{}
 //------------------------------------
+
+// WS ORDER NOTIFIER
+
+class AppWSOrderUpdateLoadingState extends AppStates{}
+
+class AppWSOrderUpdateSuccessState extends AppStates{}
+
+class AppWSOrderUpdateErrorState extends AppStates{}

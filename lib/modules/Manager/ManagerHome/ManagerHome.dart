@@ -120,9 +120,14 @@ class ManagerHome extends StatelessWidget {
                             children:
                             [
                               const Expanded(
-                                child: CircleAvatar(
-                                  backgroundImage: AssetImage('assets/images/profile/maleFigure.jpg'),
-                                  radius: 50,
+                                child: Column(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundImage: AssetImage('assets/images/profile/maleFigure.jpg'),
+                                      radius: 55,
+
+                                    ),
+                                  ],
                                 ),
                               ),
 
@@ -130,10 +135,10 @@ class ManagerHome extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   '${AppCubit.userData!.name!.capitalize} ${AppCubit.userData!.lastName!.capitalize} \n${Localization.translate(AppCubit.userData!.role!)}',
-                                  style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: AppCubit.language =='ar'? 'Cairo' : 'Poppins'
+                                  style: textStyleBuilder(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    isTitle: true,
                                   ),
                                 ),
                               ),
@@ -144,7 +149,7 @@ class ManagerHome extends StatelessWidget {
 
                           Padding(
                             padding: const EdgeInsetsDirectional.symmetric(horizontal: 18.0),
-                            child: myDivider(color: defaultDarkFontColor),
+                            child: myDivider(color: defaultCanvasDarkColor),
                           ),
 
                           const SizedBox(height: 50,),
@@ -174,7 +179,7 @@ class ManagerHome extends StatelessWidget {
                                     navigateTo(context, const ManagerCreateOrder());
                                   },
                                   child: Text(
-                                    'Add Now!',
+                                    Localization.translate('add_new_order_now'),
                                     style: textStyleBuilder(
                                         decoration: TextDecoration.underline,
                                         isTitle: true

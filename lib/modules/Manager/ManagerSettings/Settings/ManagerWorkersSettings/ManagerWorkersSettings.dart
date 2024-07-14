@@ -9,6 +9,7 @@ import 'package:samaware_flutter/modules/Manager/ManagerOrderDetails/ManagerOrde
 import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerWorkersSettings/WorkerDetailsPage.dart';
 import 'package:samaware_flutter/shared/components/Localization/Localization.dart';
 import 'package:samaware_flutter/shared/components/components.dart';
+import 'package:samaware_flutter/shared/components/constants.dart';
 import 'package:samaware_flutter/shared/styles/colors.dart';
 
 class ManagerWorkersSettings extends StatelessWidget {
@@ -31,67 +32,80 @@ class ManagerWorkersSettings extends StatelessWidget {
               condition: cubit.workersDetailsModel !=null,
               builder: (context)=>Padding(
                 padding: const EdgeInsets.all(24.0),
-                child: OrientationBuilder(
-                  builder: (context,orientation)
-                  {
-                    if(orientation == Orientation.portrait)
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context).copyWith(
+                    physics: const BouncingScrollPhysics(),
+                    dragDevices: dragDevices,
+                  ),
+                  child: RefreshIndicator(
+                    onRefresh: ()async
                     {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children:
-                        [
-                          Align(
-                            alignment: AlignmentDirectional.topStart,
-                            child: Text(
-                              Localization.translate('workers_details_settings_title'),
-                              style: headlineTextStyleBuilder(),
-                            ),
-                          ),
-
-                          const SizedBox(height: 25,),
-
-                          Expanded(
-                            child: ListView.separated(
-                              //physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, worker: cubit.workersDetailsModel?.workers?[index]),
-                              separatorBuilder: (context,index)=> const SizedBox(height: 20,),
-                              itemCount: cubit.workersDetailsModel!.workers!.length,
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-                    else
-                    {
-                      return SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children:
-                          [
-                            Align(
-                              alignment: AlignmentDirectional.topStart,
-                              child: Text(
-                                Localization.translate('workers_details_settings_title'),
-                                style: headlineTextStyleBuilder(),
+                      cubit.getWorkersDetails();
+                    },
+                    child: OrientationBuilder(
+                      builder: (context,orientation)
+                      {
+                        if(orientation == Orientation.portrait)
+                        {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children:
+                            [
+                              Align(
+                                alignment: AlignmentDirectional.topStart,
+                                child: Text(
+                                  Localization.translate('workers_details_settings_title'),
+                                  style: headlineTextStyleBuilder(),
+                                ),
                               ),
-                            ),
 
-                            const SizedBox(height: 25,),
+                              const SizedBox(height: 25,),
 
-                            ListView.separated(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, worker: cubit.workersDetailsModel?.workers?[index]),
-                              separatorBuilder: (context,index)=> const SizedBox(height: 20,),
-                              itemCount: cubit.workersDetailsModel!.workers!.length,
+                              Expanded(
+                                child: ListView.separated(
+                                  //physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, worker: cubit.workersDetailsModel?.workers?[index]),
+                                  separatorBuilder: (context,index)=> const SizedBox(height: 20,),
+                                  itemCount: cubit.workersDetailsModel!.workers!.length,
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        else
+                        {
+                          return SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children:
+                              [
+                                Align(
+                                  alignment: AlignmentDirectional.topStart,
+                                  child: Text(
+                                    Localization.translate('workers_details_settings_title'),
+                                    style: headlineTextStyleBuilder(),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 25,),
+
+                                ListView.separated(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, worker: cubit.workersDetailsModel?.workers?[index]),
+                                  separatorBuilder: (context,index)=> const SizedBox(height: 20,),
+                                  itemCount: cubit.workersDetailsModel!.workers!.length,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      );
-                    }
-                  },
+                          );
+                        }
+                      },
+                    ),
+                  ),
                 ),
               ),
               fallback: (context)=>Center(child: defaultProgressIndicator(context)),
