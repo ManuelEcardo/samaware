@@ -382,10 +382,11 @@ Widget defaultAlertDialog(
 PreferredSizeWidget defaultAppBar({
   required AppCubit cubit,
   List<Widget>? actions,
+  String? text,
 })=>AppBar(
 
   title: Text(
-    Localization.translate('appBar_title_home'),
+    Localization.translate(text??'appBar_title_home'),
     style: TextStyle(
       color: cubit.isDarkTheme? defaultDarkColor : defaultColor,
       fontFamily: AppCubit.language=='ar'? 'Cairo' : 'Poppins',

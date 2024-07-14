@@ -71,3 +71,13 @@ class AppGetNonReadyOrdersLoadingState extends AppStates{}
 class AppGetNonReadyOrdersErrorState extends AppStates{}
 
 class AppGetNonReadyOrdersSuccessState extends AppStates{}
+
+//------------------------------------
+
+// GET WORKERS WITH DETAILS
+
+class AppGetWorkersDetailsLoadingState extends AppStates{}
+
+class AppGetWorkersDetailsSuccessState extends AppStates{}
+
+class AppGetWorkersDetailsErrorState extends AppStates{}

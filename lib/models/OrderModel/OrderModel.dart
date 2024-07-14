@@ -40,10 +40,13 @@ class OrderModel
   String? status;
   List<OrderItem>? items=[];
 
-  OrderModel.fromJson(Map<String,dynamic>json)
+  //IsWorkerPassed and w are written for when we return the api /workers/details => we won't send in each order the worker details again, so we pass it literally since we have it.
+  OrderModel.fromJson(Map<String,dynamic>json, {bool isWorkerPassed=false, UserData? w})
   {
     orderId=json['order']['orderId'];
-    worker=UserData.fromJson(json['order']['workerId']);
+
+    worker=isWorkerPassed? w : UserData.fromJson(json['order']['workerId']);
+
     clientId=json['order']['clientId'];
 
     status=json['order']['status'];

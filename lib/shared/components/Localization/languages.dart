@@ -128,8 +128,6 @@ const Map<String,String> ar={
   'items_details_title':'عناصر هذه الطلبية',
 
 
-
-
   //Settings Manager
 
   'language_general_Settings':'اللغة الافتراضية',
@@ -141,6 +139,18 @@ const Map<String,String> ar={
   'english_general_settings':'الإنجليزية',
 
   'dark_mode_appearance':'الوضع الداكن',
+
+  'general_settings_title':'الإعدادات العامة',
+
+  'workers_settings_title':'العمال',
+
+  'orders_settings_title':'الطلبيات',
+
+  //Settings Manager: Workers
+
+  'workers_details_settings_title':'العمال وتفاصيلهم: ',
+
+
 
 
 
@@ -336,6 +346,18 @@ const Map<String,String> en={
   'english_general_settings':'English',
 
   'dark_mode_appearance':'Dark Mode',
+
+  'general_settings_title':'General Settings',
+
+  'workers_settings_title':'Workers',
+
+  'orders_settings_title':'Orders',
+
+  //Settings Manager: Workers
+
+  'workers_details_settings_title':'Workers With Details',
+
+
 
 
 

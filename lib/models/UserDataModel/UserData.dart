@@ -3,7 +3,7 @@ class UserData
   String? id;
   String? name;
   String? lastName;
-  String? birthDate;
+  //String? birthDate;
   String? email;
   String? role;
 
@@ -13,7 +13,7 @@ class UserData
     name=json['name'];
     lastName= json['last_name'];
     email=json['email'];
-    birthDate= json['birthDate'];
+    //birthDate= json['birthDate'];
     role=json['role'];
   }
 }

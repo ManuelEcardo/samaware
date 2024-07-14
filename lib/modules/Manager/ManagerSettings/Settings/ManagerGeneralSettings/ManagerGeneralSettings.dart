@@ -1,25 +1,24 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samaware_flutter/layout/cubit/cubit.dart';
-import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerGeneralSettings/ManagerGeneralSettings.dart';
-import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerOrdersSettings/ManagerOrdersSettings.dart';
-import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerWorkersSettings/ManagerWorkersSettings.dart';
-import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
+import 'package:samaware_flutter/layout/cubit/states.dart';
+import 'package:samaware_flutter/shared/components/Localization/Localization.dart';
+import 'package:samaware_flutter/shared/components/components.dart';
+import 'package:samaware_flutter/shared/network/local/cache_helper.dart';
+import 'package:samaware_flutter/shared/styles/colors.dart';
 
-import '../../../shared/network/local/cache_helper.dart';
-import '../../../shared/styles/colors.dart';
-
-class ManagerSettings extends StatefulWidget {
-  const ManagerSettings({super.key});
+class ManagerGeneralSettings extends StatefulWidget {
+  const ManagerGeneralSettings({super.key});
 
   @override
-  State<ManagerSettings> createState() => _ManagerSettingsState();
+  State<ManagerGeneralSettings> createState() => _ManagerGeneralSettingsState();
 }
 
-class _ManagerSettingsState extends State<ManagerSettings> {
-
+class _ManagerGeneralSettingsState extends State<ManagerGeneralSettings>
+{
   List<String> listOfLanguages = ['ar','en'];
 
   String currentLanguage= AppCubit.language??='en';
-
 
   @override
   Widget build(BuildContext context) {
@@ -31,81 +30,13 @@ class _ManagerSettingsState extends State<ManagerSettings> {
 
         return Directionality(
           textDirection: appDirectionality(),
+          child: Scaffold(
+            appBar: defaultAppBar(cubit: cubit, text: 'general_settings_title'),
+            body: SingleChildScrollView(
+              child: Directionality(
+                textDirection: appDirectionality(),
 
-          child: OrientationBuilder(
-            builder: (context,orientation)
-            {
-              if(orientation == Orientation.portrait)
-              {
-                return Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-
-                    children:
-                    [
-                      defaultBox(
-                          padding: 15,
-                          paddingOptions: false,
-                          cubit: cubit,
-                          boxColor: null, //cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
-                          child: Column(
-                            children:
-                            [
-                              itemBuilder(
-                                  icon: Icons.settings_outlined,
-                                  cubit: cubit,
-                                  text: Localization.translate('general_settings_title'),
-                                  onTap: ()
-                                  {
-                                    navigateTo(context, const ManagerGeneralSettings());
-                                  }
-                              ),
-
-                              const SizedBox(height: 10),
-
-                              myDivider(color: Colors.white),
-
-                              itemBuilder(
-                                  icon: Icons.person_outline_rounded,
-                                  cubit: cubit,
-                                  text: Localization.translate('workers_settings_title'),
-                                  onTap: ()
-                                  {
-                                    navigateTo(context, const ManagerWorkersSettings());
-                                  }
-                              ),
-
-                              const SizedBox(height: 10),
-
-                              myDivider(color: Colors.white),
-
-                              itemBuilder(
-                                  icon: Icons.reorder,
-                                  cubit: cubit,
-                                  text: Localization.translate('orders_settings_title'),
-                                  onTap: ()
-                                  {
-                                    navigateTo(context, const ManagerOrdersSettings());
-                                  }
-                              ),
-                            ],
-                          ),
-                          onTap: (){},
-                          manualBorderColor: true,
-                          borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor
-                      ),
-
-                      const SizedBox(height: 20,),
-
-                    ],
-                  ),
-                );
-              }
-              else
-              {
-                return SingleChildScrollView(
+                child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Column(
@@ -242,64 +173,16 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                           ],
                         ),
 
-                        const SizedBox(height: 20,),
-
-                        TextButton(onPressed: ()
-                        {
-                          navigateTo(context, ManagerGeneralSettings());
-                        }, child: Text('a')),
-
                       ],
                     ),
                   ),
-                );
-              }
-            },
+                ),
+              ),
+            ),
           ),
         );
       },
 
     );
   }
-
-  //Default item builder for each page
-  Widget itemBuilder({required IconData icon, required String text, required void Function()? onTap, required AppCubit cubit}) => GestureDetector(
-
-    onTap: onTap,
-
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children:
-      [
-        Icon(icon),
-
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsetsDirectional.only(start: 15.0),
-            child: Text(
-              text,
-              style: textStyleBuilder(),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ),
-
-        //const Spacer(),
-
-        Align(
-          alignment: AlignmentDirectional.topEnd,
-          child: IconButton(
-            onPressed: onTap,
-            icon: const Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 20,
-            ),
-            iconSize: 20,
-          ),
-        ),
-      ],
-    ),
-  );
 }

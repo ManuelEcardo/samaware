@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_excel/excel.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
+import 'package:samaware_flutter/models/WorkerDetailsModel/WorkerDetailsModel.dart';
 import 'package:samaware_flutter/models/WorkerModel/WorkerModel.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorHome/InspectorHome.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorPreviousOrders/InspectorPreviousOrders.dart';
@@ -246,7 +247,7 @@ class AppCubit extends Cubit<AppStates>
           print('Manager Role...');
           getWorkers();
           getNonReadyOrders();
-
+          getWorkersDetails();
           break;
 
         case 'worker':
@@ -269,7 +270,10 @@ class AppCubit extends Cubit<AppStates>
     else
     {
       print('No Token was found');
-      defaultToast(msg: 'No Token was Found');
+
+      if(!kIsWeb) {
+        defaultToast(msg: 'No Token was Found');
+      }
     }
   }
 
@@ -336,6 +340,34 @@ class AppCubit extends Cubit<AppStates>
       }
   }
 
+
+  WorkersDetailsModel? workersDetailsModel;
+  ///Gets the worker's along side their orders, all the details
+  void getWorkersDetails()
+  {
+    if(token!='')
+    {
+      print('In getting workers details...');
+      emit(AppGetWorkersDetailsLoadingState());
+
+      MainDioHelper.getData(
+        url: workersWithDetail,
+        token: token,
+      ).then((value)
+      {
+        print('Got Workers details...');
+
+        workersDetailsModel= WorkersDetailsModel.fromJson(value.data);
+
+        emit(AppGetWorkersDetailsSuccessState());
+      }).catchError((error, stackTrace)
+      {
+        print("ERROR WHILE GETTING WORKERS DETAILS, ${error.toString()}");
+        print(stackTrace);
+        emit(AppGetWorkersDetailsErrorState());
+      });
+    }
+  }
 
   //--------------------------------------------------\\
 

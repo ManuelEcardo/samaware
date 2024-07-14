@@ -14,6 +14,7 @@ const userDataByToken='users/me';
 
 const workersForManager='workers/';
 
+const workersWithDetail='workers/details';
 
 
 //ORDER ENDPOINTS
