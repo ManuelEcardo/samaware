@@ -371,6 +371,8 @@ Widget defaultAlertDialog(
     backgroundColor: AppCubit.get(context).isDarkTheme? defaultAlertDarkColor: defaultHomeColor,
 
     shape: Dialogs.dialogShape,
+
+
   );
 }
 
@@ -470,7 +472,8 @@ material.TextStyle headlineTextStyleBuilder({
   FontWeight fontWeight=FontWeight.w800,
   bool isTitle=true,
   Color? color,
-  TextDecoration decoration = TextDecoration.none
+  TextDecoration decoration = TextDecoration.none,
+
 
 })=>TextStyle(
   fontSize: fontSize,
@@ -506,7 +509,27 @@ String orderItemTypeFormatter(String t)
 }
 
 ///Translates the word
-String translateWord(String w)
+String translateWord(String? w)
 {
-  return Localization.translate(w);
+  return Localization.translate(w??'unknown');
+}
+
+//------------------------------------------------------------------------------------------\\
+
+///Calculates the difference in time
+String timePassedSince(String date)
+{
+  final intl.DateFormat formatter = intl.DateFormat('dd/MM/yyyy HH:mm:ss');
+  DateTime dateTime= formatter.parse(date);
+
+  final duration = DateTime.now().difference(dateTime);
+  if (duration.inDays > 0) {
+    return '${duration.inDays} ${Localization.translate('days_ago')}';
+  } else if (duration.inHours > 0) {
+    return '${duration.inHours} ${Localization.translate('hours_ago')}';
+  } else if (duration.inMinutes > 0) {
+    return '${duration.inMinutes} ${Localization.translate('minutes_ago')}';
+  } else {
+    return Localization.translate('just_now');
+  }
 }

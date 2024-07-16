@@ -19,6 +19,10 @@ ThemeData lightTheme(context) => ThemeData(
 
   ),
 
+  checkboxTheme: CheckboxThemeData(
+
+  ),
+
   canvasColor: defaultCanvasColor,
 
   primarySwatch: defaultColor,
@@ -140,6 +144,12 @@ ThemeData darkTheme(context)=> ThemeData(
     secondary: defaultSecondaryDarkColor,
     primary: defaultDarkColor,
 
+  ),
+
+  checkboxTheme: CheckboxThemeData(
+   side: BorderSide(
+     color: Colors.white
+   ),
   ),
 
   scaffoldBackgroundColor: defaultHomeDarkColor,

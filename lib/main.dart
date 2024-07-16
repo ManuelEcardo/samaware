@@ -1,27 +1,17 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:samaware_flutter/shared/bloc_observer.dart';
-import 'package:samaware_flutter/shared/components/Localization/Localization.dart';
-import 'package:samaware_flutter/shared/components/components.dart';
 import 'package:samaware_flutter/shared/components/constants.dart';
 import 'package:samaware_flutter/shared/network/end_points.dart';
-import 'package:samaware_flutter/shared/network/local/cache_helper.dart';
 import 'package:samaware_flutter/shared/network/remote/main_dio_helper.dart';
-import 'package:samaware_flutter/shared/styles/colors.dart';
 import 'package:samaware_flutter/shared/styles/themes.dart';
-
 import 'package:samaware_flutter/shared/components/Imports/conditional_import.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-
-import 'layout/cubit/cubit.dart';
-import 'layout/cubit/states.dart';
 import 'layout/home_layout.dart';
 import 'modules/Login/login.dart';
-import 'modules/on_boarding/on_boarding_screen.dart';
+import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 
 void main() async {
 

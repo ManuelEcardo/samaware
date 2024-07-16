@@ -9,6 +9,7 @@ import 'package:samaware_flutter/models/WorkerModel/WorkerModel.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorHome/InspectorHome.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorPreviousOrders/InspectorPreviousOrders.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorSettings/InspectorSettings.dart';
+import 'package:samaware_flutter/modules/Login/login.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerHome/ManagerHome.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerOrders/ManagerOrders.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerSettings/ManagerSettings.dart';
@@ -206,7 +207,7 @@ class AppCubit extends Cubit<AppStates>
       {
         switch (role)
         {
-          case 'manager':
+          case manager:
             bottomBarWidgets=
             [
               const ManagerHome(),
@@ -215,7 +216,7 @@ class AppCubit extends Cubit<AppStates>
             ];
             break;
 
-          case 'worker':
+          case worker:
             bottomBarWidgets=
             [
               const WorkerHome(),
@@ -224,7 +225,7 @@ class AppCubit extends Cubit<AppStates>
             ];
             break;
 
-          case 'inspector':
+          case inspector:
 
             bottomBarWidgets=
             [
@@ -235,7 +236,7 @@ class AppCubit extends Cubit<AppStates>
 
             break;
 
-          case 'priceSetter':
+          case priceSetter:
 
             bottomBarWidgets=
             [
@@ -302,7 +303,7 @@ class AppCubit extends Cubit<AppStates>
     {
       switch(CacheHelper.getData(key: 'role'))
       {
-        case 'manager':
+        case manager:
           print('Manager Role...');
 
           getWorkers();
@@ -312,15 +313,18 @@ class AppCubit extends Cubit<AppStates>
 
           break;
 
-        case 'worker':
+        case worker:
           print('Worker Role...');
+
+          getWaitingOrders();
+
           break;
 
-        case 'priceSetter':
+        case priceSetter:
           print('Price Setter Role...');
           break;
 
-        case 'inspector':
+        case inspector:
           print('Inspector Role...');
           break;
 
@@ -364,6 +368,7 @@ class AppCubit extends Cubit<AppStates>
 
         alterBottomNavBarItems(userData?.role);
 
+        print('In getUserData to wsRegister-> clientId:${userData?.id}');
         wsRegister(clientId: userData?.id);
 
         emit(AppGetUserDataSuccessState());
@@ -374,7 +379,6 @@ class AppCubit extends Cubit<AppStates>
       });
     }
   }
-
 
   WorkerModel? workers;
   ///Gets the workers data for manager
@@ -429,6 +433,116 @@ class AppCubit extends Cubit<AppStates>
         print("ERROR WHILE GETTING WORKERS DETAILS, ${error.toString()}");
         print(stackTrace);
         emit(AppGetWorkersDetailsErrorState());
+      });
+    }
+  }
+
+
+  ///Logout User and Remove his token from back-end side
+  bool logout({required BuildContext context, required String role})
+  {
+    emit(AppLogoutLoadingState());
+
+    MainDioHelper.postData(
+      url: logoutOneToken,
+      data: {},
+      token: token,
+    ).then((value) {
+
+      CacheHelper.saveData(key: 'token', value: '').then((value)
+      {
+        deleteAllData(role);
+
+        defaultToast(msg: Localization.translate('logout_successfully_toast'));
+
+        navigateAndFinish(context, const Login());
+        emit(AppLogoutSuccessState());
+
+        return true;
+
+      }).catchError((error)
+      {
+        defaultToast(msg: error.toString());
+        print('ERROR WHILE LOGGING OUT CACHE HELPER, ${error.toString()}');
+        emit(AppLogoutErrorState());
+        return false;
+      });
+
+    }).catchError((error)
+    {
+      print('ERROR WHILE LOGGING OUT, ${error.toString()}');
+      emit(AppLogoutErrorState());
+    });
+    return false;
+  }
+
+
+  ///Delete and empty All models and classes
+  void deleteAllData(String role)
+  {
+    CacheHelper.clearData(key: 'token');
+    token='';
+
+    currentBottomBarIndex=0;
+
+    switch(role)
+    {
+      case manager:
+
+        userData=null;
+        allOrders=null;
+        nonReadyOrders=null;
+        workersDetailsModel=null;
+        workers=null;
+
+        break;
+
+      case worker:
+
+        break;
+
+      case inspector:
+
+        break;
+
+      case priceSetter:
+
+        break;
+
+      default:
+        break;
+
+    }
+
+  }
+
+
+  //Worker Role
+
+  OrdersModel? workerWaitingOrders;
+  ///Get Orders waiting for you
+  void getWaitingOrders()
+  {
+    if(token!='')
+    {
+      emit(AppGetWorkerWaitingOrdersLoadingState());
+
+      print('Worker, in getWaitingOrders...');
+
+      MainDioHelper.getData(
+        url: getAwaitingOrders,
+        token: token,
+      ).then((value)
+      {
+        print('Got waitingOrders...');
+
+        workerWaitingOrders= OrdersModel.fromJson(value.data);
+
+        emit(AppGetWorkerWaitingOrdersSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING WORKER WAITING ORDERS, ${error.toString()}');
+        emit(AppGetWorkerWaitingOrdersErrorState());
       });
     }
   }
@@ -554,6 +668,65 @@ class AppCubit extends Cubit<AppStates>
     }
   }
 
+
+  ///Updates an order
+  void patchOrder({bool isWorkerWaitingOrders=false, required String orderId, required OrderState status, OrderDate? dateType, String? date})
+  {
+    if(token!='')
+    {
+      emit(AppPatchOrderLoadingState());
+      print('in patching order with id: $orderId');
+
+      MainDioHelper.patchData(
+        url: patchAnOrder,
+        data:
+        {
+          "id":orderId,
+          "status":status.name,
+          if(dateType!=null) dateType.name:date,
+        },
+        token: token,
+      ).then((value)
+      {
+        print('Got patch order data....');
+
+        getWaitingOrders();
+
+        // OrderModel order = OrderModel.fromJson(value.data);
+        //
+        // if(isWorkerWaitingOrders)
+        // {
+        //   for(OrderModel o in workerWaitingOrders?.orders??[])
+        //   {
+        //     if(o.orderId == order.orderId)
+        //     {
+        //       print('Found order to be changed in workerWaitingOrders...');
+        //       o=order;
+        //       break;
+        //     }
+        //   }
+        // }
+
+        emit(AppPatchOrderSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE PATCHING ORDER, ${error.toString()}');
+        emit(AppPatchOrderErrorState());
+      });
+    }
+  }
+
+
+
+  //Worker Orders
+
+  OrderModel? inWorkingOrder;
+  void setInWorkingOrder(OrderModel? o)
+  {
+    inWorkingOrder = o;
+    emit(AppSetInWorkingOrderState());
+
+  }
   //--------------------------------------------------------\\
 
   //Order File created by manager

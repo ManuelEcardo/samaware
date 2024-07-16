@@ -133,7 +133,7 @@ class ManagerWorkersSettings extends StatelessWidget {
         children:
         [
           Text(
-            worker?.worker?.name?? 'Worker Name',
+            '${worker?.worker?.name?? 'Worker Name'} ${worker?.worker?.lastName?? 'Worker Last'}',
             style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
           ),
 

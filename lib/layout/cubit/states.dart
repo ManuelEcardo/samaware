@@ -1,3 +1,5 @@
+import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
+
 abstract class AppStates{}
 
 class AppInitialState extends AppStates{}
@@ -100,3 +102,38 @@ class AppWSOrderUpdateLoadingState extends AppStates{}
 class AppWSOrderUpdateSuccessState extends AppStates{}
 
 class AppWSOrderUpdateErrorState extends AppStates{}
+
+//------------------------------------
+
+// LOGOUT
+
+class AppLogoutLoadingState extends AppStates{}
+class AppLogoutSuccessState extends AppStates{}
+class AppLogoutErrorState extends AppStates{}
+
+//------------------------------------
+
+//WORKER GET WAITING TO BE PREPARED ORDERS
+
+class AppGetWorkerWaitingOrdersLoadingState extends AppStates{}
+
+class AppGetWorkerWaitingOrdersSuccessState extends AppStates{}
+
+class AppGetWorkerWaitingOrdersErrorState extends AppStates{}
+
+//------------------------------------
+
+//PATCH ORDER
+
+class AppPatchOrderLoadingState extends AppStates{}
+
+class AppPatchOrderErrorState extends AppStates{}
+
+class AppPatchOrderSuccessState extends AppStates {}
+
+
+//------------------------------------
+
+// SET ORDER AS WORKING
+
+class AppSetInWorkingOrderState extends AppStates{}

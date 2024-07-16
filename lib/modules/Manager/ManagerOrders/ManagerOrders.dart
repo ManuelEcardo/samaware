@@ -113,7 +113,7 @@ class ManagerOrders extends StatelessWidget {
               const SizedBox(width: 10,),
 
               Text(
-                order?.worker?.name.capitalize?? 'Worker Name',
+                '${order?.worker?.name.capitalize?? 'Worker Name'} ${order?.worker?.lastName.capitalize?? 'Worker Last' }',
                 style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
               ),
             ],

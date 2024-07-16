@@ -87,6 +87,8 @@ const Map<String,String> ar={
 
   //ORDER STATES
 
+  'order_state_title':'حالة الطلبية: ',
+
   'waiting_to_be_prepared':'تنتظر أن تُحضر',
 
   'being_prepared':'يتم التحضير الآن',
@@ -160,6 +162,33 @@ const Map<String,String> ar={
 
 
 
+  //WORKER: HOME PAGE
+
+  'available_orders_worker':'الطلبيات المتاحة: ',
+
+  'getting_waiting_orders_toast':'يتم جلب الطلبيات المتوفرة',
+
+  //WORKER: ORDER DETAILS PAGE:
+
+  'prepare_order_dialog_title':'تحضير الطلب',
+
+  'prepare_order_dialog_sec':'هل تريد تحضير هذا الطلب, سيبدأ المؤقت عند ضغطك لنعم',
+
+
+
+
+  //DATES
+
+  'days_ago':'من الأيام',
+
+  'hours_ago':'من الساعات',
+
+  'minutes_ago':'من الدقائق',
+
+  'just_now':'للتو',
+
+
+
 
 
   //LOGIN
@@ -167,6 +196,16 @@ const Map<String,String> ar={
   'login_successfully_toast':'تمت بنجاح',
 
   'login_unknown_error_toast':'لم نستطيع تسجيل دخولك',
+
+  //LOGOUT
+
+  'logout_profile':'تسجيل الخروج',
+
+  'logout_secondary_title':'هل تريد تسجيل الخروج؟',
+
+  'logout_successfully_toast':'تم تسجيل الخروج بنجاح',
+
+
 
 
   //EXIT APP
@@ -277,6 +316,8 @@ const Map<String,String> en={
 
   //ORDER STATES
 
+  'order_state_title':'Order State: ',
+
   'waiting_to_be_prepared':'Waiting to be prepared',
 
   'being_prepared':'Being prepared',
@@ -375,6 +416,33 @@ const Map<String,String> en={
 
 
 
+  //WORKER: HOME PAGE
+
+  'available_orders_worker':'Available Orders: ',
+
+  'getting_waiting_orders_toast':'Getting Waiting Orders...',
+
+  //WORKER: ORDER DETAILS PAGE:
+
+  'prepare_order_dialog_title':'Prepare Order',
+
+  'prepare_order_dialog_sec':'Are you ready to prepare this order?\nThe timer will start when you press yes.',
+
+
+
+
+  //DATES
+
+  'days_ago':'day(s) ago',
+
+  'hours_ago':'hour(s) ago',
+
+  'minutes_ago':'minute(s) ago',
+
+  'just_now':'Just now!',
+
+
+
 
 
   //LOGIN
@@ -382,6 +450,16 @@ const Map<String,String> en={
   'login_successfully_toast':'Success',
 
   'login_unknown_error_toast':'Couldn\'t Sign you in',
+
+  //LOGOUT
+
+  'logout_profile':'Logout',
+
+  'logout_secondary_title':'Do you want to sign out?',
+
+  'logout_successfully_toast':'Logged out successfully',
+
+
 
   //--------------------------------------------------------------------\\
 

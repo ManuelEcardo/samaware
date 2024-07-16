@@ -16,11 +16,6 @@ class ManagerSettings extends StatefulWidget {
 
 class _ManagerSettingsState extends State<ManagerSettings> {
 
-  List<String> listOfLanguages = ['ar','en'];
-
-  String currentLanguage= AppCubit.language??='en';
-
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit,AppStates>(
@@ -104,6 +99,73 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                       ),
 
                       const SizedBox(height: 20,),
+
+                      defaultBox(
+                          padding: 15,
+                          paddingOptions: false,
+                          cubit: cubit,
+                          boxColor: null, //cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                          child: Column(
+                            children:
+                            [
+                              itemBuilder(
+                                  icon: Icons.logout_outlined,
+                                  cubit: cubit,
+                                  text: Localization.translate('logout_profile'),
+                                  onTap: ()
+                                  {
+                                    //cubit.logout(context: context, role: AppCubit.userData!.role!);
+
+
+                                    showDialog(
+                                      context: context,
+                                      builder: (dialogContext)
+                                      {
+                                        return defaultAlertDialog(
+                                          context: dialogContext,
+                                          title: Localization.translate('logout_profile'),
+                                          content: SingleChildScrollView(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children:
+                                              [
+                                                Text(Localization.translate('logout_secondary_title')),
+
+                                                const SizedBox(height: 5,),
+
+                                                Row(
+                                                  children:
+                                                  [
+                                                    TextButton(
+                                                        onPressed: ()=> cubit.logout(context: context, role: AppCubit.userData!.role!), //Navigator.of(context).pop(true),
+                                                        child: Text(Localization.translate('exit_app_yes'))
+                                                    ),
+
+                                                    const Spacer(),
+
+                                                    TextButton(
+                                                      onPressed: ()=> Navigator.of(dialogContext).pop(false),
+                                                      child: Text(Localization.translate('exit_app_no')),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    );
+                                  }
+                              ),
+
+                            ],
+                          ),
+                          onTap: (){},
+                          manualBorderColor: true,
+                          borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor
+                      ),
 
                     ],
                   ),

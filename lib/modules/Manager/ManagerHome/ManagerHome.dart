@@ -22,7 +22,7 @@ class ManagerHome extends StatelessWidget {
               if(orientation == Orientation.portrait)
                 {
                   return Padding(
-                    padding: const EdgeInsetsDirectional.only(top:24.0, bottom: 24.0, end: 24.0 ),
+                      padding: const EdgeInsetsDirectional.only(top:24.0, bottom: 24.0, end: 24.0 ),
                     child: Column(
                       //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children:

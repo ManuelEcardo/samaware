@@ -33,7 +33,7 @@ class WorkerDetailsPage extends StatelessWidget {
                   Align(
                     alignment: AlignmentDirectional.center,
                     child: Text(
-                      worker.worker?.name?? 'Worker Name',
+                      '${worker.worker?.name?? 'Worker Name'} ${worker.worker?.lastName?? 'Worker Last'}',
                       style: headlineTextStyleBuilder(),
                     ),
                   ),
