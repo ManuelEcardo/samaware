@@ -28,6 +28,8 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
   late DateTime date;
 
+  String? passedTime;
+
   @override
   void initState()
   {
@@ -106,7 +108,11 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                             [
                               textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder()),
 
-                              const SizedBox(height: 30,),
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder()),
+
+                              const SizedBox(height: 15,),
 
                               myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
 
@@ -173,7 +179,11 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                         [
                           textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder()),
 
-                          const SizedBox(height: 30,),
+                          const SizedBox(height: 15,),
+
+                          textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder()),
+
+                          const SizedBox(height: 15,),
 
                           myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
 
@@ -420,12 +430,12 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
       cubit.patchOrder(orderId: order.orderId!, status: OrderState.being_prepared, date: defaultDateFormatter.format(date), dateType: OrderDate.being_prepared_date);
 
-      setTimer(cubit: cubit);
+      setTimer(cubit: cubit, passedDate: date);
     });
   }
 
   /// Starts the timer
-  void setTimer({required AppCubit cubit})
+  void setTimer({required AppCubit cubit, DateTime? passedDate})
   {
     // Update every second
     timer = Timer.periodic(const Duration(seconds: 1), (Timer t)
@@ -434,7 +444,21 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
       {
         try {
           date=DateTime.now();
-          print('diff: ${date.difference(defaultDateFormatter.parse(cubit.inWorkingOrder!.beingPreparedDate!))}');
+
+          if(passedDate ==null)
+          {
+            passedTime= date.difference(defaultDateFormatter.parse(cubit.inWorkingOrder!.beingPreparedDate!)).inSeconds.toString();
+
+            print('diff: ${date.difference(defaultDateFormatter.parse(cubit.inWorkingOrder!.beingPreparedDate!))}');
+          }
+
+          else
+          {
+            passedTime = date.difference(passedDate!).inSeconds.toString() ;
+
+            print('diff: ${date.difference(passedDate!)}');
+          }
+
           print(t.tick);
         }
         catch (e, stackTrace)
@@ -445,4 +469,6 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
       });
     });
   }
+
+
 }

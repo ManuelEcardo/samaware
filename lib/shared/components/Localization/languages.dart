@@ -56,6 +56,8 @@ const Map<String,String> ar={
 
   'order_number':'رقم الطلبية:  ',
 
+  'passed_time':'الوقت المنقضي: ',
+
   'dozen':'دزينة',
 
   'piece':'قطعة',
@@ -284,6 +286,8 @@ const Map<String,String> en={
   'error_importing_file':'Error while importing file',
 
   'order_number':'Order Number: ',
+
+  'passed_time':'Passed time: ',
 
   'dozen':'Dozen',
 

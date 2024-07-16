@@ -517,10 +517,10 @@ String translateWord(String? w)
 //------------------------------------------------------------------------------------------\\
 
 ///Calculates the difference in time
-String timePassedSince(String date)
+String timePassedSinceByString(String date)
 {
-  final intl.DateFormat formatter = intl.DateFormat('dd/MM/yyyy HH:mm:ss');
-  DateTime dateTime= formatter.parse(date);
+  // final intl.DateFormat formatter = intl.DateFormat('dd/MM/yyyy HH:mm:ss');
+  DateTime dateTime= defaultDateFormatter.parse(date);
 
   final duration = DateTime.now().difference(dateTime);
   if (duration.inDays > 0) {

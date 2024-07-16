@@ -321,7 +321,7 @@ class _WorkerHomeState extends State<WorkerHome> {
         Align(
           alignment: AlignmentDirectional.topEnd,
           child: Text(
-            timePassedSince(order.waitingToBePreparedDate!),
+            timePassedSinceByString(order.waitingToBePreparedDate!),
             style: headlineTextStyleBuilder(fontSize: 20),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
