@@ -317,19 +317,23 @@ class AppCubit extends Cubit<AppStates>
           print('Worker Role...');
 
           getWaitingOrders();
-
+          getWorkerDoneOrders();
+          getAllWorkerOrders();
           break;
 
         case priceSetter:
           print('Price Setter Role...');
+
           break;
 
         case inspector:
           print('Inspector Role...');
+
           break;
 
         default:
           print('Default Role...');
+
           break;
       }
     }
@@ -498,6 +502,13 @@ class AppCubit extends Cubit<AppStates>
         break;
 
       case worker:
+        userData=null;
+        workerDoneOrders=null;
+        workerWaitingOrders=null;
+
+        inWorkingOrder=null;
+        workerDoneOrders=null;
+        allWorkerOrders=null;
 
         break;
 
@@ -670,7 +681,7 @@ class AppCubit extends Cubit<AppStates>
 
 
   ///Updates an order
-  void patchOrder({bool isWorkerWaitingOrders=false, required String orderId, required OrderState status, OrderDate? dateType, String? date})
+  void patchOrder({bool? isWorkerWaitingOrders, bool? getDoneOrders, required String orderId, required OrderState status, OrderDate? dateType, String? date})
   {
     if(token!='')
     {
@@ -690,22 +701,9 @@ class AppCubit extends Cubit<AppStates>
       {
         print('Got patch order data....');
 
-        getWaitingOrders();
+        isWorkerWaitingOrders!=null ? getWaitingOrders() : null;
 
-        // OrderModel order = OrderModel.fromJson(value.data);
-        //
-        // if(isWorkerWaitingOrders)
-        // {
-        //   for(OrderModel o in workerWaitingOrders?.orders??[])
-        //   {
-        //     if(o.orderId == order.orderId)
-        //     {
-        //       print('Found order to be changed in workerWaitingOrders...');
-        //       o=order;
-        //       break;
-        //     }
-        //   }
-        // }
+        getDoneOrders !=null? getWorkerDoneOrders() : null ;
 
         emit(AppPatchOrderSuccessState());
       }).catchError((error)
@@ -720,6 +718,7 @@ class AppCubit extends Cubit<AppStates>
 
   //Worker Orders
 
+  ///Order in WorkerPrepareOrder
   OrderModel? inWorkingOrder;
   void setInWorkingOrder(OrderModel? o)
   {
@@ -727,6 +726,64 @@ class AppCubit extends Cubit<AppStates>
     emit(AppSetInWorkingOrderState());
 
   }
+
+
+  OrdersModel? workerDoneOrders;
+  ///Get the [being-prepared, prepared] orders by a worker
+  void getWorkerDoneOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetWorkerDoneOrdersLoadingState());
+      print("In Getting Worker's Done Orders...");
+
+      MainDioHelper.getData(
+        url: doneOrdersByUser,
+        token: token,
+      ).then((value)
+      {
+        print('Got Worker Done Orders...');
+
+        workerDoneOrders = OrdersModel.fromJson(value.data);
+
+        emit(AppGetWorkerDoneOrdersSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING WORKER DONE ORDERS, ${error.toString()}');
+        emit(AppGetWorkerDoneOrdersErrorState());
+      });
+    }
+  }
+
+
+  OrdersModel? allWorkerOrders;
+  ///Get all the orders assigned to this worker
+  void getAllWorkerOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetAllOrdersWorkerLoadingState());
+
+      print('In getAllWorkerOrders...');
+
+      MainDioHelper.getData(
+        url: allOrdersWorker,
+        token: token,
+      ).then((value)
+      {
+        print('Got all Worker Orders...');
+
+        allWorkerOrders= OrdersModel.fromJson(value.data);
+
+        emit(AppGetAllOrdersWorkerSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING ALL ORDERS OF A WORKER, ${error.toString()}');
+        emit(AppGetAllOrdersWorkerErrorState());
+      });
+    }
+  }
+
   //--------------------------------------------------------\\
 
   //Order File created by manager

@@ -44,3 +44,7 @@ const notReadyOrders='orders/nonReady';
 const AllOrders='orders';
 
 const patchAnOrder='orders/patch';
+
+const doneOrdersByUser='orders/doneMe';
+
+const allOrdersWorker='orders/me';

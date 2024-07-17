@@ -211,7 +211,7 @@ ThemeData darkTheme(context)=> ThemeData(
   bottomNavigationBarTheme:  BottomNavigationBarThemeData(
     type: BottomNavigationBarType.fixed,
     backgroundColor: defaultBottomNavBarDarkColor,
-    selectedItemColor: defaultDarkColor,
+    selectedItemColor: defaultThirdDarkColor,
     unselectedIconTheme: const IconThemeData(color: Colors.white,),
     unselectedItemColor: Colors.white,
     elevation: 20,

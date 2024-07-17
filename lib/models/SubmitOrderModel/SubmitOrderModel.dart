@@ -52,7 +52,6 @@ class SubmitOrderModel
 
   @override
   String toString() {
-    // TODO: implement toString
     return "orderId:$orderId, registrationDate: $registrationDate, shippingDate: $shippingDate, workerId:$workerId, clientId: $clientId, items: ${items.toString()} ";
   }
 }

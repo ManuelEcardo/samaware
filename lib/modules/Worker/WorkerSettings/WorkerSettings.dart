@@ -1,4 +1,5 @@
 import 'package:samaware_flutter/modules/Worker/WorkerSettings/WorkerGeneralSettings/WorkerGeneralSettings.dart';
+import 'package:samaware_flutter/modules/Worker/WorkerSettings/WorkerOrdersSettings/WorkerOrdersSettings.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 
 class WorkerSettings extends StatelessWidget {
@@ -55,7 +56,9 @@ class WorkerSettings extends StatelessWidget {
                                   cubit: cubit,
                                   text: Localization.translate('orders_settings_title'),
                                   onTap: ()
-                                  {}
+                                  {
+                                    navigateTo(context, const WorkerOrdersSettings());
+                                  }
                               ),
                             ],
                           ),
@@ -175,7 +178,9 @@ class WorkerSettings extends StatelessWidget {
                                     cubit: cubit,
                                     text: Localization.translate('orders_settings_title'),
                                     onTap: ()
-                                    {}
+                                    {
+                                      navigateTo(context, const WorkerOrdersSettings());
+                                    }
                                 ),
                               ],
                             ),

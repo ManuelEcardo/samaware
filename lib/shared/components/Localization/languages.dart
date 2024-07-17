@@ -131,6 +131,18 @@ const Map<String,String> ar={
 
   'items_details_title':'عناصر هذه الطلبية',
 
+  'to_start_prepare_time':'الوقت لبدأ التحضير',
+
+  'preparation_time':'وقت تحضير الطلبية',
+
+  'to_start_pricing_time':'الوقت لبدء التسعير',
+
+  'pricing_time':'وقت التسعير',
+
+  'to_start_verifying_time':'الوقت لبدء التوثيق',
+
+  'verifying_time':'وقت التوثيق',
+
 
   //Settings Manager
 
@@ -170,11 +182,23 @@ const Map<String,String> ar={
 
   'getting_waiting_orders_toast':'يتم جلب الطلبيات المتوفرة',
 
+  'no_available_orders':'لا يوجد طلبات مخصصة لك بعد...',
+
   //WORKER: ORDER DETAILS PAGE:
 
   'prepare_order_dialog_title':'تحضير الطلب',
 
   'prepare_order_dialog_sec':'هل تريد تحضير هذا الطلب, سيبدأ المؤقت عند ضغطك لنعم',
+
+  'finish_prepare_title':'انتهى التحضير',
+
+  'finish_prepare_dialog_title':'التحضير',
+
+  'finish_prepare_dialog_secondary_title':'هل انتهيت من التحضير؟',
+
+  //WORKER PREVIOUS ORDERS PAGE:
+
+  'my_orders_title_worker':'طلبياتك',
 
 
 
@@ -386,6 +410,18 @@ const Map<String,String> en={
 
   'items_details_title':'This Order Items: ',
 
+  'to_start_prepare_time':'Time To start preparing',
+
+  'preparation_time':'Preparing',
+
+  'to_start_pricing_time':'Time To start pricing',
+
+  'pricing_time':'Pricing Time',
+
+  'to_start_verifying_time':'Time to start verifying',
+
+  'verifying_time':'Verifying Time',
+
 
 
   //Settings Manager
@@ -426,11 +462,23 @@ const Map<String,String> en={
 
   'getting_waiting_orders_toast':'Getting Waiting Orders...',
 
+  'no_available_orders':'No Available Orders',
+
   //WORKER: ORDER DETAILS PAGE:
 
   'prepare_order_dialog_title':'Prepare Order',
 
   'prepare_order_dialog_sec':'Are you ready to prepare this order?\nThe timer will start when you press yes.',
+
+  'finish_prepare_title':'Finish',
+
+  'finish_prepare_dialog_title':'Preparing',
+
+  'finish_prepare_dialog_secondary_title':'Have you finished preparing the order?',
+
+  //WORKER PREVIOUS ORDERS PAGE:
+
+  'my_orders_title_worker':'Your Orders: ',
 
 
 

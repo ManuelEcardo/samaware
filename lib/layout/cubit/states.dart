@@ -137,3 +137,26 @@ class AppPatchOrderSuccessState extends AppStates {}
 // SET ORDER AS WORKING
 
 class AppSetInWorkingOrderState extends AppStates{}
+
+//------------------------------------
+
+//GET DONE ORDERS BY WORKER
+
+class AppGetWorkerDoneOrdersLoadingState extends AppStates{}
+
+class AppGetWorkerDoneOrdersErrorState extends AppStates{}
+
+class AppGetWorkerDoneOrdersSuccessState extends AppStates{}
+
+//------------------------------------
+
+//GET ALL ORDERS OF A WORKER
+
+class AppGetAllOrdersWorkerLoadingState extends AppStates{}
+
+class AppGetAllOrdersWorkerSuccessState extends AppStates{}
+
+class AppGetAllOrdersWorkerErrorState extends AppStates{}
+
+
+//------------------------------------

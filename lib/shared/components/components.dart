@@ -533,3 +533,13 @@ String timePassedSinceByString(String date)
     return Localization.translate('just_now');
   }
 }
+
+//------------------------------------------------------------------------------------------\\
+
+///Format Duration to Hours:Minutes:Seconds
+String durationFormatToHMS(Duration duration) {
+  String twoDigits(int n) => n.toString().padLeft(2, '0');
+  String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+  String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+  return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+}

@@ -481,8 +481,8 @@ class _LoginState extends State<Login> {
                                     builder: (context)=> Center(child: defaultProgressIndicator(context)),
                                     fallback: (context)=> Center(
                                       child: defaultButton(
-                                        color: appCubit.isDarkTheme? defaultDarkColor : defaultColor,
-                                        textColor: appCubit.isDarkTheme? Colors.black : Colors.white,
+                                        color: appCubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                                        textColor: appCubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
                                         title: Localization.translate('submit_button_login'),
                                         fontFamily: AppCubit.language == 'ar'? 'Cairo': 'Poppins',
                                         letterSpacing:0,

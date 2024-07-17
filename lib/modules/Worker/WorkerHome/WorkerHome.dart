@@ -121,6 +121,12 @@ class _WorkerHomeState extends State<WorkerHome> {
 
                           const SizedBox(height: 30,),
 
+                          if(orders!=null && orders.orders!.isEmpty)
+                          Text(
+                            Localization.translate('no_available_orders'),
+                            style: textStyleBuilder(),
+                          ),
+
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsetsDirectional.only(start: 24.0),
@@ -164,10 +170,9 @@ class _WorkerHomeState extends State<WorkerHome> {
                   ),
                 );
               }
+
               else
               {
-                //Todo: complete the landscape
-
                 return ScrollConfiguration(
 
                   behavior: ScrollConfiguration.of(context).copyWith(
@@ -245,11 +250,18 @@ class _WorkerHomeState extends State<WorkerHome> {
 
                             const SizedBox(height: 30,),
 
+                            if(orders!=null && orders.orders!.isEmpty)
+                              Text(
+                                Localization.translate('no_available_orders'),
+                                style: textStyleBuilder(),
+                              ),
+
                             Padding(
                               padding: const EdgeInsetsDirectional.only(start: 24.0),
                               child: ConditionalBuilder(
                                 condition: orders!=null,
                                 builder: (context)=>ListView.separated(
+                                    physics: const NeverScrollableScrollPhysics(),
                                     shrinkWrap:true,
                                     itemBuilder: (context,index)
                                     {
@@ -261,7 +273,7 @@ class _WorkerHomeState extends State<WorkerHome> {
                                           child: itemBuilder(index: index, order: orders.orders![index]),
                                           onTap: ()
                                           {
-                                            if(orders.orders?[index] !=null )cubit.setInWorkingOrder(orders.orders![index]);
+                                            cubit.setInWorkingOrder(orders.orders?[index]);
 
                                             navigateTo(context, WorkerPrepareOrder(orderId:  orders.orders![index].orderId!,));
                                           },

@@ -151,6 +151,69 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                                   ),
                                 ),
                               ),
+
+                              const SizedBox(height: 30,),
+
+                              defaultButton(
+                                  color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                                  textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                                  title: Localization.translate('finish_prepare_title'),
+                                  onTap: ()
+                                  {
+                                    showDialog(
+                                        context: context,
+                                        builder: (dialogContext)
+                                        {
+                                          return defaultAlertDialog(
+                                            context: dialogContext,
+                                            title: Localization.translate('finish_prepare_dialog_title'),
+                                            content: SingleChildScrollView(
+                                                child: Column(
+                                                  children:
+                                                  [
+                                                    Text(
+                                                      Localization.translate('finish_prepare_dialog_secondary_title'),
+                                                      style: textStyleBuilder(),
+                                                    ),
+
+                                                    const SizedBox(height: 5,),
+
+                                                    Row(
+                                                      children:
+                                                      [
+                                                        TextButton(
+                                                            onPressed: ()
+                                                            {
+                                                              setState(()
+                                                              {
+                                                                cubit.patchOrder(orderId: order.orderId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrders: true);
+
+                                                                Navigator.of(dialogContext).pop();
+                                                                Navigator.of(context).pop();
+                                                              });
+                                                            },
+                                                            child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                                        ),
+
+                                                        const Spacer(),
+
+                                                        TextButton(
+                                                          onPressed: ()
+                                                          {
+                                                            Navigator.of(dialogContext).pop(false);
+                                                          },
+                                                          child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )
+                                            ),
+                                          );
+                                        }
+                                    );
+                                  }
+                              ),
                             ],
 
                           ),
@@ -222,6 +285,70 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                               ),
                             ),
                           ),
+
+                          const SizedBox(height: 30,),
+
+                          defaultButton(
+                            color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                            textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                            title: Localization.translate('finish_prepare_title'),
+                            onTap: ()
+                            {
+                              showDialog(
+                                context: context,
+                                builder: (dialogContext)
+                                {
+                                  return defaultAlertDialog(
+                                    context: dialogContext,
+                                    title: Localization.translate('finish_prepare_dialog_title'),
+                                    content: SingleChildScrollView(
+                                        child: Column(
+                                          children:
+                                          [
+                                            Text(
+                                              Localization.translate('finish_prepare_dialog_secondary_title'),
+                                              style: textStyleBuilder(),
+                                            ),
+
+                                            const SizedBox(height: 5,),
+
+                                            Row(
+                                              children:
+                                              [
+                                                TextButton(
+                                                    onPressed: ()
+                                                    {
+                                                      setState(()
+                                                      {
+                                                        cubit.patchOrder(orderId: order.orderId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrders: true);
+
+                                                        Navigator.of(dialogContext).pop();
+                                                        Navigator.of(context).pop();
+                                                      });
+                                                    },
+                                                    child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                                ),
+
+                                                const Spacer(),
+
+                                                TextButton(
+                                                  onPressed: ()
+                                                  {
+                                                    Navigator.of(dialogContext).pop(false);
+                                                  },
+                                                  child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                    ),
+                                  );
+                                }
+                              );
+
+                            }
+                          ),
                         ],
 
                       ),
@@ -231,13 +358,264 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
                 else
                 {
-                  //Todo build the landscape mode
-                  return SingleChildScrollView(
-                    child: Padding(
+                  if(order?.status == 'waiting_to_be_prepared')
+                  {
+                    return Stack(
+
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
+                            children:
+                            [
+                              textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder()),
+
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder()),
+
+                              const SizedBox(height: 15,),
+
+                              myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
+
+                              const SizedBox(height: 30,),
+
+                              Expanded(
+                                child: Scrollbar(
+                                  controller: scrollController,
+                                  thumbVisibility: true,
+                                  scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
+
+                                  child: ListView.separated(
+                                      controller: scrollController,
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      //physics: const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order!.items![index], itemIndex: index),
+                                      separatorBuilder: (context, index)
+                                      {
+                                        return Column(
+                                          children: [
+
+                                            const SizedBox(height: 20,),
+
+                                            Padding(
+                                              padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
+                                              child: myDivider(
+                                                  color: cubit.isDarkTheme? defaultDarkColor : defaultColor
+                                              ),
+                                            ),
+
+                                            const SizedBox(height: 20,),
+                                          ],
+                                        );
+                                      },
+                                      itemCount: order!.items!.length
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 30,),
+
+                              defaultButton(
+                                  color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                                  textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                                  title: Localization.translate('finish_prepare_title'),
+                                  onTap: ()
+                                  {
+                                    showDialog(
+                                        context: context,
+                                        builder: (dialogContext)
+                                        {
+                                          return defaultAlertDialog(
+                                            context: dialogContext,
+                                            title: Localization.translate('finish_prepare_dialog_title'),
+                                            content: SingleChildScrollView(
+                                                child: Column(
+                                                  children:
+                                                  [
+                                                    Text(
+                                                      Localization.translate('finish_prepare_dialog_secondary_title'),
+                                                      style: textStyleBuilder(),
+                                                    ),
+
+                                                    const SizedBox(height: 5,),
+
+                                                    Row(
+                                                      children:
+                                                      [
+                                                        TextButton(
+                                                            onPressed: ()
+                                                            {
+                                                              setState(()
+                                                              {
+                                                                cubit.patchOrder(orderId: order.orderId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrders: true);
+
+                                                                Navigator.of(dialogContext).pop();
+                                                                Navigator.of(context).pop();
+                                                              });
+                                                            },
+                                                            child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                                        ),
+
+                                                        const Spacer(),
+
+                                                        TextButton(
+                                                          onPressed: ()
+                                                          {
+                                                            Navigator.of(dialogContext).pop(false);
+                                                          },
+                                                          child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )
+                                            ),
+                                          );
+                                        }
+                                    );
+                                  }
+                              ),
+                            ],
+
+                          ),
+                        ),
+
+                        if(isBlurred)
+                          Positioned.fill(
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                              child: Container(
+                                //color: Colors.black.withOpacity(0.1),
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  }
+
+                  else
+                  {
+                    return Padding(
                       padding: const EdgeInsets.all(24.0),
-                      child: Column(),
-                    ),
-                  );
+                      child: Column(
+                        children:
+                        [
+                          textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder()),
+
+                          const SizedBox(height: 15,),
+
+                          textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder()),
+
+                          const SizedBox(height: 15,),
+
+                          myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
+
+                          const SizedBox(height: 30,),
+
+                          Expanded(
+                            child: Scrollbar(
+                              controller: scrollController,
+                              thumbVisibility: true,
+                              scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
+
+                              child: ListView.separated(
+                                  controller: scrollController,
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  //physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order!.items![index], itemIndex: index),
+                                  separatorBuilder: (context, index)
+                                  {
+                                    return Column(
+                                      children: [
+
+                                        const SizedBox(height: 20,),
+
+                                        Padding(
+                                          padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
+                                          child: myDivider(
+                                              color: cubit.isDarkTheme? defaultDarkColor : defaultColor
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 20,),
+                                      ],
+                                    );
+                                  },
+                                  itemCount: order!.items!.length
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 20,),
+
+                          defaultButton(
+                              color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                              textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                              title: Localization.translate('finish_prepare_title'),
+                              onTap: ()
+                              {
+                                showDialog(
+                                    context: context,
+                                    builder: (dialogContext)
+                                    {
+                                      return defaultAlertDialog(
+                                        context: dialogContext,
+                                        title: Localization.translate('finish_prepare_dialog_title'),
+                                        content: SingleChildScrollView(
+                                            child: Column(
+                                              children:
+                                              [
+                                                Text(
+                                                  Localization.translate('finish_prepare_dialog_secondary_title'),
+                                                  style: textStyleBuilder(),
+                                                ),
+
+                                                const SizedBox(height: 5,),
+
+                                                Row(
+                                                  children:
+                                                  [
+                                                    TextButton(
+                                                        onPressed: ()
+                                                        {
+                                                          setState(()
+                                                          {
+                                                            cubit.patchOrder(orderId: order.orderId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrders: true);
+
+                                                            Navigator.of(dialogContext).pop();
+                                                            Navigator.of(context).pop();
+                                                          });
+                                                        },
+                                                        child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                                    ),
+
+                                                    const Spacer(),
+
+                                                    TextButton(
+                                                      onPressed: ()
+                                                      {
+                                                        Navigator.of(dialogContext).pop(false);
+                                                      },
+                                                      child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            )
+                                        ),
+                                      );
+                                    }
+                                );
+                              }
+                          ),
+                        ],
+
+                      ),
+                    );
+                  }
                 }
               },
             ),
@@ -428,7 +806,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
       date = DateTime.now();
 
-      cubit.patchOrder(orderId: order.orderId!, status: OrderState.being_prepared, date: defaultDateFormatter.format(date), dateType: OrderDate.being_prepared_date);
+      cubit.patchOrder(orderId: order.orderId!, status: OrderState.being_prepared, date: defaultDateFormatter.format(date), dateType: OrderDate.being_prepared_date, isWorkerWaitingOrders: true);
 
       setTimer(cubit: cubit, passedDate: date);
     });
@@ -447,19 +825,17 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
           if(passedDate ==null)
           {
-            passedTime= date.difference(defaultDateFormatter.parse(cubit.inWorkingOrder!.beingPreparedDate!)).inSeconds.toString();
+            passedTime= durationFormatToHMS(date.difference(defaultDateFormatter.parse(cubit.inWorkingOrder!.beingPreparedDate!)));
 
-            print('diff: ${date.difference(defaultDateFormatter.parse(cubit.inWorkingOrder!.beingPreparedDate!))}');
+            //print('diff: ${date.difference(defaultDateFormatter.parse(cubit.inWorkingOrder!.beingPreparedDate!))}');
           }
 
           else
           {
-            passedTime = date.difference(passedDate!).inSeconds.toString() ;
+            passedTime = durationFormatToHMS(date.difference(passedDate));
 
-            print('diff: ${date.difference(passedDate!)}');
+            //print('diff: ${date.difference(passedDate!)}');
           }
-
-          print(t.tick);
         }
         catch (e, stackTrace)
         {
@@ -469,6 +845,9 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
       });
     });
   }
+
+
+
 
 
 }
