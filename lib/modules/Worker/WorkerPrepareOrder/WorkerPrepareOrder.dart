@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
-import 'package:samaware_flutter/shared/components/constants.dart';
 
 class WorkerPrepareOrder extends StatefulWidget {
   String orderId;
@@ -126,7 +125,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                                       controller: scrollController,
                                       scrollDirection: Axis.vertical,
                                       physics: const BouncingScrollPhysics(),
-                                      itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order!.items![index], itemIndex: index),
+                                      itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
                                       separatorBuilder: (context, index)
                                       {
                                         return Column(
@@ -260,7 +259,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                                   controller: scrollController,
                                   scrollDirection: Axis.vertical,
                                   physics: const BouncingScrollPhysics(),
-                                  itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order!.items![index], itemIndex: index),
+                                  itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
                                   separatorBuilder: (context, index)
                                   {
                                     return Column(
@@ -389,7 +388,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                                       scrollDirection: Axis.vertical,
                                       shrinkWrap: true,
                                       //physics: const NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order!.items![index], itemIndex: index),
+                                      itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
                                       separatorBuilder: (context, index)
                                       {
                                         return Column(
@@ -523,7 +522,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                                   scrollDirection: Axis.vertical,
                                   shrinkWrap: true,
                                   //physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order!.items![index], itemIndex: index),
+                                  itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
                                   separatorBuilder: (context, index)
                                   {
                                     return Column(

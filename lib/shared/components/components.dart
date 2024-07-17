@@ -97,15 +97,15 @@ Widget defaultBox(
       double padding=25,
       bool paddingOptions=true,
       required Widget child,
-      required void Function()? onTap,
+      void Function()? onTap,
       bool manualBorderColor=false,
       Color borderColor=Colors.white,
       Color? highlightColor,
       double? containerWidth,
 
     })=>InkWell(
-  highlightColor: highlightColor ,
   onTap: onTap,
+  highlightColor: highlightColor ,
   child:  Container(
 
     padding: paddingOptions? EdgeInsetsDirectional.only(start: padding/1.5, end:padding, bottom:padding*1.2, top:padding/1.5) : EdgeInsetsDirectional.only(start: padding, end:padding, bottom:padding, top:padding) ,

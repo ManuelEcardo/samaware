@@ -1,5 +1,7 @@
 import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerGeneralSettings/ManagerGeneralSettings.dart';
+import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerInspectorsSettings/ManagerInspectorsSettings.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerOrdersSettings/ManagerOrdersSettings.dart';
+import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerPriceSettersSettings/ManagerPriceSettersSettings.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerWorkersSettings/ManagerWorkersSettings.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 
@@ -75,7 +77,6 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                               ),
                             ],
                           ),
-                          onTap: (){},
                           manualBorderColor: true,
                           borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor
                       ),
@@ -110,13 +111,13 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                                   text: Localization.translate('priceSetters_settings_title'),
                                   onTap: ()
                                   {
-                                    // if(cubit.allOrders==null)
-                                    // {
-                                    //   print('getting all orders after press from settings...');
-                                    //   cubit.getAllOrders();
-                                    // }
-                                    //
-                                    // navigateTo(context, const ManagerOrdersSettings());
+                                    if(cubit.priceSettersDetailsModel==null)
+                                    {
+                                      print('getting all priceSetters details model after press from settings...');
+                                      cubit.getPriceSettersDetails();
+                                    }
+
+                                    navigateTo(context, const ManagerPriceSettersSettings());
                                   }
                               ),
 
@@ -130,18 +131,17 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                                   text: Localization.translate('inspectors_settings_title'),
                                   onTap: ()
                                   {
-                                    // if(cubit.allOrders==null)
-                                    // {
-                                    //   print('getting all orders after press from settings...');
-                                    //   cubit.getAllOrders();
-                                    // }
-                                    //
-                                    // navigateTo(context, const ManagerOrdersSettings());
+                                    if(cubit.inspectorsDetailsModel==null)
+                                    {
+                                      print('getting all inspector details after press from settings...');
+                                      cubit.getInspectorsDetails();
+                                    }
+
+                                    navigateTo(context, const ManagerInspectorsSettings());
                                   }
                               ),
                             ],
                           ),
-                          onTap: (){},
                           manualBorderColor: true,
                           borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor
                       ),
@@ -166,51 +166,50 @@ class _ManagerSettingsState extends State<ManagerSettings> {
 
 
                                     showDialog(
-                                      context: context,
-                                      builder: (dialogContext)
-                                      {
-                                        return defaultAlertDialog(
-                                          context: dialogContext,
-                                          title: Localization.translate('logout_profile'),
-                                          content: SingleChildScrollView(
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children:
-                                              [
-                                                Text(Localization.translate('logout_secondary_title')),
+                                        context: context,
+                                        builder: (dialogContext)
+                                        {
+                                          return defaultAlertDialog(
+                                            context: dialogContext,
+                                            title: Localization.translate('logout_profile'),
+                                            content: SingleChildScrollView(
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children:
+                                                [
+                                                  Text(Localization.translate('logout_secondary_title')),
 
-                                                const SizedBox(height: 5,),
+                                                  const SizedBox(height: 5,),
 
-                                                Row(
-                                                  children:
-                                                  [
-                                                    TextButton(
-                                                        onPressed: ()=> cubit.logout(context: context, role: AppCubit.userData!.role!), //Navigator.of(context).pop(true),
-                                                        child: Text(Localization.translate('exit_app_yes'))
-                                                    ),
+                                                  Row(
+                                                    children:
+                                                    [
+                                                      TextButton(
+                                                          onPressed: ()=> cubit.logout(context: context, role: AppCubit.userData!.role!), //Navigator.of(context).pop(true),
+                                                          child: Text(Localization.translate('exit_app_yes'))
+                                                      ),
 
-                                                    const Spacer(),
+                                                      const Spacer(),
 
-                                                    TextButton(
-                                                      onPressed: ()=> Navigator.of(dialogContext).pop(false),
-                                                      child: Text(Localization.translate('exit_app_no')),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
+                                                      TextButton(
+                                                        onPressed: ()=> Navigator.of(dialogContext).pop(false),
+                                                        child: Text(Localization.translate('exit_app_no')),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      }
+                                          );
+                                        }
                                     );
                                   }
                               ),
 
                             ],
                           ),
-                          onTap: (){},
                           manualBorderColor: true,
                           borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor
                       ),
@@ -269,7 +268,6 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                                 ),
                               ],
                             ),
-                            onTap: (){},
                             manualBorderColor: true,
                             borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor
                         ),
@@ -304,13 +302,13 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                                     text: Localization.translate('priceSetters_settings_title'),
                                     onTap: ()
                                     {
-                                      // if(cubit.allOrders==null)
-                                      // {
-                                      //   print('getting all orders after press from settings...');
-                                      //   cubit.getAllOrders();
-                                      // }
-                                      //
-                                      // navigateTo(context, const ManagerOrdersSettings());
+                                      if(cubit.priceSettersDetailsModel==null)
+                                      {
+                                        print('getting all priceSetters details model after press from settings...');
+                                        cubit.getPriceSettersDetails();
+                                      }
+
+                                      navigateTo(context, const ManagerPriceSettersSettings());
                                     }
                                 ),
 
@@ -324,18 +322,17 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                                     text: Localization.translate('inspectors_settings_title'),
                                     onTap: ()
                                     {
-                                      // if(cubit.allOrders==null)
-                                      // {
-                                      //   print('getting all orders after press from settings...');
-                                      //   cubit.getAllOrders();
-                                      // }
-                                      //
-                                      // navigateTo(context, const ManagerOrdersSettings());
+                                      if(cubit.inspectorsDetailsModel==null)
+                                      {
+                                        print('getting all inspector details after press from settings...');
+                                        cubit.getInspectorsDetails();
+                                      }
+
+                                      navigateTo(context, const ManagerInspectorsSettings());
                                     }
                                 ),
                               ],
                             ),
-                            onTap: (){},
                             manualBorderColor: true,
                             borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor
                         ),
@@ -404,7 +401,6 @@ class _ManagerSettingsState extends State<ManagerSettings> {
 
                               ],
                             ),
-                            onTap: (){},
                             manualBorderColor: true,
                             borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor
                         ),

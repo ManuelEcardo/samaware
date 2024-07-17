@@ -182,6 +182,13 @@ const Map<String,String> ar={
 
   'getting_all_orders_toast':'يتم جلب جميع الطلبات',
 
+  //Settings Manager: PriceSetters
+
+  'priceSetters_details_settings_title':'المُسعّرون وتفاصيلهم',
+
+  //Settings Manager: Inspectors
+  'inspectors_details_settings_title':'المدقّقون وتفاصيلهم',
+
 
 
   //WORKER: HOME PAGE
@@ -469,6 +476,14 @@ const Map<String,String> en={
   'orders_details_settings_title':'All Orders',
 
   'getting_all_orders_toast':'Getting all orders...',
+
+  //Settings Manager: PriceSetters
+
+  'priceSetters_details_settings_title':'Price Setters With Details',
+
+  //Settings Manager: Inspectors
+
+  'inspectors_details_settings_title':'Inspectors With Details',
 
 
 

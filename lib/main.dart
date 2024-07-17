@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:samaware_flutter/shared/bloc_observer.dart';
-import 'package:samaware_flutter/shared/components/constants.dart';
 import 'package:samaware_flutter/shared/network/end_points.dart';
 import 'package:samaware_flutter/shared/network/remote/main_dio_helper.dart';
 import 'package:samaware_flutter/shared/styles/themes.dart';

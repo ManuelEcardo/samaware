@@ -1,0 +1,146 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:samaware_flutter/models/PriceSettersDetailsModel/PriceSettersDetailsModel.dart';
+import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerPriceSettersSettings/PriceSetterDetailsPage.dart';
+import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
+class ManagerPriceSettersSettings extends StatelessWidget {
+  const ManagerPriceSettersSettings({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AppCubit,AppStates>(
+        listener: (context,state){},
+        builder: (context,state)
+        {
+          var cubit= AppCubit.get(context);
+          return Directionality(
+
+            textDirection: appDirectionality(),
+            child: Scaffold(
+              appBar: defaultAppBar(cubit: cubit, text: 'priceSetters_settings_title'),
+
+              body: ConditionalBuilder(
+                condition: cubit.priceSettersDetailsModel !=null,
+                builder: (context)=>Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(context).copyWith(
+                      physics: const BouncingScrollPhysics(),
+                      dragDevices: dragDevices,
+                    ),
+                    child: RefreshIndicator(
+                      onRefresh: ()async
+                      {
+                        cubit.getPriceSettersDetails();
+                      },
+                      child: OrientationBuilder(
+                        builder: (context,orientation)
+                        {
+                          if(orientation == Orientation.portrait)
+                          {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children:
+                              [
+                                Align(
+                                  alignment: AlignmentDirectional.topStart,
+                                  child: Text(
+                                    Localization.translate('priceSetters_details_settings_title'),
+                                    style: headlineTextStyleBuilder(),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 25,),
+
+                                Expanded(
+                                  child: ListView.separated(
+                                    shrinkWrap: true,
+                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, priceSetter: cubit.priceSettersDetailsModel?.priceSetters?[index]),
+                                    separatorBuilder: (context,index)=> const SizedBox(height: 20,),
+                                    itemCount: cubit.priceSettersDetailsModel!.priceSetters!.length,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                          else
+                          {
+                            return SingleChildScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children:
+                                [
+                                  Align(
+                                    alignment: AlignmentDirectional.topStart,
+                                    child: Text(
+                                      Localization.translate('workers_details_settings_title'),
+                                      style: headlineTextStyleBuilder(),
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 25,),
+
+                                  ListView.separated(
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, priceSetter: cubit.priceSettersDetailsModel?.priceSetters?[index]),
+                                    separatorBuilder: (context,index)=> const SizedBox(height: 20,),
+                                    itemCount: cubit.priceSettersDetailsModel!.priceSetters!.length,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                fallback: (context)=>Center(child: defaultProgressIndicator(context)),
+              ),
+            ),
+          );
+        }
+    );
+  }
+
+  Widget itemBuilder({required AppCubit cubit, required BuildContext context, required PriceSetterDetailsModel? priceSetter})
+  {
+    return defaultBox(
+      cubit: cubit,
+      highlightColor: cubit.isDarkTheme? defaultDarkColor.withOpacity(0.2) : defaultColor.withOpacity(0.2),
+      onTap: ()
+      {
+        navigateTo(context, PriceSetterDetailsPage(priceSetter: priceSetter!,));
+      },
+      boxColor: null,
+      borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor,
+      manualBorderColor: true,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children:
+        [
+          Text(
+            '${priceSetter?.priceSetter?.name?? 'Worker Name'} ${priceSetter?.priceSetter?.lastName?? 'Worker Last'}',
+            style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
+          ),
+
+          const SizedBox(width: 10,),
+
+          Text(
+            '|',
+            style: textStyleBuilder(fontSize: 24, fontWeight: FontWeight.w700),
+          ),
+
+          const SizedBox(width: 10,),
+
+          Text(
+            "${priceSetter?.orders?.length?? 'Total Orders'}",
+            style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -62,7 +62,6 @@ class WorkerSettings extends StatelessWidget {
                               ),
                             ],
                           ),
-                          onTap: (){},
                           manualBorderColor: true,
                           borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor
                       ),
@@ -131,7 +130,6 @@ class WorkerSettings extends StatelessWidget {
 
                             ],
                           ),
-                          onTap: (){},
                           manualBorderColor: true,
                           borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor
                       ),
@@ -184,7 +182,6 @@ class WorkerSettings extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            onTap: (){},
                             manualBorderColor: true,
                             borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor
                         ),
@@ -253,7 +250,6 @@ class WorkerSettings extends StatelessWidget {
 
                               ],
                             ),
-                            onTap: (){},
                             manualBorderColor: true,
                             borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor
                         ),
