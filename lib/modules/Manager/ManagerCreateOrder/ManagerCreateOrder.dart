@@ -234,7 +234,7 @@ class _ManagerCreateOrderState extends State<ManagerCreateOrder> {
                                                   child: Row(
                                                     children: [
                                                       Text(
-                                                        value.name!,
+                                                        '${value.name!} ${value.lastName!}',
                                                         overflow: TextOverflow.ellipsis,
                                                         maxLines: 1,
 
@@ -401,7 +401,7 @@ class _ManagerCreateOrderState extends State<ManagerCreateOrder> {
                                                     child: Row(
                                                       children: [
                                                         Text(
-                                                          value.name!,
+                                                          '${value.name!} ${value.lastName!}',
                                                           overflow: TextOverflow.ellipsis,
                                                           maxLines: 1,
 

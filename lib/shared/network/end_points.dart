@@ -27,6 +27,10 @@ const workersForManager='workers/';
 
 const workersWithDetail='workers/details';
 
+const priceSettersWithDetail='priceSetters/details';
+
+const inspectorWithDetail='inspectors/details';
+
 const logoutOneToken='users/logout';
 
 

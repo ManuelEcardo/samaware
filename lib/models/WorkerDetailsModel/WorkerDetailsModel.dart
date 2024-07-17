@@ -27,7 +27,7 @@ class WorkerWithDetailsModel
 
     json['orders'].forEach((order)
     {
-      orders?.add(OrderModel.fromJson(order, isWorkerPassed: true, w:worker));
+      orders?.add(OrderModel.fromJson(order, isWorkerPassed: true, worker:worker));
     });
 
   }

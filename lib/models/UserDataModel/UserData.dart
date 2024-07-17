@@ -13,7 +13,12 @@ class UserData
     name=json['name'];
     lastName= json['last_name'];
     email=json['email'];
-    //birthDate= json['birthDate'];
     role=json['role'];
+  }
+
+  @override
+  String toString()
+  {
+    return "ID:$id, Name:$name, Last name: $lastName, email:$email, role;$role";
   }
 }

@@ -1,14 +1,8 @@
-import 'dart:ui';
-
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:samaware_flutter/layout/cubit/cubit.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerOrderDetails/ManagerOrderDetails.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 import 'package:samaware_flutter/shared/components/constants.dart';
-import 'package:samaware_flutter/shared/styles/colors.dart';
-import 'package:samaware_flutter/shared/styles/styles.dart';
 import 'package:string_extensions/string_extensions.dart';
 
 class ManagerOrders extends StatelessWidget {
@@ -113,7 +107,7 @@ class ManagerOrders extends StatelessWidget {
               const SizedBox(width: 10,),
 
               Text(
-                '${order?.worker?.name.capitalize?? 'Worker Name'} ${order?.worker?.lastName.capitalize?? 'Worker Last' }',
+                '${order?.worker?.name.capitalize?? 'Name'} ${order?.worker?.lastName.capitalize?? 'Last' }',
                 style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
               ),
             ],

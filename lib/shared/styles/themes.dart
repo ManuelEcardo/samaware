@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hexcolor/hexcolor.dart';
+import 'package:samaware_flutter/layout/cubit/cubit.dart';
 
-import '../../layout/cubit/cubit.dart';
 import 'colors.dart';
 
 //Refer to: https://docs.flutter.dev/release/breaking-changes/theme-data-accent-properties

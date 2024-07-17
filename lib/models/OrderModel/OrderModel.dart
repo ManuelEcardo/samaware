@@ -1,6 +1,5 @@
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/models/UserDataModel/UserData.dart';
-import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 
 class OrdersModel
 {
@@ -23,6 +22,9 @@ class OrderModel
   UserData? worker;
   String? clientId;
 
+  UserData? priceSetter;
+  UserData? inspector;
+
   String? registrationDate;
   String? shippingDate;
   String? waitingToBePreparedDate; //waiting_to_be_prepared_date;
@@ -43,13 +45,17 @@ class OrderModel
   List<OrderItem>? items=[];
 
   //IsWorkerPassed and w are written for when we return the api /workers/details => we won't send in each order the worker details again, so we pass it literally since we have it.
-  OrderModel.fromJson(Map<String,dynamic>json, {bool isWorkerPassed=false, UserData? w})
+  OrderModel.fromJson(Map<String,dynamic>json, {bool isWorkerPassed=false, UserData? worker, bool isPriceSetterPassed=false, UserData? priceSetter, bool isInspectorPassed=false, UserData? inspector})
   {
     objectId= json['order']['_id'];
 
     orderId=json['order']['orderId'];
 
-    worker=isWorkerPassed? w : UserData.fromJson(json['order']['workerId']);
+    this.worker= isWorkerPassed? worker : UserData.fromJson(json['order']['workerId']);
+
+    if(json['order']['priceSetterId'] !=null) this.priceSetter= isPriceSetterPassed? priceSetter : UserData.fromJson(json['order']['priceSetterId']);
+
+    if(json['order']['inspectorId']!=null) this.inspector= isInspectorPassed? inspector : UserData.fromJson(json['order']['inspectorId']);
 
     clientId=json['order']['clientId'];
 
@@ -130,11 +136,7 @@ class OrderModel
       rePrepareDate=json['order']['re_prepare_date'];
     }
 
-
-
-
-
-
   }
+
 
 }

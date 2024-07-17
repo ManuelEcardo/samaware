@@ -2,8 +2,6 @@ import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/models/WorkerDetailsModel/WorkerDetailsModel.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerOrderDetails/ManagerOrderDetails.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
-import 'package:samaware_flutter/shared/styles/colors.dart';
-import 'package:string_extensions/string_extensions.dart';
 
 class WorkerDetailsPage extends StatelessWidget {
 

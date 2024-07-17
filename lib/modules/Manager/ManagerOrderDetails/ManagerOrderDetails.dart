@@ -33,6 +33,11 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
 
     items.add(MOD(title: 'order_number', value: widget.order.orderId, style: headlineTextStyleBuilder()));
     items.add(MOD(title: 'chosen_worker', value: '${widget.order.worker?.name} ${widget.order.worker?.lastName}'));
+
+    (widget.order.priceSetter?.name !=null && widget.order.priceSetter?.name !=null)? items.add(MOD(title: 'chosen_priceSetter', value: '${widget.order.priceSetter?.name} ${widget.order.priceSetter?.lastName}')) : null;
+
+    (widget.order.inspector?.name !=null && widget.order.inspector?.name !=null)? items.add(MOD(title: 'chosen_inspector', value: '${widget.order.inspector?.name} ${widget.order.inspector?.lastName}')) : null;
+
     items.add(MOD(title: 'order_reg_dialog', value: widget.order.registrationDate));
     items.add(MOD(title: 'order_ship_dialog', value: widget.order.shippingDate));
 

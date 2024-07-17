@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-
-import 'package:intl/intl.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
@@ -186,7 +184,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                                                             {
                                                               setState(()
                                                               {
-                                                                cubit.patchOrder(orderId: order.orderId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrders: true);
+                                                                cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrders: true);
 
                                                                 Navigator.of(dialogContext).pop();
                                                                 Navigator.of(context).pop();
@@ -320,7 +318,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                                                     {
                                                       setState(()
                                                       {
-                                                        cubit.patchOrder(orderId: order.orderId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrders: true);
+                                                        cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrders: true);
 
                                                         Navigator.of(dialogContext).pop();
                                                         Navigator.of(context).pop();
@@ -449,7 +447,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                                                             {
                                                               setState(()
                                                               {
-                                                                cubit.patchOrder(orderId: order.orderId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrders: true);
+                                                                cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrders: true);
 
                                                                 Navigator.of(dialogContext).pop();
                                                                 Navigator.of(context).pop();
@@ -583,7 +581,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                                                         {
                                                           setState(()
                                                           {
-                                                            cubit.patchOrder(orderId: order.orderId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrders: true);
+                                                            cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrders: true);
 
                                                             Navigator.of(dialogContext).pop();
                                                             Navigator.of(context).pop();
@@ -806,7 +804,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
       date = DateTime.now();
 
-      cubit.patchOrder(orderId: order.orderId!, status: OrderState.being_prepared, date: defaultDateFormatter.format(date), dateType: OrderDate.being_prepared_date, isWorkerWaitingOrders: true);
+      cubit.patchOrder(orderId: order.objectId!, status: OrderState.being_prepared, date: defaultDateFormatter.format(date), dateType: OrderDate.being_prepared_date, isWorkerWaitingOrders: true);
 
       setTimer(cubit: cubit, passedDate: date);
     });

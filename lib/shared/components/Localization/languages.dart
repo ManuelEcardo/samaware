@@ -127,6 +127,10 @@ const Map<String,String> ar={
 
   'chosen_worker':'الموظف المختار: ',
 
+  'chosen_priceSetter':'المُسعّر:',
+
+  'chosen_inspector':'المدقّق:',
+
   'view_items_details':'عرض المواد: ',
 
   'items_details_title':'عناصر هذه الطلبية',
@@ -161,6 +165,10 @@ const Map<String,String> ar={
   'workers_settings_title':'العمال',
 
   'orders_settings_title':'الطلبيات',
+
+  'priceSetters_settings_title':'المُسعّرون',
+
+  'inspectors_settings_title':'المدقّقون',
 
   //Settings Manager: Workers
 
@@ -406,6 +414,10 @@ const Map<String,String> en={
 
   'chosen_worker':'Chosen Worker: ',
 
+  'chosen_priceSetter':'Price Setter: ',
+
+  'chosen_inspector':'Inspector: ',
+
   'view_items_details':'View Items',
 
   'items_details_title':'This Order Items: ',
@@ -441,6 +453,10 @@ const Map<String,String> en={
   'workers_settings_title':'Workers',
 
   'orders_settings_title':'Orders',
+
+  'priceSetters_settings_title':'Price Setters',
+
+  'inspectors_settings_title':'Inspectors',
 
   //Settings Manager: Workers
 

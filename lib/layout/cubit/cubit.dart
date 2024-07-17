@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_excel/excel.dart';
+import 'package:samaware_flutter/models/InspectorsDetailsModel/InspectorsDetailsModel.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
+import 'package:samaware_flutter/models/PriceSettersDetailsModel/PriceSettersDetailsModel.dart';
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/models/WorkerDetailsModel/WorkerDetailsModel.dart';
 import 'package:samaware_flutter/models/WorkerModel/WorkerModel.dart';
@@ -311,6 +313,9 @@ class AppCubit extends Cubit<AppStates>
           getWorkersDetails();
           getAll?? getAllOrders();
 
+          getPriceSettersDetails();
+          getInspectorsDetails();
+
           break;
 
         case worker:
@@ -441,6 +446,62 @@ class AppCubit extends Cubit<AppStates>
     }
   }
 
+
+  PriceSettersDetailsModel? priceSettersDetailsModel;
+  ///Gets the priceSetters along side their orders, all the details
+  void getPriceSettersDetails()
+  {
+    if(token !='')
+    {
+      print('In getPriceSetterDetails...');
+      emit(AppGetPriceSettersDetailsLoadingState());
+
+      MainDioHelper.getData(
+        url: priceSettersWithDetail,
+        token: token,
+      ).then((value)
+      {
+        print('Got price setters details...');
+
+        priceSettersDetailsModel= PriceSettersDetailsModel.fromJson(value.data);
+
+        emit(AppGetPriceSettersDetailsSuccessState());
+      }).catchError((error, stackTrace)
+      {
+        print('ERROR WHILE GETTING PRICE SETTERS DETAILS, ${error.toString()}, $stackTrace');
+        emit(AppGetPriceSettersDetailsErrorState());
+      });
+    }
+  }
+
+
+  InspectorsDetailsModel? inspectorsDetailsModel;
+  ///Gets the inspectors along side their orders, all the details
+  void getInspectorsDetails()
+  {
+    if(token!='')
+    {
+      emit(AppGetInspectorsDetailsLoadingState());
+
+      print('In getInspectorDetails...');
+
+      MainDioHelper.getData(
+        url: inspectorWithDetail,
+        token:token
+      ).then((value)
+      {
+        print('Got Inspector details...');
+
+        inspectorsDetailsModel= InspectorsDetailsModel.fromJson(value.data);
+
+        emit(AppGetInspectorsDetailsSuccessState());
+      }).catchError((error, stackTrace)
+      {
+        print('ERROR WHILE GETTING INSPECTOR DETAILS, ${error.toString()}, $stackTrace');
+        emit(AppGetInspectorsDetailsErrorState());
+      });
+    }
+  }
 
   ///Logout User and Remove his token from back-end side
   bool logout({required BuildContext context, required String role})
@@ -603,6 +664,8 @@ class AppCubit extends Cubit<AppStates>
 
       defaultToast(msg: Localization.translate('order_submit_done_toast'));
 
+      getNonReadyOrders();
+
       emit(AppCreateOrderSuccessState());
 
       Navigator.of(context).pop(true);
@@ -636,6 +699,7 @@ class AppCubit extends Cubit<AppStates>
           print('Got Non Ready Orders data...');
 
           nonReadyOrders = OrdersModel.fromJson(value.data);
+
 
           emit(AppGetNonReadyOrdersSuccessState());
         }).catchError((error, stackTrace)
@@ -713,6 +777,7 @@ class AppCubit extends Cubit<AppStates>
       });
     }
   }
+
 
 
 

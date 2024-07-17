@@ -1,4 +1,3 @@
-import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 
 abstract class AppStates{}
 
@@ -160,3 +159,21 @@ class AppGetAllOrdersWorkerErrorState extends AppStates{}
 
 
 //------------------------------------
+
+// GET PRICE SETTERS DATA
+
+class AppGetPriceSettersDetailsLoadingState extends AppStates{}
+
+class AppGetPriceSettersDetailsErrorState extends AppStates{}
+
+class AppGetPriceSettersDetailsSuccessState extends AppStates{}
+
+//------------------------------------
+
+// GET INSPECTOR DATA
+
+class AppGetInspectorsDetailsLoadingState extends AppStates{}
+
+class AppGetInspectorsDetailsErrorState extends AppStates{}
+
+class AppGetInspectorsDetailsSuccessState extends AppStates{}

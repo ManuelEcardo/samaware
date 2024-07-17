@@ -1,14 +1,9 @@
-import 'dart:ui';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_excel/excel.dart';
-
-import 'package:fluttertoast/fluttertoast.dart'
-;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:material_dialogs/dialogs.dart';
 import 'package:samaware_flutter/shared/components/constants.dart';

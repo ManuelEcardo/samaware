@@ -1,0 +1,276 @@
+[
+  {
+    "_id": "6697f1c687cc15de937b65b5",
+    "name": "مسعر",
+    "last_name": "اول",
+    "email": "p1@test.com",
+    "role": "priceSetter",
+    "createdAt": "2024-07-17T16:31:02.739Z",
+    "updatedAt": "2024-07-17T16:31:02.778Z",
+    "__v": 1,
+    "orders": [
+      {
+        "order": {
+          "_id": "6697ecf62313136d29f9e5c0",
+          "orderId": "20538",
+          "registration_date": "06-07-2024",
+          "shipping_date": "06-07-2024",
+          "waiting_to_be_prepared_date": "17/07/2024 19:10:30",
+          "workerId": {
+            "_id": "668d0b9f0ee32e937a6c88a8",
+            "name": "حاسب",
+            "last_name": "نسائي 2",
+            "email": "s2@test.com",
+            "role": "worker",
+            "createdAt": "2024-07-09T10:06:23.156Z",
+            "updatedAt": "2024-07-17T17:10:36.407Z",
+            "__v": 4
+          },
+          "clientId": null,
+          "status": "waiting_to_be_prepared",
+          "items": null,
+          "createdAt": "2024-07-17T16:10:30.711Z",
+          "updatedAt": "2024-07-17T17:12:38.015Z",
+          "__v": 0,
+          "priceSetterId": "6697f1c687cc15de937b65b5"
+        },
+        "items": [
+          {
+            "itemId": "01000L00100",
+            "name": "شيفون سوكيت . ل 1 ق موحد",
+            "quantity": 9,
+            "type": "dozen"
+          },
+          {
+            "itemId": "01000L00200",
+            "name": "شيفون سوكيت . ل 2 ق موحد",
+            "quantity": 6,
+            "type": "dozen"
+          },
+          {
+            "itemId": "01010L00100",
+            "name": "شيفون قصيرة . ل 1 ق موحد",
+            "quantity": 6,
+            "type": "dozen"
+          },
+          {
+            "itemId": "01010L00200",
+            "name": "",
+            "quantity": 10,
+            "type": "dozen"
+          },
+          {
+            "itemId": "01010L00300",
+            "name": "",
+            "quantity": 10,
+            "type": "dozen"
+          },
+          {
+            "itemId": "01010L00400",
+            "name": "",
+            "quantity": 6,
+            "type": "dozen"
+          },
+          {
+            "itemId": "01010L03000",
+            "name": "",
+            "quantity": 10.5,
+            "type": "dozen"
+          },
+          {
+            "itemId": "02000L00100",
+            "name": "",
+            "quantity": 5,
+            "type": "dozen"
+          },
+          {
+            "itemId": "02000L00200",
+            "name": "",
+            "quantity": 2,
+            "type": "dozen"
+          },
+          {
+            "itemId": "02000L00300",
+            "name": "",
+            "quantity": 3,
+            "type": "dozen"
+          },
+          {
+            "itemId": "02000L00400",
+            "name": "",
+            "quantity": 4,
+            "type": "dozen"
+          },
+          {
+            "itemId": "02000L00800",
+            "name": "",
+            "quantity": 2,
+            "type": "dozen"
+          },
+          {
+            "itemId": "02010L00100",
+            "name": "",
+            "quantity": 3,
+            "type": "dozen"
+          },
+          {
+            "itemId": "02010L00200",
+            "name": "",
+            "quantity": 8,
+            "type": "dozen"
+          },
+          {
+            "itemId": "02010L00300",
+            "name": "",
+            "quantity": 8,
+            "type": "dozen"
+          },
+          {
+            "itemId": "02010L03000",
+            "name": "",
+            "quantity": 3,
+            "type": "dozen"
+          },
+          {
+            "itemId": "02020L03010",
+            "name": "",
+            "quantity": 2,
+            "type": "dozen"
+          },
+          {
+            "itemId": "02030L00110",
+            "name": "",
+            "quantity": 2,
+            "type": "dozen"
+          },
+          {
+            "itemId": "03000L00200",
+            "name": "",
+            "quantity": 4,
+            "type": "dozen"
+          },
+          {
+            "itemId": "03000L00400",
+            "name": "",
+            "quantity": 2,
+            "type": "dozen"
+          },
+          {
+            "itemId": "03000L00800",
+            "name": "",
+            "quantity": 2,
+            "type": "dozen"
+          },
+          {
+            "itemId": "03000L03000",
+            "name": "",
+            "quantity": 4,
+            "type": "dozen"
+          },
+          {
+            "itemId": "03010L00400",
+            "name": "",
+            "quantity": 2,
+            "type": "dozen"
+          },
+          {
+            "itemId": "03010L00800",
+            "name": "",
+            "quantity": 6,
+            "type": "dozen"
+          },
+          {
+            "itemId": "03010L01100",
+            "name": "",
+            "quantity": 3,
+            "type": "dozen"
+          },
+          {
+            "itemId": "05010L01110",
+            "name": "",
+            "quantity": 2,
+            "type": "dozen"
+          },
+          {
+            "itemId": "05010L02710",
+            "name": "",
+            "quantity": 3,
+            "type": "dozen"
+          },
+          {
+            "itemId": "05010L03010",
+            "name": "",
+            "quantity": 7,
+            "type": "dozen"
+          },
+          {
+            "itemId": "10030L00211",
+            "name": "",
+            "quantity": 0.5,
+            "type": "dozen"
+          },
+          {
+            "itemId": "45070L00200",
+            "name": "",
+            "quantity": 2,
+            "type": "dozen"
+          },
+          {
+            "itemId": "45070L00400",
+            "name": "",
+            "quantity": 2,
+            "type": "dozen"
+          },
+          {
+            "itemId": "48030L00211",
+            "name": "",
+            "quantity": 2,
+            "type": "dozen"
+          },
+          {
+            "itemId": "48030L00311",
+            "name": "",
+            "quantity": 1,
+            "type": "dozen"
+          },
+          {
+            "itemId": "48030L00410",
+            "name": "",
+            "quantity": 0.5,
+            "type": "dozen"
+          },
+          {
+            "itemId": "48031L00110",
+            "name": "",
+            "quantity": 3,
+            "type": "dozen"
+          },
+          {
+            "itemId": "48031L00210",
+            "name": "",
+            "quantity": 3,
+            "type": "dozen"
+          },
+          {
+            "itemId": "48031L00310",
+            "name": "",
+            "quantity": 2,
+            "type": "dozen"
+          },
+          {
+            "itemId": "803L73000202",
+            "name": "",
+            "quantity": 1,
+            "type": "dozen"
+          },
+          {
+            "itemId": "803L73000212",
+            "name": "",
+            "quantity": 1,
+            "type": "dozen"
+          }
+        ]
+      }
+    ]
+  }
+]
