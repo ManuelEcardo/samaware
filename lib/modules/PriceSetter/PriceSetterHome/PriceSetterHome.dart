@@ -184,7 +184,7 @@ class _PriceSetterHomeState extends State<PriceSetterHome> {
                   child: RefreshIndicator(
                     onRefresh: ()async
                     {
-                      cubit.getWaitingOrders();
+                      cubit.getWaitingOrdersPriceSetter();
                       defaultToast(msg: Localization.translate('getting_waiting_orders_toast'));
                     },
 

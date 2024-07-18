@@ -336,6 +336,10 @@ class AppCubit extends Cubit<AppStates>
         case inspector:
           print('Inspector Role...');
 
+          getWaitingOrdersInspector();
+          getInspectorDoneOrders();
+          getAllInspectorOrders();
+
           break;
 
         default:
@@ -344,6 +348,7 @@ class AppCubit extends Cubit<AppStates>
           break;
       }
     }
+
     else
     {
       print('No Token was found');
@@ -575,11 +580,18 @@ class AppCubit extends Cubit<AppStates>
 
         break;
 
-      case inspector:
+      case priceSetter:
+        userData=null;
+        priceSetterDoneOrders=null;
+        priceSetterWaitingOrders=null;
+
+        inWorkingOrder=null;
+        priceSetterDoneOrders=null;
+        allPriceSetterOrders=null;
 
         break;
 
-      case priceSetter:
+      case inspector:
 
         break;
 
@@ -655,6 +667,40 @@ class AppCubit extends Cubit<AppStates>
       {
         print('ERROR WHILE GETTING PRICE SETTER WAITING ORDERS, ${error.toString()}');
         emit(AppGetPriceSetterWaitingOrdersErrorState());
+      });
+    }
+  }
+
+
+  //--------------------------
+  //--------------------------
+
+  // INSPECTOR ROLE
+
+  OrdersModel? inspectorWaitingOrders;
+  ///Get Orders waiting for you
+  void getWaitingOrdersInspector()
+  {
+    if(token!='')
+    {
+      emit(AppGetInspectorWaitingOrdersLoadingState());
+
+      print('Inspector, in getWaitingOrders...');
+
+      MainDioHelper.getData(
+        url: getAwaitingOrdersInspector,
+        token: token,
+      ).then((value)
+      {
+        print('Got Inspector waitingOrders...');
+
+        inspectorWaitingOrders= OrdersModel.fromJson(value.data);
+
+        emit(AppGetInspectorWaitingOrdersSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING INSPECTOR WAITING ORDERS, ${error.toString()}');
+        emit(AppGetInspectorWaitingOrdersErrorState());
       });
     }
   }
@@ -788,6 +834,7 @@ class AppCubit extends Cubit<AppStates>
   void patchOrder({
     bool? isWorkerWaitingOrders, bool? getDoneOrdersWorker,
     bool? isPriceSetterWaitingOrders, bool? getDoneOrdersPriceSetter,
+    bool? isInspectorWaitingOrders, bool? getDoneOrdersInspector,
     bool? designatePriceSetter, bool? designateInspector,
     String? userId,
     required String orderId, required OrderState status,
@@ -816,12 +863,13 @@ class AppCubit extends Cubit<AppStates>
         print('Got patch order data....');
 
         isWorkerWaitingOrders!=null ? getWaitingOrders() : null;
-
         getDoneOrdersWorker !=null? getWorkerDoneOrders() : null;
 
         isPriceSetterWaitingOrders !=null? getWaitingOrdersPriceSetter() : null;
-
         getDoneOrdersPriceSetter !=null? getPriceSetterDoneOrders() : null;
+
+        isInspectorWaitingOrders !=null? getWaitingOrdersInspector(): null;
+        getDoneOrdersInspector !=null? getInspectorDoneOrders() :null;
 
         getMyAPI(); //Update the data
 
@@ -966,6 +1014,70 @@ class AppCubit extends Cubit<AppStates>
       });
     }
   }
+
+
+  //------------------------
+  //------------------------
+
+  // INSPECTOR ORDERS
+
+  OrdersModel? inspectorDoneOrders;
+  ///Get the [verified, being_verified] orders by an inspector
+  void getInspectorDoneOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetInspectorDoneOrdersLoadingState());
+      print("In Getting inspector's Done Orders...");
+
+      MainDioHelper.getData(
+        url: doneOrdersByUser,
+        token: token,
+      ).then((value)
+      {
+        print('Got inspector Done Orders...');
+
+        inspectorDoneOrders = OrdersModel.fromJson(value.data);
+
+        emit(AppGetInspectorDoneOrdersSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING INSPECTOR DONE ORDERS, ${error.toString()}');
+        emit(AppGetInspectorDoneOrdersErrorState());
+      });
+    }
+  }
+
+
+  OrdersModel? allInspectorOrders;
+  ///Get all the orders assigned to this inspector
+  void getAllInspectorOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetAllOrdersInspectorLoadingState());
+
+      print('In getAllInspectorOrders...');
+
+      MainDioHelper.getData(
+        url: allOrdersWorker,
+        token: token,
+      ).then((value)
+      {
+        print('Got all inspector Orders...');
+
+        allInspectorOrders= OrdersModel.fromJson(value.data);
+
+        emit(AppGetAllOrdersInspectorSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING ALL ORDERS OF AN INSPECTOR, ${error.toString()}');
+
+        emit(AppGetAllOrdersInspectorErrorState());
+      });
+    }
+  }
+
   //--------------------------------------------------------\\
 
   //Order File created by manager

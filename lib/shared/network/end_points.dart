@@ -40,7 +40,9 @@ const getAwaitingOrders= 'orders/waiting_me';
 
 //Price SETTER ENDPOINTS
 
-const getAwaitingOrdersPriceSetters= 'orders/priceInspector/waiting_me';
+const getAwaitingOrdersPriceSetters= 'orders/priceSetter/waiting_me';
+
+const getAwaitingOrdersInspector='orders/inspector/waiting_me';
 
 
 //ORDER ENDPOINTS

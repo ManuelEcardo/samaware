@@ -2,15 +2,15 @@ import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 
-class PriceSetterOrderItemsDetails extends StatefulWidget {
+class InspectorOrderItemsDetails extends StatefulWidget {
   OrderModel order;
-  PriceSetterOrderItemsDetails({super.key, required this.order});
+  InspectorOrderItemsDetails({super.key, required this.order});
 
   @override
-  State<PriceSetterOrderItemsDetails> createState() => _PriceSetterOrderItemsDetailsState();
+  State<InspectorOrderItemsDetails> createState() => _InspectorOrderItemsDetailsState();
 }
 
-class _PriceSetterOrderItemsDetailsState extends State<PriceSetterOrderItemsDetails> {
+class _InspectorOrderItemsDetailsState extends State<InspectorOrderItemsDetails> {
 
   late ScrollController scrollController;
 
@@ -75,7 +75,7 @@ class _PriceSetterOrderItemsDetailsState extends State<PriceSetterOrderItemsDeta
                         child: ListView.separated(
                             controller: scrollController,
                             scrollDirection: Axis.vertical,
-                            physics: BouncingScrollPhysics(),
+                            physics: const BouncingScrollPhysics(),
                             itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: widget.order.items![index]),
                             separatorBuilder: (context, index)
                             {
@@ -183,5 +183,4 @@ class _PriceSetterOrderItemsDetailsState extends State<PriceSetterOrderItemsDeta
       ],
     );
   }
-
 }
