@@ -138,7 +138,7 @@ class _WorkerHomeState extends State<WorkerHome> {
                                           padding: 15,
                                           paddingOptions: false,
                                           cubit: cubit,
-                                          boxColor: null, //cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                                          boxColor: null,
                                           child: itemBuilder(index: index, order: orders.orders![index]),
                                           onTap: ()
                                           {

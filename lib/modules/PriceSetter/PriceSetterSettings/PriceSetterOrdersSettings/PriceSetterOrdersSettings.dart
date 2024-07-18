@@ -1,10 +1,10 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
-import 'package:samaware_flutter/modules/Worker/WorkerOrderDetails/WorkerOrderDetails.dart';
+import 'package:samaware_flutter/modules/PriceSetter/PriceSetterOrderDetails/PriceSetterOrderDetails.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 
-class WorkerOrdersSettings extends StatelessWidget {
-  const WorkerOrdersSettings({super.key});
+class PriceSetterOrdersSettings extends StatelessWidget {
+  const PriceSetterOrdersSettings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,8 @@ class WorkerOrdersSettings extends StatelessWidget {
               appBar: defaultAppBar(cubit: cubit, text: 'orders_settings_title'),
 
               body: ConditionalBuilder(
-                condition: cubit.allWorkerOrders !=null,
+
+                condition: cubit.allPriceSetterOrders !=null,
 
                 builder: (context)=>OrientationBuilder(
                     builder: (context,orientation)
@@ -36,7 +37,7 @@ class WorkerOrdersSettings extends StatelessWidget {
                           child: RefreshIndicator(
                             onRefresh: ()async
                             {
-                              cubit.getAllWorkerOrders();
+                              cubit.getAllPriceSetterOrders();
                               defaultToast(msg: Localization.translate('getting_all_orders_toast'));
                             },
                             child: Padding(
@@ -59,9 +60,9 @@ class WorkerOrdersSettings extends StatelessWidget {
                                     child: ListView.separated(
                                       //physics: const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
-                                      itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, order: cubit.allWorkerOrders?.orders?[index]),
+                                      itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, order: cubit.allPriceSetterOrders?.orders?[index]),
                                       separatorBuilder: (context,index)=> const SizedBox(height: 20,),
-                                      itemCount: cubit.allWorkerOrders!.orders!.length,
+                                      itemCount: cubit.allPriceSetterOrders!.orders!.length,
                                     ),
                                   ),
                                 ],
@@ -81,7 +82,7 @@ class WorkerOrdersSettings extends StatelessWidget {
                           child: RefreshIndicator(
                             onRefresh: ()async
                             {
-                              cubit.getAllWorkerOrders();
+                              cubit.getAllPriceSetterOrders();
                               defaultToast(msg: Localization.translate('getting_all_orders_toast'));
                             },
                             child: SingleChildScrollView(
@@ -105,9 +106,9 @@ class WorkerOrdersSettings extends StatelessWidget {
                                     ListView.separated(
                                       physics: const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
-                                      itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, order: cubit.allWorkerOrders?.orders?[index]),
+                                      itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, order: cubit.allPriceSetterOrders?.orders?[index]),
                                       separatorBuilder: (context,index)=> const SizedBox(height: 20,),
-                                      itemCount: cubit.allWorkerOrders!.orders!.length,
+                                      itemCount: cubit.allPriceSetterOrders!.orders!.length,
                                     ),
                                   ],
                                 ),
@@ -134,7 +135,7 @@ class WorkerOrdersSettings extends StatelessWidget {
       highlightColor: cubit.isDarkTheme? defaultDarkColor.withOpacity(0.2) : defaultColor.withOpacity(0.2),
       onTap: ()
       {
-        navigateTo(context, WorkerOrderDetails(order: order!));
+        navigateTo(context, PriceSetterOrderDetails(order: order!));
       },
       boxColor: null,
       borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor,

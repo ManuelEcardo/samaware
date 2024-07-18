@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,52 +35,105 @@ class _HomeLayoutState extends State<HomeLayout> {
       {
         var cubit = AppCubit.get(context);
 
-        return Directionality(
-            textDirection: appDirectionality(),
-            child: ConditionalBuilder(
-              condition: AppCubit.userData !=null,
+        return PopScope(
+          canPop: false,
+          onPopInvoked: (didPop)
+          {
+            showDialog(
+                context: context,
+                builder: (dialogContext)
+                {
+                  return defaultAlertDialog(
+                    context: dialogContext,
+                    title: Localization.translate('logout_profile'),
+                    content: SingleChildScrollView(
+                        child: Column(
+                          children:
+                          [
+                            Text(
+                              Localization.translate('logout_secondary_title'),
+                              style: textStyleBuilder(),
+                            ),
 
-              builder: (BuildContext context)
-              {
-                return Scaffold(
-                  appBar: defaultAppBar(
-                    cubit: cubit,
-                    actions:
-                    [],
-                  ),
+                            const SizedBox(height: 5,),
 
-                  body: cubit.bottomBarWidgets[cubit.currentBottomBarIndex],
+                            Row(
+                              children:
+                              [
+                                TextButton(
+                                    onPressed: ()
+                                    {
+                                      exit(0);
+                                    },
+                                    child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                ),
 
-                  bottomNavigationBar: BottomNavigationBar(
-                    currentIndex: cubit.currentBottomBarIndex,
+                                const Spacer(),
 
-                    onTap: (index)
-                    {
-                      const Duration(milliseconds: 800);
-                      cubit.changeBottomNavBar(index);
-                    },
+                                TextButton(
+                                  onPressed: ()
+                                  {
+                                    Navigator.of(dialogContext).pop(false);
+                                  },
+                                  child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                    ),
+                  );
+                }
+            );
+          },
 
-                    items:
-                    [
-                      BottomNavigationBarItem(label: Localization.translate('home_bnb'), icon: const Icon(Icons.home)),
+          child: Directionality(
+              textDirection: appDirectionality(),
+              child: ConditionalBuilder(
+                condition: AppCubit.userData !=null,
 
-                      BottomNavigationBarItem(label: Localization.translate('orders_bnb') , icon: const Icon(Icons.list_alt_outlined)),
+                builder: (BuildContext context)
+                {
+                  return Scaffold(
+                    appBar: defaultAppBar(
+                      cubit: cubit,
+                      actions:
+                      [],
+                    ),
 
-                      BottomNavigationBarItem(label: Localization.translate('settings_bnb') ,icon: const Icon(Icons.settings_outlined)),
-                    ],
+                    body: cubit.bottomBarWidgets[cubit.currentBottomBarIndex],
 
-                  ),
+                    bottomNavigationBar: BottomNavigationBar(
+                      currentIndex: cubit.currentBottomBarIndex,
 
-                  resizeToAvoidBottomInset: false, //For Text File Page when adding text => won't resize itself
-                );
-              },
+                      onTap: (index)
+                      {
+                        const Duration(milliseconds: 800);
+                        cubit.changeBottomNavBar(index);
+                      },
 
-              fallback: (BuildContext context)=> Scaffold(
-                appBar: defaultAppBar(cubit: cubit),
+                      items:
+                      [
+                        BottomNavigationBarItem(label: Localization.translate('home_bnb'), icon: const Icon(Icons.home)),
 
-                body: Center(child: defaultProgressIndicator(context),),
+                        BottomNavigationBarItem(label: Localization.translate('orders_bnb') , icon: const Icon(Icons.list_alt_outlined)),
+
+                        BottomNavigationBarItem(label: Localization.translate('settings_bnb') ,icon: const Icon(Icons.settings_outlined)),
+                      ],
+
+                    ),
+
+                    resizeToAvoidBottomInset: false, //For Text File Page when adding text => won't resize itself
+                  );
+                },
+
+                fallback: (BuildContext context)=> Scaffold(
+                  appBar: defaultAppBar(cubit: cubit),
+
+                  body: Center(child: defaultProgressIndicator(context),),
+                ),
               ),
-            ),
+          ),
         );
       }
     );

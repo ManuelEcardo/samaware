@@ -38,6 +38,10 @@ const logoutOneToken='users/logout';
 
 const getAwaitingOrders= 'orders/waiting_me';
 
+//Price SETTER ENDPOINTS
+
+const getAwaitingOrdersPriceSetters= 'orders/priceInspector/waiting_me';
+
 
 //ORDER ENDPOINTS
 

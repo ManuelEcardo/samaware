@@ -177,3 +177,34 @@ class AppGetInspectorsDetailsLoadingState extends AppStates{}
 class AppGetInspectorsDetailsErrorState extends AppStates{}
 
 class AppGetInspectorsDetailsSuccessState extends AppStates{}
+
+//------------------------------------
+
+//PRICE SETTER GET WAITING TO BE PREPARED ORDERS
+
+class AppGetPriceSetterWaitingOrdersLoadingState extends AppStates{}
+
+class AppGetPriceSetterWaitingOrdersSuccessState extends AppStates{}
+
+class AppGetPriceSetterWaitingOrdersErrorState extends AppStates{}
+
+
+//------------------------------------
+
+//GET DONE ORDERS BY A PRICE SETTER
+
+class AppGetPriceSetterDoneOrdersLoadingState extends AppStates{}
+
+class AppGetPriceSetterDoneOrdersErrorState extends AppStates{}
+
+class AppGetPriceSetterDoneOrdersSuccessState extends AppStates{}
+
+//------------------------------------
+
+//GET ALL ORDERS OF A PRICE SETTER
+
+class AppGetAllOrdersPriceSetterLoadingState extends AppStates{}
+
+class AppGetAllOrdersPriceSetterSuccessState extends AppStates{}
+
+class AppGetAllOrdersPriceSetterErrorState extends AppStates{}

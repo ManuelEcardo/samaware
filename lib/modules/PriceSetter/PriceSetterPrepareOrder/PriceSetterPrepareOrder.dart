@@ -1,18 +1,22 @@
 import 'dart:async';
 import 'dart:ui';
+
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 
-class WorkerPrepareOrder extends StatefulWidget {
+class PriceSetterPrepareOrder extends StatefulWidget {
   String orderId;
-  WorkerPrepareOrder({super.key, required this.orderId});
+
+  PriceSetterPrepareOrder({super.key, required this.orderId});
+
 
   @override
-  State<WorkerPrepareOrder> createState() => _WorkerPrepareOrderState();
+  State<PriceSetterPrepareOrder> createState() => _PriceSetterPrepareOrderState();
 }
 
-class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
+class _PriceSetterPrepareOrderState extends State<PriceSetterPrepareOrder> {
+
 
   late ScrollController scrollController;
   List<bool> checkBoxValues=[];
@@ -22,6 +26,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
   //timer to click each second to show the time
   Timer? timer;
+
 
   late DateTime date;
 
@@ -48,12 +53,12 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
     WidgetsBinding.instance.addPostFrameCallback((_)
     {
-      if (cu.inWorkingOrder!.status == 'waiting_to_be_prepared')
+      if (cu.inWorkingOrder!.status == OrderState.prepared.name)
       {
         _showDialog(context, cu.inWorkingOrder!);
       }
 
-      if(cu.inWorkingOrder!.beingPreparedDate !=null)
+      if(cu.inWorkingOrder!.beingPricedDate !=null)
       {
         date = DateTime.now();
         setTimer(cubit: cu);
@@ -70,6 +75,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +98,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
               {
                 if(orientation == Orientation.portrait)
                 {
-                  if(order?.status == 'waiting_to_be_prepared')
+                  if(order?.status == OrderState.prepared.name)
                   {
 
                     return Stack(
@@ -183,7 +189,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                                                             {
                                                               setState(()
                                                               {
-                                                                cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrdersWorker: true);
+                                                                cubit.patchOrder(orderId: order.objectId!, status: OrderState.priced, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.priced_date, isPriceSetterWaitingOrders: true, getDoneOrdersPriceSetter: true);
 
                                                                 Navigator.of(dialogContext).pop();
                                                                 Navigator.of(context).pop();
@@ -286,65 +292,65 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                           const SizedBox(height: 30,),
 
                           defaultButton(
-                            color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
-                            textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
-                            title: Localization.translate('finish_prepare_title'),
-                            onTap: ()
-                            {
-                              showDialog(
-                                context: context,
-                                builder: (dialogContext)
-                                {
-                                  return defaultAlertDialog(
-                                    context: dialogContext,
-                                    title: Localization.translate('finish_prepare_dialog_title'),
-                                    content: SingleChildScrollView(
-                                        child: Column(
-                                          children:
-                                          [
-                                            Text(
-                                              Localization.translate('finish_prepare_dialog_secondary_title'),
-                                              style: textStyleBuilder(),
-                                            ),
-
-                                            const SizedBox(height: 5,),
-
-                                            Row(
+                              color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                              textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                              title: Localization.translate('finish_prepare_title'),
+                              onTap: ()
+                              {
+                                showDialog(
+                                    context: context,
+                                    builder: (dialogContext)
+                                    {
+                                      return defaultAlertDialog(
+                                        context: dialogContext,
+                                        title: Localization.translate('finish_prepare_dialog_title'),
+                                        content: SingleChildScrollView(
+                                            child: Column(
                                               children:
                                               [
-                                                TextButton(
-                                                    onPressed: ()
-                                                    {
-                                                      setState(()
-                                                      {
-                                                        cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrdersWorker: true);
-
-                                                        Navigator.of(dialogContext).pop();
-                                                        Navigator.of(context).pop();
-                                                      });
-                                                    },
-                                                    child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                                Text(
+                                                  Localization.translate('finish_prepare_dialog_secondary_title'),
+                                                  style: textStyleBuilder(),
                                                 ),
 
-                                                const Spacer(),
+                                                const SizedBox(height: 5,),
 
-                                                TextButton(
-                                                  onPressed: ()
-                                                  {
-                                                    Navigator.of(dialogContext).pop(false);
-                                                  },
-                                                  child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                                Row(
+                                                  children:
+                                                  [
+                                                    TextButton(
+                                                        onPressed: ()
+                                                        {
+                                                          setState(()
+                                                          {
+                                                            cubit.patchOrder(orderId: order.objectId!, status: OrderState.priced, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.priced_date, isPriceSetterWaitingOrders: true, getDoneOrdersPriceSetter: true);
+
+                                                            Navigator.of(dialogContext).pop();
+                                                            Navigator.of(context).pop();
+                                                          });
+                                                        },
+                                                        child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                                    ),
+
+                                                    const Spacer(),
+
+                                                    TextButton(
+                                                      onPressed: ()
+                                                      {
+                                                        Navigator.of(dialogContext).pop(false);
+                                                      },
+                                                      child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                                    ),
+                                                  ],
                                                 ),
                                               ],
-                                            ),
-                                          ],
-                                        )
-                                    ),
-                                  );
-                                }
-                              );
+                                            )
+                                        ),
+                                      );
+                                    }
+                                );
 
-                            }
+                              }
                           ),
                         ],
 
@@ -355,7 +361,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
                 else
                 {
-                  if(order?.status == 'waiting_to_be_prepared')
+                  if(order?.status == OrderState.prepared.name)
                   {
                     return Stack(
 
@@ -446,7 +452,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                                                             {
                                                               setState(()
                                                               {
-                                                                cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrdersWorker: true);
+                                                                cubit.patchOrder(orderId: order.objectId!, status: OrderState.priced, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.priced_date, isPriceSetterWaitingOrders: true, getDoneOrdersPriceSetter: true);
 
                                                                 Navigator.of(dialogContext).pop();
                                                                 Navigator.of(context).pop();
@@ -580,7 +586,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                                                         {
                                                           setState(()
                                                           {
-                                                            cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrdersWorker: true);
+                                                            cubit.patchOrder(orderId: order.objectId!, status: OrderState.priced, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.priced_date, isPriceSetterWaitingOrders: true, getDoneOrdersPriceSetter: true);
 
                                                             Navigator.of(dialogContext).pop();
                                                             Navigator.of(context).pop();
@@ -621,6 +627,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
       },
     );
   }
+
 
   ///Prepare the showDialog
   void _showDialog(BuildContext context, OrderModel order)
@@ -803,7 +810,8 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
       date = DateTime.now();
 
-      cubit.patchOrder(orderId: order.objectId!, status: OrderState.being_prepared, date: defaultDateFormatter.format(date), dateType: OrderDate.being_prepared_date, isWorkerWaitingOrders: true);
+      cubit.patchOrder(orderId: order.objectId!, status: OrderState.being_priced, date: defaultDateFormatter.format(date),
+                        dateType: OrderDate.being_priced_date, isPriceSetterWaitingOrders: true, designatePriceSetter: true, userId: AppCubit.userData?.id);
 
       setTimer(cubit: cubit, passedDate: date);
     });
@@ -822,7 +830,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
           if(passedDate ==null)
           {
-            passedTime= durationFormatToHMS(date.difference(defaultDateFormatter.parse(cubit.inWorkingOrder!.beingPreparedDate!)));
+            passedTime= durationFormatToHMS(date.difference(defaultDateFormatter.parse(cubit.inWorkingOrder!.beingPricedDate!)));
 
             //print('diff: ${date.difference(defaultDateFormatter.parse(cubit.inWorkingOrder!.beingPreparedDate!))}');
           }
@@ -842,9 +850,4 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
       });
     });
   }
-
-
-
-
-
 }

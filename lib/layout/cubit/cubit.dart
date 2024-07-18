@@ -327,6 +327,10 @@ class AppCubit extends Cubit<AppStates>
         case priceSetter:
           print('Price Setter Role...');
 
+          getWaitingOrdersPriceSetter();
+          getPriceSetterDoneOrders();
+          getAllPriceSetterOrders();
+
           break;
 
         case inspector:
@@ -586,6 +590,9 @@ class AppCubit extends Cubit<AppStates>
 
   }
 
+  //--------------------------
+  //--------------------------
+
 
   //Worker Role
 
@@ -613,6 +620,41 @@ class AppCubit extends Cubit<AppStates>
       {
         print('ERROR WHILE GETTING WORKER WAITING ORDERS, ${error.toString()}');
         emit(AppGetWorkerWaitingOrdersErrorState());
+      });
+    }
+  }
+
+
+  //--------------------------
+  //--------------------------
+
+  // PRICE SETTER ROLE
+
+
+  OrdersModel? priceSetterWaitingOrders;
+  ///Get Orders waiting for you
+  void getWaitingOrdersPriceSetter()
+  {
+    if(token!='')
+    {
+      emit(AppGetPriceSetterWaitingOrdersLoadingState());
+
+      print('Price Setter, in getWaitingOrders...');
+
+      MainDioHelper.getData(
+        url: getAwaitingOrdersPriceSetters,
+        token: token,
+      ).then((value)
+      {
+        print('Got priceSetter waitingOrders...');
+
+        priceSetterWaitingOrders= OrdersModel.fromJson(value.data);
+
+        emit(AppGetPriceSetterWaitingOrdersSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING PRICE SETTER WAITING ORDERS, ${error.toString()}');
+        emit(AppGetPriceSetterWaitingOrdersErrorState());
       });
     }
   }
@@ -743,7 +785,15 @@ class AppCubit extends Cubit<AppStates>
 
 
   ///Updates an order
-  void patchOrder({bool? isWorkerWaitingOrders, bool? getDoneOrders, required String orderId, required OrderState status, OrderDate? dateType, String? date})
+  void patchOrder({
+    bool? isWorkerWaitingOrders, bool? getDoneOrdersWorker,
+    bool? isPriceSetterWaitingOrders, bool? getDoneOrdersPriceSetter,
+    bool? designatePriceSetter, bool? designateInspector,
+    String? userId,
+    required String orderId, required OrderState status,
+    OrderDate? dateType, String? date,
+
+  })
   {
     if(token!='')
     {
@@ -757,6 +807,8 @@ class AppCubit extends Cubit<AppStates>
           "id":orderId,
           "status":status.name,
           if(dateType!=null) dateType.name:date,
+          if(designatePriceSetter !=null && userId !=null) "priceSetterId":userId,
+          if(designateInspector !=null && userId !=null) "inspectorId":userId,
         },
         token: token,
       ).then((value)
@@ -765,7 +817,13 @@ class AppCubit extends Cubit<AppStates>
 
         isWorkerWaitingOrders!=null ? getWaitingOrders() : null;
 
-        getDoneOrders !=null? getWorkerDoneOrders() : null ;
+        getDoneOrdersWorker !=null? getWorkerDoneOrders() : null;
+
+        isPriceSetterWaitingOrders !=null? getWaitingOrdersPriceSetter() : null;
+
+        getDoneOrdersPriceSetter !=null? getPriceSetterDoneOrders() : null;
+
+        getMyAPI(); //Update the data
 
         emit(AppPatchOrderSuccessState());
       }).catchError((error)
@@ -847,6 +905,67 @@ class AppCubit extends Cubit<AppStates>
     }
   }
 
+  //------------------------
+  //------------------------
+
+  // PRICE SETTER ORDERS
+
+  OrdersModel? priceSetterDoneOrders;
+  ///Get the [priced, being_priced] orders by a priceSetter
+  void getPriceSetterDoneOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetPriceSetterDoneOrdersLoadingState());
+      print("In Getting Price Setter's Done Orders...");
+
+      MainDioHelper.getData(
+        url: doneOrdersByUser,
+        token: token,
+      ).then((value)
+      {
+        print('Got Price Setter Done Orders...');
+
+        priceSetterDoneOrders = OrdersModel.fromJson(value.data);
+
+        emit(AppGetPriceSetterDoneOrdersSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING PRICE SETTER DONE ORDERS, ${error.toString()}');
+        emit(AppGetPriceSetterDoneOrdersErrorState());
+      });
+    }
+  }
+
+
+  OrdersModel? allPriceSetterOrders;
+  ///Get all the orders assigned to this priceSetter
+  void getAllPriceSetterOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetAllOrdersPriceSetterLoadingState());
+
+      print('In getAllPriceSetterOrders...');
+
+      MainDioHelper.getData(
+        url: allOrdersWorker,
+        token: token,
+      ).then((value)
+      {
+        print('Got all Price Setters Orders...');
+
+        allPriceSetterOrders= OrdersModel.fromJson(value.data);
+
+        emit(AppGetAllOrdersPriceSetterSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING ALL ORDERS OF A PRICE SETTER, ${error.toString()}');
+
+        emit(AppGetAllOrdersPriceSetterErrorState());
+      });
+    }
+  }
   //--------------------------------------------------------\\
 
   //Order File created by manager
