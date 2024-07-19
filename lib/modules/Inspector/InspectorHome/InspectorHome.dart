@@ -335,7 +335,7 @@ class _InspectorHomeState extends State<InspectorHome> {
         Align(
           alignment: AlignmentDirectional.topEnd,
           child: Text(
-            order.preparedDate !=null? timePassedSinceByString(order.preparedDate!) : 'Prepared Date is Null',
+            order.pricedDate !=null? timePassedSinceByString(order.pricedDate!) : 'Price Date is Null',
             style: headlineTextStyleBuilder(fontSize: 20),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,

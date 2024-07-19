@@ -43,7 +43,6 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
 
   }
 
-
   @override
   void dispose() {
 
@@ -83,7 +82,9 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
                             child: ListView.separated(
                               itemBuilder: (context,index)
                               {
-                                return itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style);
+                                return index != items.length-1
+                                    ?itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style)
+                                    : Column(children:[itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style), datesBuilder(widget.order),],);
                               },
 
                               separatorBuilder: (context,index)
@@ -104,9 +105,11 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
                             ),
                           ),
 
-                          datesBuilder(widget.order),
+                          //datesBuilder(widget.order),
 
-                          const Spacer(),
+                          //const Spacer(),
+
+                          const SizedBox(height: 40,),
 
                           itemBuilder(title: 'order_state_title', value: translateWord(widget.order.status), style: headlineTextStyleBuilder(fontSize: 22)),
 
@@ -221,13 +224,12 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
     );
   }
 
-
   ///Build the information items
   Widget dateItemBuilder({required String title, required var value, TextStyle? style})
   {
     return Column(
       children: [
-        const SizedBox(height: 10,),
+        const SizedBox(height: 25,),
 
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -255,7 +257,6 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
       ],
     );
   }
-
 
   ///Build calculated times between order states
   Widget datesBuilder(OrderModel order)

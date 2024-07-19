@@ -426,7 +426,7 @@ class AppCubit extends Cubit<AppStates>
 
 
   WorkersDetailsModel? workersDetailsModel;
-  ///Gets the worker's along side their orders, all the details
+  ///Gets workers along side their orders, all the details
   void getWorkersDetails()
   {
     if(token!='')

@@ -174,7 +174,7 @@ const Map<String,String> ar={
 
   'workers_details_settings_title':'العمال وتفاصيلهم: ',
 
-  'workers_details_order_number':'الطبيات المتاحة: ',
+  'workers_details_order_number':'الطلبيات المتاحة: ',
 
   //Settings Manager: Orders
 
