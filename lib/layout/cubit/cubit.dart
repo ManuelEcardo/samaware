@@ -55,7 +55,7 @@ class AppCubit extends Cubit<AppStates>
           switch(jsonMessage['type'])
           {
             case 'order':
-              getMyAPI(getAll: true);
+              getMyAPI(getAll: false); //was true
               break;
 
             default:
@@ -322,7 +322,9 @@ class AppCubit extends Cubit<AppStates>
 
           getWaitingOrders();
           getWorkerDoneOrders();
-          getAllWorkerOrders();
+
+
+          getAll?? getAllWorkerOrders();
 
           break;
 
@@ -331,7 +333,8 @@ class AppCubit extends Cubit<AppStates>
 
           getWaitingOrdersPriceSetter();
           getPriceSetterDoneOrders();
-          getAllPriceSetterOrders();
+
+          getAll?? getAllPriceSetterOrders();
 
           break;
 
@@ -340,7 +343,8 @@ class AppCubit extends Cubit<AppStates>
 
           getWaitingOrdersInspector();
           getInspectorDoneOrders();
-          getAllInspectorOrders();
+
+          getAll?? getAllInspectorOrders();
 
           break;
 
@@ -1547,12 +1551,12 @@ class AppCubit extends Cubit<AppStates>
   {
     if(id !=null)
       {
-        for(var worker in workers?.workers??[])
+        for(WorkerWithDetailsModel worker in workers?.workers??[])
         {
-          if (worker.id == id)
+          if (worker.worker?.id == id)
           {
-            chosenWorker = worker;
-            orderFromExcel?.workerId=worker.id;
+            chosenWorker = worker.worker;
+            orderFromExcel?.workerId=worker.worker?.id;
 
             emit(AppSetChosenWorkerState());
             break; // Break out of the loop when the worker is found
