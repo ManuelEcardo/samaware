@@ -66,7 +66,7 @@ const patchAnOrder='orders/patch';
 
 const doneOrdersByUser='orders/doneMe';
 
-const allOrdersWorker='orders/me';
+const allOrdersUsers='orders/me';
 
 //ORDER WORKER
 

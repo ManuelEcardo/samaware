@@ -79,7 +79,7 @@ class _InspectorDetailsPageState extends State<InspectorDetailsPage> {
 
                     const SizedBox(height: 50,),
 
-                    if(state is AppGetNextInspectorOrdersLoadingState && widget.inspector.orders?.length ==0)
+                    if(state is AppGetNextInspectorOrdersMLoadingState && widget.inspector.orders?.length ==0)
 
                       Center(
                         child: Column(
@@ -104,7 +104,7 @@ class _InspectorDetailsPageState extends State<InspectorDetailsPage> {
                       ),
                     ),
 
-                    if(state is AppGetNextInspectorOrdersLoadingState && widget.inspector.orders?.length !=0)
+                    if(state is AppGetNextInspectorOrdersMLoadingState && widget.inspector.orders?.length !=0)
                       defaultLinearProgressIndicator(context),
 
                   ],
@@ -199,7 +199,7 @@ class _InspectorDetailsPageState extends State<InspectorDetailsPage> {
       if(widget.inspector.pagination?.nextPage !=null)
       {
         print('paginating next inspector orders...');
-        cubit.getNextInspectorOrders(id: widget.inspector.inspector!.id!, nextPage: widget.inspector.pagination?.nextPage);
+        cubit.getNextInspectorOrdersManager(id: widget.inspector.inspector!.id!, nextPage: widget.inspector.pagination?.nextPage);
       }
 
     }

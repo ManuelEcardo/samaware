@@ -80,7 +80,7 @@ class _WorkerDetailsPageState extends State<WorkerDetailsPage> {
 
                     const SizedBox(height: 50,),
 
-                    if(state is AppGetNextWorkerOrdersLoadingState && widget.worker.orders?.length ==0)
+                    if(state is AppGetNextWorkerMOrdersLoadingState && widget.worker.orders?.length ==0)
 
                       Center(
                         child: Column(
@@ -105,7 +105,7 @@ class _WorkerDetailsPageState extends State<WorkerDetailsPage> {
                       ),
                     ),
 
-                    if(state is AppGetNextWorkerOrdersLoadingState && widget.worker.orders?.length !=0)
+                    if(state is AppGetNextWorkerMOrdersLoadingState && widget.worker.orders?.length !=0)
                       defaultLinearProgressIndicator(context),
 
                   ],
@@ -200,7 +200,7 @@ class _WorkerDetailsPageState extends State<WorkerDetailsPage> {
       if(widget.worker.pagination?.nextPage !=null)
       {
         print('paginating next worker orders...');
-        cubit.getNextWorkerOrders(id: widget.worker.worker!.id!, nextPage: widget.worker.pagination?.nextPage);
+        cubit.getNextWorkerOrdersManager(id: widget.worker.worker!.id!, nextPage: widget.worker.pagination?.nextPage);
       }
 
     }

@@ -7,7 +7,6 @@ const Map<String,String> ar={
 
   'loading':'يتم التحميل, الرجاء الانتظار',
 
-
   //Bottom Navigation Bar
 
   'home_bnb':'الرئيسية',
@@ -218,8 +217,6 @@ const Map<String,String> ar={
   'my_orders_title_worker':'طلبياتك',
 
 
-
-
   //DATES
 
   'days_ago':'من الأيام',
@@ -229,9 +226,6 @@ const Map<String,String> ar={
   'minutes_ago':'من الدقائق',
 
   'just_now':'للتو',
-
-
-
 
 
   //LOGIN

@@ -1,9 +1,10 @@
-
 abstract class AppStates{}
 
 class AppInitialState extends AppStates{}
 
 class AppChangeBottomNavBar extends AppStates{}
+
+class AppAlterBottomNavBarItemsLoadingState extends AppStates{}
 
 class AppAlterBottomNavBarItemsSuccessState extends AppStates{}
 
@@ -72,16 +73,6 @@ class AppGetNonReadyOrdersLoadingState extends AppStates{}
 class AppGetNonReadyOrdersErrorState extends AppStates{}
 
 class AppGetNonReadyOrdersSuccessState extends AppStates{}
-
-//------------------------------------
-
-// GET WORKERS WITH DETAILS
-
-class AppGetWorkersDetailsLoadingState extends AppStates{}
-
-class AppGetWorkersDetailsSuccessState extends AppStates{}
-
-class AppGetWorkersDetailsErrorState extends AppStates{}
 
 //------------------------------------
 
@@ -157,26 +148,6 @@ class AppGetAllOrdersWorkerSuccessState extends AppStates{}
 
 class AppGetAllOrdersWorkerErrorState extends AppStates{}
 
-
-//------------------------------------
-
-// GET PRICE SETTERS DATA
-
-class AppGetPriceSettersDetailsLoadingState extends AppStates{}
-
-class AppGetPriceSettersDetailsErrorState extends AppStates{}
-
-class AppGetPriceSettersDetailsSuccessState extends AppStates{}
-
-//------------------------------------
-
-// GET INSPECTOR DATA
-
-class AppGetInspectorsDetailsLoadingState extends AppStates{}
-
-class AppGetInspectorsDetailsErrorState extends AppStates{}
-
-class AppGetInspectorsDetailsSuccessState extends AppStates{}
 
 //------------------------------------
 
@@ -266,33 +237,70 @@ class AppGetInspectorsErrorState extends AppStates{}
 //------------------------------------
 
 
-//GET PAGINATED ORDERS WORKER
+//GET PAGINATED ORDERS WORKER - MANAGER ROLE
 
-class AppGetNextWorkerOrdersLoadingState extends AppStates{}
+class AppGetNextWorkerMOrdersLoadingState extends AppStates{}
 
-class AppGetNextWorkerOrdersSuccessState extends AppStates{}
+class AppGetNextWorkerMOrdersSuccessState extends AppStates{}
 
-class AppGetNextWorkerOrdersErrorState extends AppStates{}
-
-//------------------------------------
-
-//GET PAGINATED ORDERS PRICE-SETTER
-
-class AppGetNextPriceSetterOrdersLoadingState extends AppStates{}
-
-class AppGetNextPriceSetterOrdersSuccessState extends AppStates{}
-
-class AppGetNextPriceSetterOrdersErrorState extends AppStates{}
+class AppGetNextWorkerMOrdersErrorState extends AppStates{}
 
 //------------------------------------
 
-//GET PAGINATED ORDERS INSPECTOR
 
-class AppGetNextInspectorOrdersLoadingState extends AppStates{}
+//GET PAGINATED ORDERS WORKER - WORKER ROLE
 
-class AppGetNextInspectorOrdersSuccessState extends AppStates{}
+class AppGetNextWorkerWOrdersLoadingState extends AppStates{}
 
-class AppGetNextInspectorOrdersErrorState extends AppStates{}
+class AppGetNextWorkerWOrdersSuccessState extends AppStates{}
+
+class AppGetNextWorkerWOrdersErrorState extends AppStates{}
+
+
+
+
+//------------------------------------
+
+//GET PAGINATED ORDERS PRICE-SETTER - MANAGER ROLE
+
+class AppGetNextPriceSetterMOrdersLoadingState extends AppStates{}
+
+class AppGetNextPriceSetterMOrdersSuccessState extends AppStates{}
+
+class AppGetNextPriceSetterMOrdersErrorState extends AppStates{}
+
+
+//------------------------------------
+
+//GET PAGINATED ORDERS PRICE-SETTER - PRICE SETTER ROLE
+
+class AppGetNextPriceSetterOrdersPLoadingState extends AppStates{}
+
+class AppGetNextPriceSetterOrdersPSuccessState extends AppStates{}
+
+class AppGetNextPriceSetterOrdersPErrorState extends AppStates{}
+
+//------------------------------------
+
+//GET PAGINATED ORDERS INSPECTOR - MANAGER ROLE
+
+class AppGetNextInspectorOrdersMLoadingState extends AppStates{}
+
+class AppGetNextInspectorOrdersMSuccessState extends AppStates{}
+
+class AppGetNextInspectorOrdersMErrorState extends AppStates{}
+
+
+//------------------------------------
+
+//GET PAGINATED ORDERS INSPECTOR - INSPECTOR  ROLE
+
+class AppGetNextInspectorOrdersILoadingState extends AppStates{}
+
+class AppGetNextInspectorOrdersISuccessState extends AppStates{}
+
+class AppGetNextInspectorOrdersIErrorState extends AppStates{}
+
 
 //------------------------------------
 

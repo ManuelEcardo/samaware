@@ -3,8 +3,37 @@ import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/modules/PriceSetter/PriceSetterOrderDetails/PriceSetterOrderDetails.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 
-class PriceSetterOrdersSettings extends StatelessWidget {
+class PriceSetterOrdersSettings extends StatefulWidget {
   const PriceSetterOrdersSettings({super.key});
+
+  @override
+  State<PriceSetterOrdersSettings> createState() => _PriceSetterOrdersSettingsState();
+}
+
+class _PriceSetterOrdersSettingsState extends State<PriceSetterOrdersSettings> {
+
+  //Scroll Controller & listener for Lazy Loading
+  ScrollController scrollController= ScrollController();
+  final GlobalKey _key = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+
+    AppCubit cubit= AppCubit.get(context);
+
+    scrollController.addListener(()
+    {
+      _onScroll(cubit);
+    });
+  }
+
+  @override
+  void dispose()
+  {
+    scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,27 +49,28 @@ class PriceSetterOrdersSettings extends StatelessWidget {
             child: Scaffold(
               appBar: defaultAppBar(cubit: cubit, text: 'orders_settings_title'),
 
-              body: ConditionalBuilder(
+              body: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(context).copyWith(
+                  physics: const BouncingScrollPhysics(),
+                  dragDevices: dragDevices,
+                ),
+                child: RefreshIndicator(
+                  onRefresh: ()async
+                  {
+                    cubit.allPriceSetterOrders=null;
+                    cubit.getAllPriceSetterOrders();
+                    defaultToast(msg: Localization.translate('getting_all_orders_toast'));
+                  },
+                  child: ConditionalBuilder(
 
-                condition: cubit.allPriceSetterOrders !=null,
+                    condition: cubit.allPriceSetterOrders !=null,
 
-                builder: (context)=>OrientationBuilder(
-                    builder: (context,orientation)
-                    {
-                      if(orientation == Orientation.portrait)
-                      {
-                        return ScrollConfiguration(
-                          behavior: ScrollConfiguration.of(context).copyWith(
-                            physics: const BouncingScrollPhysics(),
-                            dragDevices: dragDevices,
-                          ),
-                          child: RefreshIndicator(
-                            onRefresh: ()async
-                            {
-                              cubit.getAllPriceSetterOrders();
-                              defaultToast(msg: Localization.translate('getting_all_orders_toast'));
-                            },
-                            child: Padding(
+                    builder: (context)=>OrientationBuilder(
+                        builder: (context,orientation)
+                        {
+                          if(orientation == Orientation.portrait)
+                          {
+                            return Padding(
                               padding: const EdgeInsets.all(24.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,35 +88,29 @@ class PriceSetterOrdersSettings extends StatelessWidget {
 
                                   Expanded(
                                     child: ListView.separated(
-                                      //physics: const NeverScrollableScrollPhysics(),
+                                      physics: const AlwaysScrollableScrollPhysics(),
+                                      key:_key,
+                                      controller: scrollController,
                                       shrinkWrap: true,
                                       itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, order: cubit.allPriceSetterOrders?.orders?[index]),
                                       separatorBuilder: (context,index)=> const SizedBox(height: 20,),
                                       itemCount: cubit.allPriceSetterOrders!.orders!.length,
                                     ),
                                   ),
+
+                                  if(state is AppGetNextPriceSetterOrdersPLoadingState && cubit.allPriceSetterOrders?.orders?.length !=0)
+                                    defaultLinearProgressIndicator(context),
                                 ],
                               ),
-                            ),
-                          ),
-                        );
-                      }
+                            );
+                          }
 
-                      else
-                      {
-                        return ScrollConfiguration(
-                          behavior: ScrollConfiguration.of(context).copyWith(
-                            physics: const BouncingScrollPhysics(),
-                            dragDevices: dragDevices,
-                          ),
-                          child: RefreshIndicator(
-                            onRefresh: ()async
-                            {
-                              cubit.getAllPriceSetterOrders();
-                              defaultToast(msg: Localization.translate('getting_all_orders_toast'));
-                            },
-                            child: SingleChildScrollView(
+                          else
+                          {
+                            return SingleChildScrollView(
                               physics: const AlwaysScrollableScrollPhysics(),
+                              key:_key,
+                              controller: scrollController,
                               child: Padding(
                                 padding: const EdgeInsets.all(24.0),
                                 child: Column(
@@ -110,17 +134,20 @@ class PriceSetterOrdersSettings extends StatelessWidget {
                                       separatorBuilder: (context,index)=> const SizedBox(height: 20,),
                                       itemCount: cubit.allPriceSetterOrders!.orders!.length,
                                     ),
+
+                                    if(state is AppGetNextInspectorOrdersILoadingState && cubit.allInspectorOrders?.orders?.length !=0)
+                                      defaultLinearProgressIndicator(context),
                                   ],
                                 ),
                               ),
-                            ),
-                          ),
-                        );
-                      }
-                    }
-                ),
+                            );
+                          }
+                        }
+                    ),
 
-                fallback: (context)=> Center(child: defaultProgressIndicator(context),),
+                    fallback: (context)=> Center(child: defaultProgressIndicator(context),),
+                  ),
+                ),
               ),
             ),
           );
@@ -171,5 +198,20 @@ class PriceSetterOrdersSettings extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  ///onScroll Function for to get orders
+  void _onScroll(AppCubit cubit)
+  {
+    //Will Scroll Only and Only if: Got to the end of the list
+    if (scrollController.position.pixels == scrollController.position.maxScrollExtent)
+    {
+      if(cubit.allPriceSetterOrders?.pagination?.nextPage !=null)
+      {
+        print('paginating next priceSetter orders...');
+        cubit.getNextWorkerOrdersPriceSetter(nextPage: cubit.allPriceSetterOrders?.pagination?.nextPage);
+      }
+
+    }
   }
 }

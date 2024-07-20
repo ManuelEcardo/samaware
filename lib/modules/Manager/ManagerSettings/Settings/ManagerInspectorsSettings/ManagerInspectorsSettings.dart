@@ -120,7 +120,7 @@ class ManagerInspectorsSettings extends StatelessWidget {
         //Only get orders on click if it's empty, pagination happens by scroll in his page
         if(inspector?.orders?.length ==0)
         {
-          cubit.getNextInspectorOrders(id: inspector!.inspector!.id!, nextPage: inspector.pagination?.nextPage);
+          cubit.getNextInspectorOrdersManager(id: inspector!.inspector!.id!, nextPage: inspector.pagination?.nextPage);
         }
 
         navigateTo(context, InspectorDetailsPage(inspector: inspector!,));

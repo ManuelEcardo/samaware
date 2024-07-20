@@ -126,7 +126,7 @@ class ManagerWorkersSettings extends StatelessWidget {
         //Only get orders on click if it's empty, pagination happens by scroll in his page
         if(worker?.orders?.length == 0)
         {
-          cubit.getNextWorkerOrders(id: worker!.worker!.id!, nextPage: worker.pagination?.nextPage);
+          cubit.getNextWorkerOrdersManager(id: worker!.worker!.id!, nextPage: worker.pagination?.nextPage);
         }
 
         navigateTo(context, WorkerDetailsPage(worker: worker!,));

@@ -203,6 +203,8 @@ class AppCubit extends Cubit<AppStates>
   ///Alter the BottomNavBarItems Depending on User's Role; manager, worker, etc...
   void alterBottomNavBarItems(String? role)
   {
+    emit(AppAlterBottomNavBarItemsLoadingState());
+
     if(role !=null)
       {
         switch (role)
@@ -313,11 +315,6 @@ class AppCubit extends Cubit<AppStates>
           getNonReadyOrders();
           getAll?? getAllOrders();
 
-          //Todo is deleted?
-          // getWorkersDetails();
-          // getPriceSettersDetails();
-          // getInspectorsDetails();
-
           break;
 
         case worker:
@@ -326,6 +323,7 @@ class AppCubit extends Cubit<AppStates>
           getWaitingOrders();
           getWorkerDoneOrders();
           getAllWorkerOrders();
+
           break;
 
         case priceSetter:
@@ -588,8 +586,8 @@ class AppCubit extends Cubit<AppStates>
 
   //ORDER API
 
-  ///Helper function to add the new orders
-  void nextOrderHelper({required String type, required Response<dynamic> value, required String id})
+  ///Helper function to add the new orders for MANAGER
+  void nextOrderHelperManager({required String type, required Response<dynamic> value, required String id})
   {
     switch(type)
     {
@@ -646,6 +644,36 @@ class AppCubit extends Cubit<AppStates>
         break;
 
         default:
+        break;
+    }
+  }
+
+  ///Helper function to add the new orders for other roles
+  void nextOrderHelperRoles({required String type, required Response<dynamic> value})
+  {
+    switch(type)
+    {
+      case worker:
+
+        allWorkerOrders?.addOrders(value.data);
+        allWorkerOrders?.addPagination(value.data);
+
+        break;
+
+      case priceSetter:
+        allPriceSetterOrders?.addOrders(value.data);
+        allPriceSetterOrders?.addPagination(value.data);
+
+        break;
+
+      case inspector:
+        allInspectorOrders?.addOrders(value.data);
+        allInspectorOrders?.addPagination(value.data);
+
+        break;
+
+
+      default:
         break;
     }
   }
@@ -730,7 +758,7 @@ class AppCubit extends Cubit<AppStates>
       print('In getAllWorkerOrders...');
 
       MainDioHelper.getData(
-        url: allOrdersWorker,
+        url: allOrdersUsers,
         token: token,
       ).then((value)
       {
@@ -748,10 +776,37 @@ class AppCubit extends Cubit<AppStates>
   }
 
 
-  ///Gets next batch of orders for worker
-  void getNextWorkerOrders({String? nextPage, required String id})
+  /// Get Next Paginated Orders, Worker type
+  void getNextWorkerOrdersWorker({String? nextPage})
   {
-    emit(AppGetNextWorkerOrdersLoadingState());
+    if(token != '')
+    {
+      emit(AppGetNextWorkerWOrdersLoadingState());
+      print('in getNextWorkerOrdersWorker...');
+
+      MainDioHelper.getData(
+        url: nextPage != null ? '$allOrdersUsers$nextPage' : allOrdersUsers,
+        token: token,
+      ).then((value)
+      {
+        print('got next worker orders w...');
+
+        nextOrderHelperRoles(value: value, type: worker);
+
+        emit(AppGetNextWorkerWOrdersSuccessState());
+      }).catchError((error)
+      {
+        print("COULDN'T GET NEXT ORDERS WORKER W, ${error.toString()}");
+
+        emit(AppGetNextWorkerWOrdersErrorState());
+      });
+    }
+  }
+
+  ///Gets next batch of orders for worker
+  void getNextWorkerOrdersManager({String? nextPage, required String id})
+  {
+    emit(AppGetNextWorkerMOrdersLoadingState());
 
     print('In getNextWorkerOrders...');
 
@@ -762,13 +817,13 @@ class AppCubit extends Cubit<AppStates>
     {
       print('Got next worker orders...');
 
-      nextOrderHelper(id: id, type: worker, value: value);
+      nextOrderHelperManager(id: id, type: worker, value: value);
 
-      emit(AppGetNextWorkerOrdersSuccessState());
+      emit(AppGetNextWorkerMOrdersSuccessState());
     }).catchError((error)
     {
       print("COULDN'T GET NEXT WORKER ORDERS, ${error.toString()}");
-      emit(AppGetNextWorkerOrdersErrorState());
+      emit(AppGetNextWorkerMOrdersErrorState());
     });
   }
 
@@ -846,7 +901,7 @@ class AppCubit extends Cubit<AppStates>
       print('In getAllPriceSetterOrders...');
 
       MainDioHelper.getData(
-        url: allOrdersWorker,
+        url: allOrdersUsers,
         token: token,
       ).then((value)
       {
@@ -864,11 +919,38 @@ class AppCubit extends Cubit<AppStates>
     }
   }
 
+  /// Get Next Paginated Orders, PriceSetter type
+  void getNextWorkerOrdersPriceSetter({String? nextPage})
+  {
+    if(token != '')
+    {
+      emit(AppGetNextPriceSetterOrdersPLoadingState());
+      print('in getNextWorkerOrdersPriceSetter...');
+
+      MainDioHelper.getData(
+        url: nextPage != null ? '$allOrdersUsers$nextPage' : allOrdersUsers,
+        token: token,
+      ).then((value)
+      {
+        print('got next priceSetter orders w...');
+
+        nextOrderHelperRoles(value: value, type: priceSetter);
+
+        emit(AppGetNextPriceSetterOrdersPSuccessState());
+      }).catchError((error)
+      {
+        print("COULDN'T GET NEXT ORDERS PRICE-SETTER P, ${error.toString()}");
+
+        emit(AppGetNextPriceSetterOrdersPErrorState());
+      });
+    }
+  }
+
 
   ///Gets next batch of orders for priceSetter
-  void getNextPriceSetterOrders({String? nextPage, required String id})
+  void getNextPriceSetterOrdersManager({String? nextPage, required String id})
   {
-    emit(AppGetNextPriceSetterOrdersLoadingState());
+    emit(AppGetNextPriceSetterMOrdersLoadingState());
     print('In getNextPriceSetterOrders...');
 
     MainDioHelper.getData(
@@ -878,13 +960,13 @@ class AppCubit extends Cubit<AppStates>
     {
       print('Got next priceSetter orders...');
 
-      nextOrderHelper(id: id, type: priceSetter, value: value);
+      nextOrderHelperManager(id: id, type: priceSetter, value: value);
 
-      emit(AppGetNextPriceSetterOrdersSuccessState());
+      emit(AppGetNextPriceSetterMOrdersSuccessState());
     }).catchError((error)
     {
       print("COULDN'T GET NEXT PRICE SETTER ORDERS, ${error.toString()}");
-      emit(AppGetNextPriceSetterOrdersErrorState());
+      emit(AppGetNextPriceSetterMOrdersErrorState());
     });
   }
 
@@ -960,7 +1042,7 @@ class AppCubit extends Cubit<AppStates>
       print('In getAllInspectorOrders...');
 
       MainDioHelper.getData(
-        url: allOrdersWorker,
+        url: allOrdersUsers,
         token: token,
       ).then((value)
       {
@@ -979,10 +1061,37 @@ class AppCubit extends Cubit<AppStates>
   }
 
 
-  ///Gets next batch of orders for inspector
-  void getNextInspectorOrders({String? nextPage, required String id})
+  /// Get Next Paginated Orders, Inspector type
+  void getNextWorkerOrdersInspector({String? nextPage})
   {
-    emit(AppGetNextInspectorOrdersLoadingState());
+    if(token != '')
+    {
+      emit(AppGetNextInspectorOrdersILoadingState());
+      print('in getNextWorkerOrdersInspector...');
+
+      MainDioHelper.getData(
+        url: nextPage != null ? '$allOrdersUsers$nextPage' : allOrdersUsers,
+        token: token,
+      ).then((value)
+      {
+        print('got next Inspector orders w...');
+
+        nextOrderHelperRoles(value: value, type: inspector);
+
+        emit(AppGetNextInspectorOrdersISuccessState());
+      }).catchError((error)
+      {
+        print("COULDN'T GET NEXT ORDERS INSPECTOR I, ${error.toString()}");
+
+        emit(AppGetNextInspectorOrdersIErrorState());
+      });
+    }
+  }
+
+  ///Gets next batch of orders for inspector
+  void getNextInspectorOrdersManager({String? nextPage, required String id})
+  {
+    emit(AppGetNextInspectorOrdersMLoadingState());
     print('In getNextInspectorOrders...');
 
     MainDioHelper.getData(
@@ -992,13 +1101,13 @@ class AppCubit extends Cubit<AppStates>
     {
       print('Got next inspector orders...');
 
-      nextOrderHelper(id: id, type: inspector, value: value);
+      nextOrderHelperManager(id: id, type: inspector, value: value);
 
-      emit(AppGetNextInspectorOrdersSuccessState());
+      emit(AppGetNextInspectorOrdersMSuccessState());
     }).catchError((error)
     {
       print("COULDN'T GET NEXT INSPECTOR ORDERS, ${error.toString()}");
-      emit(AppGetNextInspectorOrdersErrorState());
+      emit(AppGetNextInspectorOrdersMErrorState());
     });
 
   }
@@ -1142,7 +1251,7 @@ class AppCubit extends Cubit<AppStates>
     {
       print('Got next  orders...');
 
-      nextOrderHelper(id: 'none', type: 'allOrders', value: value);
+      nextOrderHelperManager(id: 'none', type: 'allOrders', value: value);
 
       emit(AppGetNextOrdersSuccessState());
     }).catchError((error)

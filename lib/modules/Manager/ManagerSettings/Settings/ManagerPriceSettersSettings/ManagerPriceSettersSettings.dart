@@ -118,7 +118,7 @@ class ManagerPriceSettersSettings extends StatelessWidget {
         //Only get orders on click if it's empty, pagination happens by scroll in his page
         if(priceSetter?.orders?.length ==0)
         {
-          cubit.getNextPriceSetterOrders(id: priceSetter!.priceSetter!.id!, nextPage: priceSetter.pagination?.nextPage);
+          cubit.getNextPriceSetterOrdersManager(id: priceSetter!.priceSetter!.id!, nextPage: priceSetter.pagination?.nextPage);
         }
 
         navigateTo(context, PriceSetterDetailsPage(priceSetter: priceSetter!,));

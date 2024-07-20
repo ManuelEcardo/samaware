@@ -80,7 +80,7 @@ class _PriceSetterDetailsPageState extends State<PriceSetterDetailsPage> {
 
                     const SizedBox(height: 50,),
 
-                    if(state is AppGetNextPriceSetterOrdersLoadingState && widget.priceSetter.orders?.length ==0)
+                    if(state is AppGetNextPriceSetterMOrdersLoadingState && widget.priceSetter.orders?.length ==0)
 
                       Center(
                         child: Column(
@@ -105,7 +105,7 @@ class _PriceSetterDetailsPageState extends State<PriceSetterDetailsPage> {
                       ),
                     ),
 
-                    if(state is AppGetNextPriceSetterOrdersLoadingState && widget.priceSetter.orders?.length !=0)
+                    if(state is AppGetNextPriceSetterMOrdersLoadingState && widget.priceSetter.orders?.length !=0)
                       defaultLinearProgressIndicator(context),
 
                   ],
@@ -200,7 +200,7 @@ class _PriceSetterDetailsPageState extends State<PriceSetterDetailsPage> {
       if(widget.priceSetter.pagination?.nextPage !=null)
       {
         print('paginating next priceSetter orders...');
-        cubit.getNextPriceSetterOrders(id: widget.priceSetter.priceSetter!.id!, nextPage: widget.priceSetter.pagination?.nextPage);
+        cubit.getNextPriceSetterOrdersManager(id: widget.priceSetter.priceSetter!.id!, nextPage: widget.priceSetter.pagination?.nextPage);
       }
 
     }
