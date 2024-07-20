@@ -5,12 +5,16 @@ class WorkersDetailsModel
 {
   List<WorkerWithDetailsModel>? workers=[];
 
-  WorkersDetailsModel.fromJson(List<dynamic> json)
+  WorkersDetailsModel.fromJson(Map<String,dynamic> json)
   {
-    for (var worker in json)
+    if(json['workers']!=null)
     {
-      workers?.add(WorkerWithDetailsModel.fromJson(worker));
+      for (var worker in json['workers'])
+      {
+        workers?.add(WorkerWithDetailsModel.fromJson(worker));
+      }
     }
+
   }
 }
 
@@ -21,15 +25,60 @@ class WorkerWithDetailsModel
 
   List<OrderModel>? orders=[];
 
+  Pagination? pagination;
+
   WorkerWithDetailsModel.fromJson(Map<String,dynamic>json)
   {
     worker= UserData.fromJson(json);
 
-    json['orders'].forEach((order)
+    if(json['orders'] !=null)
     {
-      orders?.add(OrderModel.fromJson(order, isWorkerPassed: true, worker:worker));
-    });
+      json['orders'].forEach((order)
+      {
+        orders?.add(OrderModel.fromJson(order, isWorkerPassed: true, worker:worker));
+      });
+    }
+  }
 
+  /// Adds orders to object
+  void addOrders(Map<String,dynamic> json)
+  {
+    if(json['orders'] !=null)
+    {
+      json['orders'].forEach((order)
+      {
+        OrderModel myOrder = OrderModel.fromJson(order, isWorkerPassed: true, worker:worker);
+
+        if(isFound(myOrder.orderId) == false)
+        {
+          orders?.add(myOrder);
+        }
+
+      });
+    }
+  }
+
+  /// Adds pagination
+  void addPagination(Map<String,dynamic> json)
+  {
+    if(json['pagination'] !=null)
+    {
+      pagination = Pagination.fromJson(json['pagination']);
+    }
+  }
+
+  ///Checks if order exists
+  bool isFound(String? id)
+  {
+    for(OrderModel order in orders?? [])
+    {
+      if(order.orderId == id)
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 
 }

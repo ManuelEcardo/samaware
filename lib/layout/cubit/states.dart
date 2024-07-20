@@ -29,7 +29,7 @@ class AppGetUserDataSuccessState extends AppStates{}
 
 class AppGetWorkersLoadingState extends AppStates{}
 
-class AppGetWorkerSuccessState extends AppStates{}
+class AppGetWorkersSuccessState extends AppStates{}
 
 class AppGetWorkersErrorState extends AppStates{}
 
@@ -241,5 +241,67 @@ class AppGetAllOrdersInspectorLoadingState extends AppStates{}
 class AppGetAllOrdersInspectorSuccessState extends AppStates{}
 
 class AppGetAllOrdersInspectorErrorState extends AppStates{}
+
+//------------------------------------
+
+
+//GET PRICE SETTERS
+
+class AppGetPriceSettersLoadingState extends AppStates{}
+
+class AppGetPriceSettersSuccessState extends AppStates{}
+
+class AppGetPriceSettersErrorState extends AppStates{}
+
+//------------------------------------
+
+//GET INSPECTORS
+
+class AppGetInspectorsLoadingState extends AppStates{}
+
+class AppGetInspectorsSuccessState extends AppStates{}
+
+class AppGetInspectorsErrorState extends AppStates{}
+
+//------------------------------------
+
+
+//GET PAGINATED ORDERS WORKER
+
+class AppGetNextWorkerOrdersLoadingState extends AppStates{}
+
+class AppGetNextWorkerOrdersSuccessState extends AppStates{}
+
+class AppGetNextWorkerOrdersErrorState extends AppStates{}
+
+//------------------------------------
+
+//GET PAGINATED ORDERS PRICE-SETTER
+
+class AppGetNextPriceSetterOrdersLoadingState extends AppStates{}
+
+class AppGetNextPriceSetterOrdersSuccessState extends AppStates{}
+
+class AppGetNextPriceSetterOrdersErrorState extends AppStates{}
+
+//------------------------------------
+
+//GET PAGINATED ORDERS INSPECTOR
+
+class AppGetNextInspectorOrdersLoadingState extends AppStates{}
+
+class AppGetNextInspectorOrdersSuccessState extends AppStates{}
+
+class AppGetNextInspectorOrdersErrorState extends AppStates{}
+
+//------------------------------------
+
+//GET PAGINATED ORDERS
+
+class AppGetNextOrdersLoadingState extends AppStates{}
+
+class AppGetNextOrdersSuccessState extends AppStates{}
+
+class AppGetNextOrdersErrorState extends AppStates{}
 
 //------------------------------------

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_excel/excel.dart';
 import 'package:samaware_flutter/models/InspectorsDetailsModel/InspectorsDetailsModel.dart';
@@ -7,7 +8,6 @@ import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/models/PriceSettersDetailsModel/PriceSettersDetailsModel.dart';
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/models/WorkerDetailsModel/WorkerDetailsModel.dart';
-import 'package:samaware_flutter/models/WorkerModel/WorkerModel.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorHome/InspectorHome.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorPreviousOrders/InspectorPreviousOrders.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorSettings/InspectorSettings.dart';
@@ -307,12 +307,16 @@ class AppCubit extends Cubit<AppStates>
           print('Manager Role...');
 
           getWorkers();
+          getPriceSetters();
+          getInspectors();
+
           getNonReadyOrders();
-          getWorkersDetails();
           getAll?? getAllOrders();
 
-          getPriceSettersDetails();
-          getInspectorsDetails();
+          //Todo is deleted?
+          // getWorkersDetails();
+          // getPriceSettersDetails();
+          // getInspectorsDetails();
 
           break;
 
@@ -396,7 +400,7 @@ class AppCubit extends Cubit<AppStates>
     }
   }
 
-  WorkerModel? workers;
+  WorkersDetailsModel? workers;
   ///Gets the workers data for manager
   void getWorkers()
   {
@@ -411,104 +415,81 @@ class AppCubit extends Cubit<AppStates>
         {
           print('Got Workers Data...');
 
-          workers = WorkerModel.fromJson(value.data);
+          workers = WorkersDetailsModel.fromJson(value.data);
 
-          setChosenWorker(w:workers?.workers?[0]);
 
-          emit(AppGetWorkerSuccessState());
-        }).catchError((error)
+          setChosenWorker(w:workers?.workers?[0].worker);
+
+          emit(AppGetWorkersSuccessState());
+        }).catchError((error, stackTrace)
         {
           print("COULDN'T GET WORKERS DATA FROM getWorkers, ${error.toString()}");
+
+          print(stackTrace);
+
           emit(AppGetWorkersErrorState());
         });
       }
   }
 
 
-  WorkersDetailsModel? workersDetailsModel;
-  ///Gets workers along side their orders, all the details
-  void getWorkersDetails()
+  PriceSettersDetailsModel? priceSetters;
+  ///Gets the priceSetters for manager
+  void getPriceSetters()
   {
     if(token!='')
     {
-      print('In getting workers details...');
-      emit(AppGetWorkersDetailsLoadingState());
+      print('In getPriceSetters...');
+      emit(AppGetPriceSettersLoadingState());
 
       MainDioHelper.getData(
-        url: workersWithDetail,
-        token: token,
+        url: allPriceSetters,
+        token: token
       ).then((value)
       {
-        print('Got Workers details...');
+        print('Got priceSetters...');
 
-        workersDetailsModel= WorkersDetailsModel.fromJson(value.data);
+        priceSetters= PriceSettersDetailsModel.fromJson(value.data);
 
-        emit(AppGetWorkersDetailsSuccessState());
-      }).catchError((error, stackTrace)
+        emit(AppGetPriceSettersSuccessState());
+      }).catchError((error)
       {
-        print("ERROR WHILE GETTING WORKERS DETAILS, ${error.toString()}");
-        print(stackTrace);
-        emit(AppGetWorkersDetailsErrorState());
+        print('ERROR WHILE GETTING PRICE SETTERS, ${error.toString()}');
+        emit(AppGetPriceSettersErrorState());
       });
+
     }
   }
 
 
-  PriceSettersDetailsModel? priceSettersDetailsModel;
-  ///Gets the priceSetters along side their orders, all the details
-  void getPriceSettersDetails()
-  {
-    if(token !='')
-    {
-      print('In getPriceSetterDetails...');
-      emit(AppGetPriceSettersDetailsLoadingState());
-
-      MainDioHelper.getData(
-        url: priceSettersWithDetail,
-        token: token,
-      ).then((value)
-      {
-        print('Got price setters details...');
-
-        priceSettersDetailsModel= PriceSettersDetailsModel.fromJson(value.data);
-
-        emit(AppGetPriceSettersDetailsSuccessState());
-      }).catchError((error, stackTrace)
-      {
-        print('ERROR WHILE GETTING PRICE SETTERS DETAILS, ${error.toString()}, $stackTrace');
-        emit(AppGetPriceSettersDetailsErrorState());
-      });
-    }
-  }
-
-
-  InspectorsDetailsModel? inspectorsDetailsModel;
-  ///Gets the inspectors along side their orders, all the details
-  void getInspectorsDetails()
+  InspectorsDetailsModel? inspectors;
+  ///Gets the inspectors for manager
+  void getInspectors()
   {
     if(token!='')
     {
-      emit(AppGetInspectorsDetailsLoadingState());
-
-      print('In getInspectorDetails...');
+      print('In getInspectors...');
+      emit(AppGetInspectorsLoadingState());
 
       MainDioHelper.getData(
-        url: inspectorWithDetail,
-        token:token
+          url: allInspectors,
+          token: token
       ).then((value)
       {
-        print('Got Inspector details...');
+        print('Got inspectors...');
 
-        inspectorsDetailsModel= InspectorsDetailsModel.fromJson(value.data);
+        inspectors= InspectorsDetailsModel.fromJson(value.data);
 
-        emit(AppGetInspectorsDetailsSuccessState());
-      }).catchError((error, stackTrace)
+        emit(AppGetInspectorsSuccessState());
+      }).catchError((error)
       {
-        print('ERROR WHILE GETTING INSPECTOR DETAILS, ${error.toString()}, $stackTrace');
-        emit(AppGetInspectorsDetailsErrorState());
+        print('ERROR WHILE GETTING INSPECTORS, ${error.toString()}');
+        emit(AppGetInspectorsErrorState());
       });
+
     }
   }
+
 
   ///Logout User and Remove his token from back-end side
   bool logout({required BuildContext context, required String role})
@@ -564,7 +545,8 @@ class AppCubit extends Cubit<AppStates>
         userData=null;
         allOrders=null;
         nonReadyOrders=null;
-        workersDetailsModel=null;
+
+        //workersDetailsModel=null; //Todo is this deleted?
         workers=null;
 
         break;
@@ -602,11 +584,73 @@ class AppCubit extends Cubit<AppStates>
 
   }
 
-  //--------------------------
-  //--------------------------
+  //--------------------------------------------------\\
 
+  //ORDER API
 
-  //Worker Role
+  ///Helper function to add the new orders
+  void nextOrderHelper({required String type, required Response<dynamic> value, required String id})
+  {
+    switch(type)
+    {
+      case worker:
+
+        for(WorkerWithDetailsModel worker in workers?.workers ?? [])
+        {
+          if(worker.worker?.id == id)
+          {
+            worker.addOrders(value.data);
+            worker.addPagination(value.data);
+
+            break;
+          }
+        }
+
+        break;
+
+      case priceSetter:
+
+        for(PriceSetterDetailsModel priceSetter in priceSetters?.priceSetters ?? [])
+        {
+          if(priceSetter.priceSetter?.id == id)
+          {
+            priceSetter.addOrders(value.data);
+            priceSetter.addPagination(value.data);
+
+            break;
+          }
+        }
+
+        break;
+
+      case inspector:
+
+        for(InspectorDetailsModel inspector in inspectors?.inspectors ?? [])
+        {
+          if(inspector.inspector?.id == id)
+          {
+            inspector.addOrders(value.data);
+            inspector.addPagination(value.data);
+
+            break;
+          }
+        }
+
+        break;
+
+      case 'allOrders':
+
+        allOrders?.addOrders(value.data);
+        allOrders?.addPagination(value.data);
+
+        break;
+
+        default:
+        break;
+    }
+  }
+
+  //WORKER ROLE
 
   OrdersModel? workerWaitingOrders;
   ///Get Orders waiting for you
@@ -636,6 +680,97 @@ class AppCubit extends Cubit<AppStates>
     }
   }
 
+
+  ///Order in WorkerPrepareOrder
+  OrderModel? inWorkingOrder;
+  void setInWorkingOrder(OrderModel? o)
+  {
+    inWorkingOrder = o;
+    emit(AppSetInWorkingOrderState());
+
+  }
+
+
+  OrdersModel? workerDoneOrders;
+  ///Get the [being-prepared, prepared] orders by a worker
+  void getWorkerDoneOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetWorkerDoneOrdersLoadingState());
+      print("In Getting Worker's Done Orders...");
+
+      MainDioHelper.getData(
+        url: doneOrdersByUser,
+        token: token,
+      ).then((value)
+      {
+        print('Got Worker Done Orders...');
+
+        workerDoneOrders = OrdersModel.fromJson(value.data);
+
+        emit(AppGetWorkerDoneOrdersSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING WORKER DONE ORDERS, ${error.toString()}');
+        emit(AppGetWorkerDoneOrdersErrorState());
+      });
+    }
+  }
+
+
+  OrdersModel? allWorkerOrders;
+  ///Get all the orders assigned to this worker
+  void getAllWorkerOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetAllOrdersWorkerLoadingState());
+
+      print('In getAllWorkerOrders...');
+
+      MainDioHelper.getData(
+        url: allOrdersWorker,
+        token: token,
+      ).then((value)
+      {
+        print('Got all Worker Orders...');
+
+        allWorkerOrders= OrdersModel.fromJson(value.data);
+
+        emit(AppGetAllOrdersWorkerSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING ALL ORDERS OF A WORKER, ${error.toString()}');
+        emit(AppGetAllOrdersWorkerErrorState());
+      });
+    }
+  }
+
+
+  ///Gets next batch of orders for worker
+  void getNextWorkerOrders({String? nextPage, required String id})
+  {
+    emit(AppGetNextWorkerOrdersLoadingState());
+
+    print('In getNextWorkerOrders...');
+
+    MainDioHelper.getData(
+        url: nextPage !=null ? '$workerOrders/$id$nextPage' : '$workerOrders/$id',
+        token: token
+    ).then((value)
+    {
+      print('Got next worker orders...');
+
+      nextOrderHelper(id: id, type: worker, value: value);
+
+      emit(AppGetNextWorkerOrdersSuccessState());
+    }).catchError((error)
+    {
+      print("COULDN'T GET NEXT WORKER ORDERS, ${error.toString()}");
+      emit(AppGetNextWorkerOrdersErrorState());
+    });
+  }
 
   //--------------------------
   //--------------------------
@@ -672,6 +807,87 @@ class AppCubit extends Cubit<AppStates>
   }
 
 
+  OrdersModel? priceSetterDoneOrders;
+  ///Get the [priced, being_priced] orders by a priceSetter
+  void getPriceSetterDoneOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetPriceSetterDoneOrdersLoadingState());
+      print("In Getting Price Setter's Done Orders...");
+
+      MainDioHelper.getData(
+        url: doneOrdersByUser,
+        token: token,
+      ).then((value)
+      {
+        print('Got Price Setter Done Orders...');
+
+        priceSetterDoneOrders = OrdersModel.fromJson(value.data);
+
+        emit(AppGetPriceSetterDoneOrdersSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING PRICE SETTER DONE ORDERS, ${error.toString()}');
+        emit(AppGetPriceSetterDoneOrdersErrorState());
+      });
+    }
+  }
+
+
+  OrdersModel? allPriceSetterOrders;
+  ///Get all the orders assigned to this priceSetter
+  void getAllPriceSetterOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetAllOrdersPriceSetterLoadingState());
+
+      print('In getAllPriceSetterOrders...');
+
+      MainDioHelper.getData(
+        url: allOrdersWorker,
+        token: token,
+      ).then((value)
+      {
+        print('Got all Price Setters Orders...');
+
+        allPriceSetterOrders= OrdersModel.fromJson(value.data);
+
+        emit(AppGetAllOrdersPriceSetterSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING ALL ORDERS OF A PRICE SETTER, ${error.toString()}');
+
+        emit(AppGetAllOrdersPriceSetterErrorState());
+      });
+    }
+  }
+
+
+  ///Gets next batch of orders for priceSetter
+  void getNextPriceSetterOrders({String? nextPage, required String id})
+  {
+    emit(AppGetNextPriceSetterOrdersLoadingState());
+    print('In getNextPriceSetterOrders...');
+
+    MainDioHelper.getData(
+        url: nextPage !=null ? '$priceSetterOrders/$id$nextPage' : '$priceSetterOrders/$id',
+        token: token
+    ).then((value)
+    {
+      print('Got next priceSetter orders...');
+
+      nextOrderHelper(id: id, type: priceSetter, value: value);
+
+      emit(AppGetNextPriceSetterOrdersSuccessState());
+    }).catchError((error)
+    {
+      print("COULDN'T GET NEXT PRICE SETTER ORDERS, ${error.toString()}");
+      emit(AppGetNextPriceSetterOrdersErrorState());
+    });
+  }
+
   //--------------------------
   //--------------------------
 
@@ -705,9 +921,91 @@ class AppCubit extends Cubit<AppStates>
     }
   }
 
-  //--------------------------------------------------\\
+  OrdersModel? inspectorDoneOrders;
+  ///Get the [verified, being_verified] orders by an inspector
+  void getInspectorDoneOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetInspectorDoneOrdersLoadingState());
+      print("In Getting inspector's Done Orders...");
 
-  //ORDER API
+      MainDioHelper.getData(
+        url: doneOrdersByUser,
+        token: token,
+      ).then((value)
+      {
+        print('Got inspector Done Orders...');
+
+        inspectorDoneOrders = OrdersModel.fromJson(value.data);
+
+        emit(AppGetInspectorDoneOrdersSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING INSPECTOR DONE ORDERS, ${error.toString()}');
+        emit(AppGetInspectorDoneOrdersErrorState());
+      });
+    }
+  }
+
+
+  OrdersModel? allInspectorOrders;
+  ///Get all the orders assigned to this inspector
+  void getAllInspectorOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetAllOrdersInspectorLoadingState());
+
+      print('In getAllInspectorOrders...');
+
+      MainDioHelper.getData(
+        url: allOrdersWorker,
+        token: token,
+      ).then((value)
+      {
+        print('Got all inspector Orders...');
+
+        allInspectorOrders= OrdersModel.fromJson(value.data);
+
+        emit(AppGetAllOrdersInspectorSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING ALL ORDERS OF AN INSPECTOR, ${error.toString()}');
+
+        emit(AppGetAllOrdersInspectorErrorState());
+      });
+    }
+  }
+
+
+  ///Gets next batch of orders for inspector
+  void getNextInspectorOrders({String? nextPage, required String id})
+  {
+    emit(AppGetNextInspectorOrdersLoadingState());
+    print('In getNextInspectorOrders...');
+
+    MainDioHelper.getData(
+        url: nextPage !=null ? '$inspectorOrders/$id$nextPage' : '$inspectorOrders/$id',
+        token: token
+    ).then((value)
+    {
+      print('Got next inspector orders...');
+
+      nextOrderHelper(id: id, type: inspector, value: value);
+
+      emit(AppGetNextInspectorOrdersSuccessState());
+    }).catchError((error)
+    {
+      print("COULDN'T GET NEXT INSPECTOR ORDERS, ${error.toString()}");
+      emit(AppGetNextInspectorOrdersErrorState());
+    });
+
+  }
+
+  //----------------------
+
+  //GLOBAL ORDERS
 
   ///Create an Order
   void createOrder(SubmitOrderModel? order, BuildContext context)
@@ -830,6 +1128,30 @@ class AppCubit extends Cubit<AppStates>
   }
 
 
+  ///Gets next batch of total orders
+  void getNextOrders({String? nextPage})
+  {
+    emit(AppGetNextOrdersLoadingState());
+
+    print('In getNextOrders...');
+
+    MainDioHelper.getData(
+        url: nextPage !=null ? '$AllOrders$nextPage' : AllOrders,
+        token: token
+    ).then((value)
+    {
+      print('Got next  orders...');
+
+      nextOrderHelper(id: 'none', type: 'allOrders', value: value);
+
+      emit(AppGetNextOrdersSuccessState());
+    }).catchError((error)
+    {
+      print("COULDN'T GET NEXT ORDERS, ${error.toString()}");
+      emit(AppGetNextOrdersErrorState());
+    });
+  }
+
   ///Updates an order
   void patchOrder({
     bool? isWorkerWaitingOrders, bool? getDoneOrdersWorker,
@@ -884,203 +1206,10 @@ class AppCubit extends Cubit<AppStates>
 
 
 
-
-  //Worker Orders
-
-  ///Order in WorkerPrepareOrder
-  OrderModel? inWorkingOrder;
-  void setInWorkingOrder(OrderModel? o)
-  {
-    inWorkingOrder = o;
-    emit(AppSetInWorkingOrderState());
-
-  }
-
-
-  OrdersModel? workerDoneOrders;
-  ///Get the [being-prepared, prepared] orders by a worker
-  void getWorkerDoneOrders()
-  {
-    if(token !='')
-    {
-      emit(AppGetWorkerDoneOrdersLoadingState());
-      print("In Getting Worker's Done Orders...");
-
-      MainDioHelper.getData(
-        url: doneOrdersByUser,
-        token: token,
-      ).then((value)
-      {
-        print('Got Worker Done Orders...');
-
-        workerDoneOrders = OrdersModel.fromJson(value.data);
-
-        emit(AppGetWorkerDoneOrdersSuccessState());
-      }).catchError((error)
-      {
-        print('ERROR WHILE GETTING WORKER DONE ORDERS, ${error.toString()}');
-        emit(AppGetWorkerDoneOrdersErrorState());
-      });
-    }
-  }
-
-
-  OrdersModel? allWorkerOrders;
-  ///Get all the orders assigned to this worker
-  void getAllWorkerOrders()
-  {
-    if(token !='')
-    {
-      emit(AppGetAllOrdersWorkerLoadingState());
-
-      print('In getAllWorkerOrders...');
-
-      MainDioHelper.getData(
-        url: allOrdersWorker,
-        token: token,
-      ).then((value)
-      {
-        print('Got all Worker Orders...');
-
-        allWorkerOrders= OrdersModel.fromJson(value.data);
-
-        emit(AppGetAllOrdersWorkerSuccessState());
-      }).catchError((error)
-      {
-        print('ERROR WHILE GETTING ALL ORDERS OF A WORKER, ${error.toString()}');
-        emit(AppGetAllOrdersWorkerErrorState());
-      });
-    }
-  }
-
-  //------------------------
-  //------------------------
-
-  // PRICE SETTER ORDERS
-
-  OrdersModel? priceSetterDoneOrders;
-  ///Get the [priced, being_priced] orders by a priceSetter
-  void getPriceSetterDoneOrders()
-  {
-    if(token !='')
-    {
-      emit(AppGetPriceSetterDoneOrdersLoadingState());
-      print("In Getting Price Setter's Done Orders...");
-
-      MainDioHelper.getData(
-        url: doneOrdersByUser,
-        token: token,
-      ).then((value)
-      {
-        print('Got Price Setter Done Orders...');
-
-        priceSetterDoneOrders = OrdersModel.fromJson(value.data);
-
-        emit(AppGetPriceSetterDoneOrdersSuccessState());
-      }).catchError((error)
-      {
-        print('ERROR WHILE GETTING PRICE SETTER DONE ORDERS, ${error.toString()}');
-        emit(AppGetPriceSetterDoneOrdersErrorState());
-      });
-    }
-  }
-
-
-  OrdersModel? allPriceSetterOrders;
-  ///Get all the orders assigned to this priceSetter
-  void getAllPriceSetterOrders()
-  {
-    if(token !='')
-    {
-      emit(AppGetAllOrdersPriceSetterLoadingState());
-
-      print('In getAllPriceSetterOrders...');
-
-      MainDioHelper.getData(
-        url: allOrdersWorker,
-        token: token,
-      ).then((value)
-      {
-        print('Got all Price Setters Orders...');
-
-        allPriceSetterOrders= OrdersModel.fromJson(value.data);
-
-        emit(AppGetAllOrdersPriceSetterSuccessState());
-      }).catchError((error)
-      {
-        print('ERROR WHILE GETTING ALL ORDERS OF A PRICE SETTER, ${error.toString()}');
-
-        emit(AppGetAllOrdersPriceSetterErrorState());
-      });
-    }
-  }
-
-
-  //------------------------
-  //------------------------
-
-  // INSPECTOR ORDERS
-
-  OrdersModel? inspectorDoneOrders;
-  ///Get the [verified, being_verified] orders by an inspector
-  void getInspectorDoneOrders()
-  {
-    if(token !='')
-    {
-      emit(AppGetInspectorDoneOrdersLoadingState());
-      print("In Getting inspector's Done Orders...");
-
-      MainDioHelper.getData(
-        url: doneOrdersByUser,
-        token: token,
-      ).then((value)
-      {
-        print('Got inspector Done Orders...');
-
-        inspectorDoneOrders = OrdersModel.fromJson(value.data);
-
-        emit(AppGetInspectorDoneOrdersSuccessState());
-      }).catchError((error)
-      {
-        print('ERROR WHILE GETTING INSPECTOR DONE ORDERS, ${error.toString()}');
-        emit(AppGetInspectorDoneOrdersErrorState());
-      });
-    }
-  }
-
-
-  OrdersModel? allInspectorOrders;
-  ///Get all the orders assigned to this inspector
-  void getAllInspectorOrders()
-  {
-    if(token !='')
-    {
-      emit(AppGetAllOrdersInspectorLoadingState());
-
-      print('In getAllInspectorOrders...');
-
-      MainDioHelper.getData(
-        url: allOrdersWorker,
-        token: token,
-      ).then((value)
-      {
-        print('Got all inspector Orders...');
-
-        allInspectorOrders= OrdersModel.fromJson(value.data);
-
-        emit(AppGetAllOrdersInspectorSuccessState());
-      }).catchError((error)
-      {
-        print('ERROR WHILE GETTING ALL ORDERS OF AN INSPECTOR, ${error.toString()}');
-
-        emit(AppGetAllOrdersInspectorErrorState());
-      });
-    }
-  }
-
   //--------------------------------------------------------\\
 
-  //Order File created by manager
+  //Order FILE CREATED BY MANAGER
+
   SubmitOrderModel? orderFromExcel;
 
   PlatformFile? excelFile;

@@ -20,22 +20,23 @@ class ManagerInspectorsSettings extends StatelessWidget {
             child: Scaffold(
               appBar: defaultAppBar(cubit: cubit, text: 'inspectors_settings_title'),
 
-              body: ConditionalBuilder(
-                condition: cubit.inspectorsDetailsModel !=null,
-                builder: (context)=>Padding(
-                  padding: const EdgeInsets.all(24.0),
+              body: Padding(
+                padding: const EdgeInsets.all(24.0),
 
-                  child: ScrollConfiguration(
-                    behavior: ScrollConfiguration.of(context).copyWith(
-                      physics: const BouncingScrollPhysics(),
-                      dragDevices: dragDevices,
-                    ),
-                    child: RefreshIndicator(
-                      onRefresh: ()async
-                      {
-                        cubit.getInspectorsDetails();
-                      },
-                      child: OrientationBuilder(
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context).copyWith(
+                    physics: const BouncingScrollPhysics(),
+                    dragDevices: dragDevices,
+                  ),
+                  child: RefreshIndicator(
+                    onRefresh: ()async
+                    {
+                      cubit.inspectors=null;
+                      cubit.getInspectors();
+                    },
+                    child: ConditionalBuilder(
+                      condition: cubit.inspectors !=null,
+                      builder: (context)=>OrientationBuilder(
                         builder: (context,orientation)
                         {
                           if(orientation == Orientation.portrait)
@@ -58,9 +59,9 @@ class ManagerInspectorsSettings extends StatelessWidget {
                                 Expanded(
                                   child: ListView.separated(
                                     shrinkWrap: true,
-                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, inspector: cubit.inspectorsDetailsModel?.inspectors?[index]),
+                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, inspector: cubit.inspectors?.inspectors?[index]),
                                     separatorBuilder: (context,index)=> const SizedBox(height: 20,),
-                                    itemCount: cubit.inspectorsDetailsModel!.inspectors!.length,
+                                    itemCount: cubit.inspectors!.inspectors!.length,
                                   ),
                                 ),
                               ],
@@ -87,9 +88,9 @@ class ManagerInspectorsSettings extends StatelessWidget {
                                   ListView.separated(
                                     physics: const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
-                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, inspector: cubit.inspectorsDetailsModel?.inspectors?[index]),
+                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, inspector: cubit.inspectors?.inspectors?[index]),
                                     separatorBuilder: (context,index)=> const SizedBox(height: 20,),
-                                    itemCount: cubit.inspectorsDetailsModel!.inspectors!.length,
+                                    itemCount: cubit.inspectors!.inspectors!.length,
                                   ),
                                 ],
                               ),
@@ -97,10 +98,11 @@ class ManagerInspectorsSettings extends StatelessWidget {
                           }
                         },
                       ),
+
+                      fallback: (context)=> Center(child: defaultProgressIndicator(context)),
                     ),
                   ),
                 ),
-                fallback: (context)=>Center(child: defaultProgressIndicator(context)),
               ),
             ),
           );
@@ -115,6 +117,12 @@ class ManagerInspectorsSettings extends StatelessWidget {
       highlightColor: cubit.isDarkTheme? defaultDarkColor.withOpacity(0.2) : defaultColor.withOpacity(0.2),
       onTap: ()
       {
+        //Only get orders on click if it's empty, pagination happens by scroll in his page
+        if(inspector?.orders?.length ==0)
+        {
+          cubit.getNextInspectorOrders(id: inspector!.inspector!.id!, nextPage: inspector.pagination?.nextPage);
+        }
+
         navigateTo(context, InspectorDetailsPage(inspector: inspector!,));
       },
       boxColor: null,
@@ -126,20 +134,6 @@ class ManagerInspectorsSettings extends StatelessWidget {
         [
           Text(
             '${inspector?.inspector?.name?? 'Worker Name'} ${inspector?.inspector?.lastName?? 'Worker Last'}',
-            style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
-          ),
-
-          const SizedBox(width: 10,),
-
-          Text(
-            '|',
-            style: textStyleBuilder(fontSize: 24, fontWeight: FontWeight.w700),
-          ),
-
-          const SizedBox(width: 10,),
-
-          Text(
-            "${inspector?.orders?.length?? 'Total Orders'}",
             style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
           ),
         ],

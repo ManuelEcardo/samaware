@@ -35,7 +35,7 @@ class LoginCubit extends Cubit<LoginStates>
       },
     ).then((value)
     {
-      print('Got Login Data, ${value.data}');
+      print('Got Login Data...');
 
        loginModel=LoginModel.fromJson(value.data);
       // AppCubit().getUserData(loginModel?.token);

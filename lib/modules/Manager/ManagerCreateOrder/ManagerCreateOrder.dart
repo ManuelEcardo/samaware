@@ -230,11 +230,11 @@ class _ManagerCreateOrderState extends State<ManagerCreateOrder> {
                                               },
                                               items: cubit.workers?.workers?.map((value) {
                                                 return DropdownMenuItem<String>(
-                                                  value: value.id,
+                                                  value: value.worker?.id,
                                                   child: Row(
                                                     children: [
                                                       Text(
-                                                        '${value.name!} ${value.lastName!}',
+                                                        '${value.worker?.name} ${value.worker?.lastName}',
                                                         overflow: TextOverflow.ellipsis,
                                                         maxLines: 1,
 
@@ -397,11 +397,11 @@ class _ManagerCreateOrderState extends State<ManagerCreateOrder> {
                                                 },
                                                 items: cubit.workers?.workers?.map((value) {
                                                   return DropdownMenuItem<String>(
-                                                    value: value.id,
+                                                    value: value.worker?.id,
                                                     child: Row(
                                                       children: [
                                                         Text(
-                                                          '${value.name!} ${value.lastName!}',
+                                                          '${value.worker?.name} ${value.worker?.lastName}',
                                                           overflow: TextOverflow.ellipsis,
                                                           maxLines: 1,
 

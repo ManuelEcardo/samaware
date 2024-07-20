@@ -11,8 +11,37 @@ import 'package:samaware_flutter/shared/components/constants.dart';
 import 'package:samaware_flutter/shared/styles/colors.dart';
 import 'package:string_extensions/string_extensions.dart';
 
-class ManagerOrdersSettings extends StatelessWidget {
+class ManagerOrdersSettings extends StatefulWidget {
   const ManagerOrdersSettings({super.key});
+
+  @override
+  State<ManagerOrdersSettings> createState() => _ManagerOrdersSettingsState();
+}
+
+class _ManagerOrdersSettingsState extends State<ManagerOrdersSettings> {
+
+  //Scroll Controller & listener for Lazy Loading
+  ScrollController scrollController= ScrollController();
+  final GlobalKey _key = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+
+    AppCubit cubit= AppCubit.get(context);
+
+    scrollController.addListener(()
+    {
+      _onScroll(cubit);
+    });
+  }
+
+  @override
+  void dispose()
+  {
+    scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +93,9 @@ class ManagerOrdersSettings extends StatelessWidget {
 
                                 Expanded(
                                   child: ListView.separated(
-                                    //physics: const NeverScrollableScrollPhysics(),
+                                    physics: const AlwaysScrollableScrollPhysics(),
+                                    key: _key,
+                                    controller: scrollController,
                                     shrinkWrap: true,
                                     itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, order: cubit.allOrders?.orders?[index]),
                                     separatorBuilder: (context,index)=> const SizedBox(height: 20,),
@@ -92,6 +123,8 @@ class ManagerOrdersSettings extends StatelessWidget {
                             defaultToast(msg: Localization.translate('getting_all_orders_toast'));
                           },
                           child: SingleChildScrollView(
+                            key: _key,
+                            controller: scrollController,
                             physics: const AlwaysScrollableScrollPhysics(),
                             child: Padding(
                               padding: const EdgeInsets.all(24.0),
@@ -116,6 +149,9 @@ class ManagerOrdersSettings extends StatelessWidget {
                                     separatorBuilder: (context,index)=> const SizedBox(height: 20,),
                                     itemCount: cubit.allOrders!.orders!.length,
                                   ),
+
+                                  if(state is AppGetNextOrdersLoadingState)
+                                    defaultLinearProgressIndicator(context),
                                 ],
                               ),
                             ),
@@ -190,5 +226,20 @@ class ManagerOrdersSettings extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  ///onScroll Function for to get orders
+  void _onScroll(AppCubit cubit)
+  {
+    //Will Scroll Only and Only if: Got to the end of the list
+    if (scrollController.position.pixels == scrollController.position.maxScrollExtent)
+    {
+      if(cubit.allOrders?.pagination?.nextPage !=null)
+      {
+        print('paginating next orders...');
+        cubit.getNextOrders(nextPage: cubit.allOrders?.pagination?.nextPage);
+      }
+
+    }
   }
 }

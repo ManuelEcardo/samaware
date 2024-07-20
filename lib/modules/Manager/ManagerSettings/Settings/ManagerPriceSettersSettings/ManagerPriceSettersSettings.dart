@@ -2,6 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:samaware_flutter/models/PriceSettersDetailsModel/PriceSettersDetailsModel.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerPriceSettersSettings/PriceSetterDetailsPage.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
+
 class ManagerPriceSettersSettings extends StatelessWidget {
   const ManagerPriceSettersSettings({super.key});
 
@@ -12,6 +13,7 @@ class ManagerPriceSettersSettings extends StatelessWidget {
         builder: (context,state)
         {
           var cubit= AppCubit.get(context);
+
           return Directionality(
 
             textDirection: appDirectionality(),
@@ -19,7 +21,7 @@ class ManagerPriceSettersSettings extends StatelessWidget {
               appBar: defaultAppBar(cubit: cubit, text: 'priceSetters_settings_title'),
 
               body: ConditionalBuilder(
-                condition: cubit.priceSettersDetailsModel !=null,
+                condition: cubit.priceSetters !=null,
                 builder: (context)=>Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: ScrollConfiguration(
@@ -30,7 +32,8 @@ class ManagerPriceSettersSettings extends StatelessWidget {
                     child: RefreshIndicator(
                       onRefresh: ()async
                       {
-                        cubit.getPriceSettersDetails();
+                        cubit.priceSetters=null;
+                        cubit.getPriceSetters();
                       },
                       child: OrientationBuilder(
                         builder: (context,orientation)
@@ -55,9 +58,9 @@ class ManagerPriceSettersSettings extends StatelessWidget {
                                 Expanded(
                                   child: ListView.separated(
                                     shrinkWrap: true,
-                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, priceSetter: cubit.priceSettersDetailsModel?.priceSetters?[index]),
+                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, priceSetter: cubit.priceSetters?.priceSetters?[index]),
                                     separatorBuilder: (context,index)=> const SizedBox(height: 20,),
-                                    itemCount: cubit.priceSettersDetailsModel!.priceSetters!.length,
+                                    itemCount: cubit.priceSetters!.priceSetters!.length,
                                   ),
                                 ),
                               ],
@@ -84,9 +87,9 @@ class ManagerPriceSettersSettings extends StatelessWidget {
                                   ListView.separated(
                                     physics: const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
-                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, priceSetter: cubit.priceSettersDetailsModel?.priceSetters?[index]),
+                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, priceSetter: cubit.priceSetters?.priceSetters?[index]),
                                     separatorBuilder: (context,index)=> const SizedBox(height: 20,),
-                                    itemCount: cubit.priceSettersDetailsModel!.priceSetters!.length,
+                                    itemCount: cubit.priceSetters!.priceSetters!.length,
                                   ),
                                 ],
                               ),
@@ -112,6 +115,12 @@ class ManagerPriceSettersSettings extends StatelessWidget {
       highlightColor: cubit.isDarkTheme? defaultDarkColor.withOpacity(0.2) : defaultColor.withOpacity(0.2),
       onTap: ()
       {
+        //Only get orders on click if it's empty, pagination happens by scroll in his page
+        if(priceSetter?.orders?.length ==0)
+        {
+          cubit.getNextPriceSetterOrders(id: priceSetter!.priceSetter!.id!, nextPage: priceSetter.pagination?.nextPage);
+        }
+
         navigateTo(context, PriceSetterDetailsPage(priceSetter: priceSetter!,));
       },
       boxColor: null,
@@ -123,20 +132,6 @@ class ManagerPriceSettersSettings extends StatelessWidget {
         [
           Text(
             '${priceSetter?.priceSetter?.name?? 'Worker Name'} ${priceSetter?.priceSetter?.lastName?? 'Worker Last'}',
-            style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
-          ),
-
-          const SizedBox(width: 10,),
-
-          Text(
-            '|',
-            style: textStyleBuilder(fontSize: 24, fontWeight: FontWeight.w700),
-          ),
-
-          const SizedBox(width: 10,),
-
-          Text(
-            "${priceSetter?.orders?.length?? 'Total Orders'}",
             style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
           ),
         ],

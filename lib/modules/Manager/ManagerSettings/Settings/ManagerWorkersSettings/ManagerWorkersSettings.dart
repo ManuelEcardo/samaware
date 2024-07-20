@@ -27,9 +27,10 @@ class ManagerWorkersSettings extends StatelessWidget {
             appBar: defaultAppBar(cubit: cubit, text: 'workers_settings_title'),
 
             body: ConditionalBuilder(
-              condition: cubit.workersDetailsModel !=null,
+              condition: cubit.workers !=null,
               builder: (context)=>Padding(
                 padding: const EdgeInsets.all(24.0),
+
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context).copyWith(
                     physics: const BouncingScrollPhysics(),
@@ -38,7 +39,8 @@ class ManagerWorkersSettings extends StatelessWidget {
                   child: RefreshIndicator(
                     onRefresh: ()async
                     {
-                      cubit.getWorkersDetails();
+                      cubit.workers=null;
+                      cubit.getWorkers();
                     },
                     child: OrientationBuilder(
                       builder: (context,orientation)
@@ -64,9 +66,9 @@ class ManagerWorkersSettings extends StatelessWidget {
                                 child: ListView.separated(
                                   //physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
-                                  itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, worker: cubit.workersDetailsModel?.workers?[index]),
+                                  itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, worker: cubit.workers?.workers?[index]),
                                   separatorBuilder: (context,index)=> const SizedBox(height: 20,),
-                                  itemCount: cubit.workersDetailsModel!.workers!.length,
+                                  itemCount: cubit.workers!.workers!.length,
                                 ),
                               ),
                             ],
@@ -93,9 +95,9 @@ class ManagerWorkersSettings extends StatelessWidget {
                                 ListView.separated(
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
-                                  itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, worker: cubit.workersDetailsModel?.workers?[index]),
+                                  itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, worker: cubit.workers?.workers?[index]),
                                   separatorBuilder: (context,index)=> const SizedBox(height: 20,),
-                                  itemCount: cubit.workersDetailsModel!.workers!.length,
+                                  itemCount: cubit.workers!.workers!.length,
                                 ),
                               ],
                             ),
@@ -121,6 +123,12 @@ class ManagerWorkersSettings extends StatelessWidget {
       highlightColor: cubit.isDarkTheme? defaultDarkColor.withOpacity(0.2) : defaultColor.withOpacity(0.2),
       onTap: ()
       {
+        //Only get orders on click if it's empty, pagination happens by scroll in his page
+        if(worker?.orders?.length == 0)
+        {
+          cubit.getNextWorkerOrders(id: worker!.worker!.id!, nextPage: worker.pagination?.nextPage);
+        }
+
         navigateTo(context, WorkerDetailsPage(worker: worker!,));
       },
       boxColor: null,
@@ -132,20 +140,6 @@ class ManagerWorkersSettings extends StatelessWidget {
         [
           Text(
             '${worker?.worker?.name?? 'Worker Name'} ${worker?.worker?.lastName?? 'Worker Last'}',
-            style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
-          ),
-
-          const SizedBox(width: 10,),
-
-          Text(
-            '|',
-            style: textStyleBuilder(fontSize: 24, fontWeight: FontWeight.w700),
-          ),
-
-          const SizedBox(width: 10,),
-
-          Text(
-            "${worker?.orders?.length?? 'Total Orders'}",
             style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
           ),
         ],

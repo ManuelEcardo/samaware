@@ -5,6 +5,8 @@ const Map<String,String> ar={
   'submit_button':'ثّبت',
   'upload_button':'ارفع',
 
+  'loading':'يتم التحميل, الرجاء الانتظار',
+
 
   //Bottom Navigation Bar
 
@@ -121,7 +123,7 @@ const Map<String,String> ar={
 
   //Order Page Manager
 
-  'available_order_title':'الطلبيات في انتظار التحضير: ',
+  'available_order_title':'الطلبيات الغير منتهية: ',
 
   //Order Details Manager
 
@@ -277,6 +279,8 @@ const Map<String,String> en={
   'submit_button':'SUBMIT',
   'upload_button':'UPLOAD',
 
+  'loading':'Loading...',
+
 
   //Bottom Navigation Bar
 
@@ -415,7 +419,7 @@ const Map<String,String> en={
 
   //Order Page Manager
 
-  'available_order_title':'Waiting Orders: ',
+  'available_order_title':'Unfinished Orders: ',
 
   //Order Details Manager
 

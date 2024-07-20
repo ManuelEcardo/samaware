@@ -4,13 +4,61 @@ import 'package:samaware_flutter/models/UserDataModel/UserData.dart';
 class OrdersModel
 {
   List<OrderModel>? orders=[];
+  Pagination? pagination;
 
-  OrdersModel.fromJson(List<dynamic> json)
+  OrdersModel.fromJson(Map<String,dynamic> json)
   {
-    for(Map<String,dynamic> element in json)
+    json['orders'].forEach((element)
     {
       orders?.add(OrderModel.fromJson(element));
+    });
+
+    if(json['pagination'] !=null)
+    {
+      pagination = Pagination.fromJson(json['pagination']);
     }
+  }
+
+
+  /// Adds orders to object
+  void addOrders(Map<String,dynamic> json)
+  {
+    if(json['orders'] !=null)
+    {
+      json['orders'].forEach((order)
+      {
+        OrderModel myOrder = OrderModel.fromJson(order);
+
+        if(isFound(myOrder.orderId) == false)
+        {
+          orders?.add(myOrder);
+        }
+
+      });
+    }
+  }
+
+  /// Adds pagination
+  void addPagination(Map<String,dynamic> json)
+  {
+    if(json['pagination'] !=null)
+    {
+      pagination = Pagination.fromJson(json['pagination']);
+    }
+  }
+
+  ///Checks if order exists
+  bool isFound(String? id)
+  {
+    for(OrderModel order in orders?? [])
+    {
+      if(order.orderId == id)
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
 
@@ -139,4 +187,30 @@ class OrderModel
   }
 
 
+}
+
+
+class Pagination
+{
+  int? currentPage;
+  int? totalPages;
+
+  String? nextPage;
+  String? previousPage;
+
+  Pagination.fromJson(Map<String,dynamic> json)
+  {
+    currentPage = json['currentPage'];
+    totalPages = json['totalPages'];
+
+    if(json['nextPage'] !=null)
+    {
+      nextPage = json['nextPage'];
+    }
+
+    if(json['prevPage']!=null)
+    {
+      previousPage = json['prevPage'];
+    }
+  }
 }

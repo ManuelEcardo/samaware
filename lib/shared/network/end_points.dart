@@ -23,26 +23,35 @@ const login='users/login';
 
 const userDataByToken='users/me';
 
-const workersForManager='workers/';
-
-const workersWithDetail='workers/details';
-
-const priceSettersWithDetail='priceSetters/details';
-
-const inspectorWithDetail='inspectors/details';
-
 const logoutOneToken='users/logout';
 
 
 //WORKER ENDPOINTS
 
-const getAwaitingOrders= 'orders/waiting_me';
+const getAwaitingOrders= 'orders/workerRole/waiting_me';
 
-//Price SETTER ENDPOINTS
+const workersForManager='workers/all';
+
+const workersWithDetail='workers/details';
+
+
+
+//PRICE-SETTER ENDPOINTS
 
 const getAwaitingOrdersPriceSetters= 'orders/priceSetter/waiting_me';
 
 const getAwaitingOrdersInspector='orders/inspector/waiting_me';
+
+const priceSettersWithDetail='priceSetters/details';
+
+const allPriceSetters='priceSetters/all';
+
+//INSPECTOR ENDPOINTS
+
+const inspectorWithDetail='inspectors/details';
+
+const allInspectors='inspectors/all';
+
 
 
 //ORDER ENDPOINTS
@@ -58,3 +67,15 @@ const patchAnOrder='orders/patch';
 const doneOrdersByUser='orders/doneMe';
 
 const allOrdersWorker='orders/me';
+
+//ORDER WORKER
+
+const workerOrders='orders/worker';
+
+//ORDER PRICE-SETTER
+
+const priceSetterOrders='orders/priceSetter';
+
+//ORDER INSPECTOR
+
+const inspectorOrders='orders/inspector';

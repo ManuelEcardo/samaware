@@ -3,11 +3,40 @@ import 'package:samaware_flutter/models/PriceSettersDetailsModel/PriceSettersDet
 import 'package:samaware_flutter/modules/Manager/ManagerOrderDetails/ManagerOrderDetails.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 
-class PriceSetterDetailsPage extends StatelessWidget {
+class PriceSetterDetailsPage extends StatefulWidget {
 
   PriceSetterDetailsModel priceSetter;
 
   PriceSetterDetailsPage({super.key, required this.priceSetter});
+
+  @override
+  State<PriceSetterDetailsPage> createState() => _PriceSetterDetailsPageState();
+}
+
+class _PriceSetterDetailsPageState extends State<PriceSetterDetailsPage> {
+
+  //Scroll Controller & listener for Lazy Loading
+  ScrollController scrollController= ScrollController();
+  final GlobalKey _key = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+
+    AppCubit cubit= AppCubit.get(context);
+
+    scrollController.addListener(()
+    {
+      _onScroll(cubit);
+    });
+  }
+
+  @override
+  void dispose()
+  {
+    scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,39 +51,65 @@ class PriceSetterDetailsPage extends StatelessWidget {
           child: Scaffold(
             appBar: AppBar(),
 
-            body: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:
-                [
-                  Align(
-                    alignment: AlignmentDirectional.center,
-                    child: Text(
-                      '${priceSetter.priceSetter?.name?? 'Worker Name'} ${priceSetter.priceSetter?.lastName?? 'Worker Last'}',
-                      style: headlineTextStyleBuilder(),
+            body: ScrollConfiguration(
+              behavior: ScrollConfiguration.of(context).copyWith(
+                physics: const BouncingScrollPhysics(),
+                dragDevices: dragDevices,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children:
+                  [
+                    Align(
+                      alignment: AlignmentDirectional.center,
+                      child: Text(
+                        '${widget.priceSetter.priceSetter?.name?? 'Worker Name'} ${widget.priceSetter.priceSetter?.lastName?? 'Worker Last'}',
+                        style: headlineTextStyleBuilder(),
+                      ),
                     ),
-                  ),
 
-                  const SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
 
-                  myDivider(color: cubit.isDarkTheme? defaultThirdDarkColor : defaultThirdColor),
+                    myDivider(color: cubit.isDarkTheme? defaultThirdDarkColor : defaultThirdColor),
 
-                  const SizedBox(height: 35,),
+                    const SizedBox(height: 35,),
 
-                  informationBuilder(title: 'workers_details_order_number', value: priceSetter.orders?.length),
+                    informationBuilder(title: 'workers_details_order_number', value: widget.priceSetter.orders?.length),
 
-                  const SizedBox(height: 50,),
+                    const SizedBox(height: 50,),
 
-                  Expanded(
-                    child: ListView.separated(
-                      itemBuilder: (context,index)=>orderItemBuilder(cubit: cubit, context: context, order: priceSetter.orders?[index]),
-                      separatorBuilder: (context,index)=> const SizedBox(height: 20,),
-                      itemCount: priceSetter.orders!.length,
+                    if(state is AppGetNextPriceSetterOrdersLoadingState && widget.priceSetter.orders?.length ==0)
+
+                      Center(
+                        child: Column(
+                          children: [
+                            Text(Localization.translate('loading'), style: textStyleBuilder(),),
+
+                            const SizedBox(height: 25,),
+
+                            defaultProgressIndicator(context),
+                          ],
+                        ),
+                      ),
+
+                    Expanded(
+                      child: ListView.separated(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        controller: scrollController,
+                        key: _key,
+                        itemBuilder: (context,index)=>orderItemBuilder(cubit: cubit, context: context, order: widget.priceSetter.orders?[index]),
+                        separatorBuilder: (context,index)=> const SizedBox(height: 20,),
+                        itemCount: widget.priceSetter.orders!.length,
+                      ),
                     ),
-                  ),
 
-                ],
+                    if(state is AppGetNextPriceSetterOrdersLoadingState && widget.priceSetter.orders?.length !=0)
+                      defaultLinearProgressIndicator(context),
+
+                  ],
+                ),
               ),
             ),
           ),
@@ -62,7 +117,6 @@ class PriceSetterDetailsPage extends StatelessWidget {
       },
     );
   }
-
 
   ///Build the information items
   Widget informationBuilder({required String title, required var value, TextStyle? style})
@@ -135,5 +189,20 @@ class PriceSetterDetailsPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  ///onScroll Function for to get orders
+  void _onScroll(AppCubit cubit)
+  {
+    //Will Scroll Only and Only if: Got to the end of the list
+    if (scrollController.position.pixels == scrollController.position.maxScrollExtent)
+    {
+      if(widget.priceSetter.pagination?.nextPage !=null)
+      {
+        print('paginating next priceSetter orders...');
+        cubit.getNextPriceSetterOrders(id: widget.priceSetter.priceSetter!.id!, nextPage: widget.priceSetter.pagination?.nextPage);
+      }
+
+    }
   }
 }

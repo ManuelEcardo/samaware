@@ -5,11 +5,14 @@ class PriceSettersDetailsModel
 {
   List<PriceSetterDetailsModel>? priceSetters=[];
 
-  PriceSettersDetailsModel.fromJson(List<dynamic> json)
+  PriceSettersDetailsModel.fromJson(Map<String,dynamic> json)
   {
-    for(var priceSetter in json)
+    if(json['priceSetters'] !=null)
     {
-      priceSetters?.add(PriceSetterDetailsModel.fromJson(priceSetter));
+      for(var priceSetter in json['priceSetters'])
+      {
+        priceSetters?.add(PriceSetterDetailsModel.fromJson(priceSetter));
+      }
     }
   }
 }
@@ -21,13 +24,60 @@ class PriceSetterDetailsModel
 
   List<OrderModel>? orders=[];
 
+  Pagination? pagination;
+
   PriceSetterDetailsModel.fromJson(Map<String,dynamic> json)
   {
     priceSetter= UserData.fromJson(json);
 
-    json['orders'].forEach((order)
+    if(json['orders'] !=null)
     {
-      orders?.add(OrderModel.fromJson(order, isPriceSetterPassed: true, priceSetter: priceSetter));
-    });
+      json['orders'].forEach((order)
+      {
+        orders?.add(OrderModel.fromJson(order, isPriceSetterPassed: true, priceSetter: priceSetter));
+      });
+    }
+
+  }
+
+  /// Adds orders to object
+  void addOrders(Map<String,dynamic> json)
+  {
+    if(json['orders'] !=null)
+    {
+      json['orders'].forEach((order)
+      {
+
+        OrderModel myOrder = OrderModel.fromJson(order, isPriceSetterPassed: true, priceSetter: priceSetter);
+
+        if(isFound(myOrder.orderId) == false)
+        {
+          orders?.add(myOrder);
+        }
+      });
+    }
+  }
+
+  /// Adds pagination
+  void addPagination(Map<String,dynamic> json)
+  {
+    if(json['pagination'] !=null)
+    {
+      pagination = Pagination.fromJson(json['pagination']);
+    }
+  }
+
+  ///Checks if order exists
+  bool isFound(String? id)
+  {
+    for(OrderModel order in orders?? [])
+    {
+      if(order.orderId == id)
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

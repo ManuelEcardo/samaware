@@ -111,10 +111,10 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                                   text: Localization.translate('priceSetters_settings_title'),
                                   onTap: ()
                                   {
-                                    if(cubit.priceSettersDetailsModel==null)
+                                    if(cubit.priceSetters==null)
                                     {
-                                      print('getting all priceSetters details model after press from settings...');
-                                      cubit.getPriceSettersDetails();
+                                      print('getting all priceSetters after press from settings...');
+                                      cubit.getPriceSetters();
                                     }
 
                                     navigateTo(context, const ManagerPriceSettersSettings());
@@ -131,10 +131,10 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                                   text: Localization.translate('inspectors_settings_title'),
                                   onTap: ()
                                   {
-                                    if(cubit.inspectorsDetailsModel==null)
+                                    if(cubit.inspectors==null)
                                     {
-                                      print('getting all inspector details after press from settings...');
-                                      cubit.getInspectorsDetails();
+                                      print('getting all inspector after press from settings...');
+                                      cubit.getInspectors();
                                     }
 
                                     navigateTo(context, const ManagerInspectorsSettings());
@@ -302,10 +302,10 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                                     text: Localization.translate('priceSetters_settings_title'),
                                     onTap: ()
                                     {
-                                      if(cubit.priceSettersDetailsModel==null)
+                                      if(cubit.priceSetters==null)
                                       {
-                                        print('getting all priceSetters details model after press from settings...');
-                                        cubit.getPriceSettersDetails();
+                                        print('getting all priceSetters model after press from settings...');
+                                        cubit.getPriceSetters();
                                       }
 
                                       navigateTo(context, const ManagerPriceSettersSettings());
@@ -322,10 +322,10 @@ class _ManagerSettingsState extends State<ManagerSettings> {
                                     text: Localization.translate('inspectors_settings_title'),
                                     onTap: ()
                                     {
-                                      if(cubit.inspectorsDetailsModel==null)
+                                      if(cubit.inspectors==null)
                                       {
-                                        print('getting all inspector details after press from settings...');
-                                        cubit.getInspectorsDetails();
+                                        print('getting all inspector after press from settings...');
+                                        cubit.getInspectors();
                                       }
 
                                       navigateTo(context, const ManagerInspectorsSettings());
