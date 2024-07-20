@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../shared/components/Localization/Localization.dart';
 import '../shared/components/components.dart';
+import '../shared/components/constants.dart';
 import 'cubit/cubit.dart';
 import 'cubit/states.dart';
 
@@ -130,7 +131,31 @@ class _HomeLayoutState extends State<HomeLayout> {
                 fallback: (BuildContext context)=> Scaffold(
                   appBar: defaultAppBar(cubit: cubit),
 
-                  body: Center(child: defaultProgressIndicator(context),),
+                  body: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(context).copyWith(
+                      physics: const BouncingScrollPhysics(),
+                      dragDevices: dragDevices,
+                    ),
+                    child: RefreshIndicator(
+                        onRefresh: ()async
+                        {
+                          cubit.getMyAPI(getAll: true, GetUserData: true);
+                        },
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SizedBox(height: MediaQuery.of(context).size.height /2.5,),
+
+                                defaultProgressIndicator(context),
+                              ],
+                            ),
+                          )
+                        )
+                    ),
+                  ),
                 ),
               ),
           ),

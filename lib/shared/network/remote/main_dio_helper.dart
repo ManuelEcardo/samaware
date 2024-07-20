@@ -58,7 +58,7 @@ class MainDioHelper
     if(isStatusCheck == true)  //Allow Status 400,200,201 for Register and Login Errors.
       {
         dio?.options.validateStatus= (status) {
-          if([200,201,400].contains(status))
+          if([200,201,400,404].contains(status))
           {
             return true;
           }

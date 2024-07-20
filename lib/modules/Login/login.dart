@@ -141,7 +141,7 @@ class _LoginState extends State<Login> {
                                   Localization.translate('login_second_title'),//'Login Now and Start Revealing the Truth',
                                   style: TextStyle(
                                     fontSize: 16,
-                                    color: AppCubit.get(context).isDarkTheme? Colors.white : defaultFontColor,
+                                    color: AppCubit.get(context).isDarkTheme? defaultDarkColor : defaultColor,
                                     fontFamily: AppCubit.language == 'ar'? 'Cairo': 'Railway',
                                     fontWeight: FontWeight.w400
                                   ),
@@ -156,6 +156,7 @@ class _LoginState extends State<Login> {
                                   prefix: Icons.email_outlined,
                                   isFilled: false,
                                   fillColor: appCubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+
                                   validate: (value)
                                   {
                                     if(value!.isEmpty)
@@ -286,7 +287,7 @@ class _LoginState extends State<Login> {
                                     fallback: (context)=> Center(
                                       child: defaultButton(
                                         color: appCubit.isDarkTheme? defaultDarkColor : defaultColor,
-                                        textColor: appCubit.isDarkTheme? Colors.black : Colors.white,
+                                        textColor: appCubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
                                         title: Localization.translate('submit_button_login'),
                                         fontFamily: AppCubit.language == 'ar'? 'Cairo': 'Poppins',
                                         letterSpacing:0,
@@ -340,7 +341,7 @@ class _LoginState extends State<Login> {
                                     Localization.translate('login_second_title'),//'Login Now and Start Revealing the Truth',
                                     style: TextStyle(
                                         fontSize: 16,
-                                        color: AppCubit.get(context).isDarkTheme? Colors.white : defaultFontColor,
+                                        color: AppCubit.get(context).isDarkTheme? defaultDarkColor : defaultColor,
                                         fontFamily: AppCubit.language == 'ar'? 'Cairo': 'Poppins',
                                         fontWeight: FontWeight.w400
                                     ),

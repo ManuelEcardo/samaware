@@ -299,10 +299,12 @@ class AppCubit extends Cubit<AppStates>
   //----------------------------------------------------\\
 
   ///Will Get the required data depending on the user's role
-  void getMyAPI({bool? getAll})
+  void getMyAPI({bool getAll = false, bool GetUserData =false})
   {
     if(token !='')
     {
+      if(GetUserData) getUserData();
+
       switch(CacheHelper.getData(key: 'role'))
       {
         case manager:
@@ -313,7 +315,7 @@ class AppCubit extends Cubit<AppStates>
           getInspectors();
 
           getNonReadyOrders();
-          getAll?? getAllOrders();
+          if(getAll) getAllOrders();
 
           break;
 
@@ -324,7 +326,7 @@ class AppCubit extends Cubit<AppStates>
           getWorkerDoneOrders();
 
 
-          getAll?? getAllWorkerOrders();
+          if(getAll) getAllWorkerOrders();
 
           break;
 
@@ -334,7 +336,7 @@ class AppCubit extends Cubit<AppStates>
           getWaitingOrdersPriceSetter();
           getPriceSetterDoneOrders();
 
-          getAll?? getAllPriceSetterOrders();
+          if(getAll) getAllPriceSetterOrders();
 
           break;
 
@@ -344,7 +346,7 @@ class AppCubit extends Cubit<AppStates>
           getWaitingOrdersInspector();
           getInspectorDoneOrders();
 
-          getAll?? getAllInspectorOrders();
+          if(getAll) getAllInspectorOrders();
 
           break;
 
@@ -1580,6 +1582,98 @@ class AppCubit extends Cubit<AppStates>
   }
 
 
-
+  // // TO BE DELETED , add total items
+  //
+  // List<Map<String, dynamic>> map=[];
+  //
+  // /// Add items to Database
+  // Future<void> toDatabase()
+  // async {
+  //   emit(AppAddDatabaseLoadingState());
+  //
+  //   if(map.isEmpty)
+  //   {
+  //     print('empty  map');
+  //     await loadAllItems();
+  //   }
+  //
+  //   MainDioHelper.postData(
+  //     url: 'items/addItem',
+  //     data: {
+  //       'data':map,
+  //       token:token,
+  //     },
+  //     isStatusCheck: true
+  //   ).then((value)
+  //   {
+  //     print(value.data);
+  //     emit(AppAddDatabaseSuccessState());
+  //   }).catchError((error, stackTrace)
+  //   {
+  //     print('ERROR, ${error.toString()}, $stackTrace');
+  //
+  //     emit(AppAddDatabaseErrorState());
+  //   });
+  // }
+  //
+  // /// Method to fetch the items from excel file
+  // Future<void> loadAllItems() async {
+  //   FilePickerResult? result=await FilePicker.platform.pickFiles();
+  //
+  //   if(result !=null)
+  //   {
+  //     var file = result.files.first.path!;
+  //
+  //     print("PATH IS: $file");
+  //
+  //     try
+  //     {
+  //       var bytes = File(file).readAsBytesSync();
+  //
+  //       var excel = Excel.decodeBytes(bytes);
+  //
+  //       for (var table in excel.tables.keys)
+  //       {
+  //         if (excel.tables[table] != null)
+  //         {
+  //           final sheet = excel.tables[table]!;
+  //
+  //           print("Rows: ${sheet.maxRows}");
+  //
+  //           //Get Items
+  //           for (var rowIndex = 4; rowIndex < sheet.maxRows; rowIndex++) {
+  //             final row = sheet.row(rowIndex);
+  //
+  //             final id = row[0];
+  //             final itemName = row[1];
+  //
+  //             if (id != null && itemName != null )
+  //             {
+  //               map.add({
+  //                 'itemId': id.value.toString(),
+  //                 'name': itemName.value.toString(),
+  //               });
+  //             }
+  //             else
+  //             {
+  //               print("Some row is null");
+  //             }
+  //           }
+  //         }
+  //       }
+  //
+  //     }
+  //
+  //     catch (e, stackTrace)
+  //     {
+  //       print("Error while reading files, $e");
+  //       print(stackTrace.toString());
+  //     }
+  //
+  //   }
+  //
+  //
+  //   return null;
+  // }
 
 }

@@ -9,19 +9,19 @@ MaterialColor defaultColor= getMaterialColor(HexColor('25291C'));
 
 Color defaultHomeColor= HexColor('E3E7D3');
 
-Color defaultSecondaryColor= HexColor('989C94');
+Color defaultSecondaryColor= HexColor('5E0B15');
 
 Color defaultThirdColor= HexColor('25291C');
 
 Color defaultAlertColor=HexColor('ABABD1');
 
-Color defaultBoxColor= HexColor('EEEBEB');
+Color defaultBoxColor= HexColor('25291C');
 
 Color defaultCanvasColor = HexColor('EEE9E9');
 
 Color defaultBottomNavBarColor= HexColor('BDC2BF');
 
-Color defaultFontColor= Colors.black;
+Color defaultFontColor= Colors.white;
 
 Color defaultRespondMessageColor=HexColor('C2C3C4');
 

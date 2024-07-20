@@ -313,3 +313,11 @@ class AppGetNextOrdersSuccessState extends AppStates{}
 class AppGetNextOrdersErrorState extends AppStates{}
 
 //------------------------------------
+
+// TO DATABASE
+
+class AppAddDatabaseLoadingState extends AppStates{}
+
+class AppAddDatabaseSuccessState extends AppStates{}
+
+class AppAddDatabaseErrorState extends AppStates{}

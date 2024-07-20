@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:samaware_flutter/layout/cubit/cubit.dart';
+import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 
 import 'colors.dart';
 
@@ -99,16 +100,16 @@ ThemeData lightTheme(context) => ThemeData(
       color: Colors.black
   ),
 
-  inputDecorationTheme: const InputDecorationTheme(
+  inputDecorationTheme: InputDecorationTheme(
     prefixIconColor: Colors.black,
     suffixIconColor: Colors.black,
 
-    labelStyle: TextStyle(
+    labelStyle: const TextStyle(
         color: Colors.black
     ),
 
     enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.white),
+      borderSide: BorderSide(color: defaultColor),
     ),
 
   ),
