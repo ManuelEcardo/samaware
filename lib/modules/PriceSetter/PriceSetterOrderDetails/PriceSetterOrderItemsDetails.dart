@@ -75,7 +75,7 @@ class _PriceSetterOrderItemsDetailsState extends State<PriceSetterOrderItemsDeta
                         child: ListView.separated(
                             controller: scrollController,
                             scrollDirection: Axis.vertical,
-                            physics: BouncingScrollPhysics(),
+                            physics: const BouncingScrollPhysics(),
                             itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: widget.order.items![index]),
                             separatorBuilder: (context, index)
                             {

@@ -28,7 +28,7 @@ void main() async {
   //Dio Initialization
   MainDioHelper.init();
 
-  await CacheHelper.init(); //Starting CacheHelper (SharedPreferences), await for it since there is async,await in .init().
+  await CacheHelper.init(); //Starting CacheHelper (SharedPreferences)
 
 
   //LOAD LANGUAGE
@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
 
   const MyApp({super.key, required this.isDark, required this.homeWidget, required this.wsChannel});
 
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
