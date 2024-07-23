@@ -60,6 +60,12 @@ class OrdersModel
 
     return false;
   }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return orders.toString();
+  }
 }
 
 class OrderModel
@@ -193,6 +199,11 @@ class OrderModel
   }
 
 
+  @override
+  String toString() {
+    // TODO: implement toString
+    return 'OrderId: $orderId, toString Only Prints Order ID ';
+  }
 }
 
 

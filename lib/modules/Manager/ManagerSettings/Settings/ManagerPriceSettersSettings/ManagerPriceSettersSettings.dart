@@ -9,7 +9,13 @@ class ManagerPriceSettersSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit,AppStates>(
-        listener: (context,state){},
+        listener: (context,state)
+        {
+          if(state is AppGetPriceSettersLoadingState)
+          {
+            defaultToast(msg: Localization.translate('get_priceSetters_details_toast'));
+          }
+        },
         builder: (context,state)
         {
           var cubit= AppCubit.get(context);

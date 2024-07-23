@@ -16,7 +16,13 @@ class ManagerWorkersSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit,AppStates>(
-      listener: (context,state){},
+      listener: (context,state)
+      {
+        if(state is AppGetWorkersLoadingState)
+        {
+          defaultToast(msg: Localization.translate('get_worker_details_toast'));
+        }
+      },
       builder: (context,state)
       {
         var cubit= AppCubit.get(context);

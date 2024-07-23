@@ -68,6 +68,8 @@ const doneOrdersByUser='orders/doneMe';
 
 const allOrdersUsers='orders/me';
 
+const searchFOrders='orders/search';
+
 //ORDER WORKER
 
 const workerOrders='orders/worker';

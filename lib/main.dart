@@ -114,7 +114,7 @@ class MyApp extends StatelessWidget {
                   backgroundColor: cubit.isDarkTheme? defaultHomeDarkColor : defaultHomeColor,
                 ),
               ),
-              builder: EasyLoading.init(), //Toasts without context for web
+              builder: EasyLoading.init(), //Toasts without context for web support
             );
           },
         ),

@@ -124,6 +124,8 @@ const Map<String,String> ar={
 
   'available_order_title':'الطلبيات الغير منتهية: ',
 
+  'no_pending_orders':'لا يوجد طلبيات غير منتهية بعد...',
+
   //Order Details Manager
 
   'chosen_worker':'الموظف المختار: ',
@@ -193,18 +195,60 @@ const Map<String,String> ar={
 
   'workers_details_order_number':'الطلبيات المتاحة: ',
 
+  'get_worker_details_toast':'يتم جلب العمال...',
+
   //Settings Manager: Orders
 
   'orders_details_settings_title':'جميع الطلبات',
 
   'getting_all_orders_toast':'يتم جلب جميع الطلبات',
 
+  'getting_next_orders_toast':'يتم طلب الطلبيات...',
+
   //Settings Manager: PriceSetters
 
   'priceSetters_details_settings_title':'المُسعّرون وتفاصيلهم',
 
+  'get_priceSetters_details_toast':'يتم جلب المسعرين...',
+
   //Settings Manager: Inspectors
+
   'inspectors_details_settings_title':'المدقّقون وتفاصيلهم',
+
+  'get_inspectors_details_toast':'يتم جلب المدققين...',
+
+
+  //Settings Manager: Search
+
+  'search':'البحث',
+
+  'search_by_id':'البحث عن طريق الرقم',
+
+  'search_by_id_label':'الرقم',
+
+  'search_by_worker':'البحث عن طريق العامل',
+
+  'search_by_worker_label':'العامل',
+
+  'search_by_priceSetter':'البحث عن طريق المسعر',
+
+  'search_by_priceSetter_label':'المسعر',
+
+  'search_by_inspector':'البحث عن طريق المدقق',
+
+  'search_by_inspector_label':'المدقق',
+
+  'search_button':'ابحث',
+
+  'search_results_title':'نتائج البحث',
+
+  'no_available_results':'لم يتم إيجاد أية نتائج...',
+
+
+
+
+
+
 
 
   //WORKER ORDER FAILURE REASONS: FOR CONSTANT ARRAY TYPES
@@ -457,6 +501,8 @@ const Map<String,String> en={
 
   'available_order_title':'Unfinished Orders: ',
 
+  'no_pending_orders':'No Pending Orders...',
+
   //Order Details Manager
 
   'chosen_worker':'Chosen Worker: ',
@@ -527,19 +573,60 @@ const Map<String,String> en={
 
   'workers_details_order_number':'Total Assigned Orders:',
 
+  'get_worker_details_toast':'Getting workers...',
+
   //Settings Manager: Orders
 
   'orders_details_settings_title':'All Orders',
 
   'getting_all_orders_toast':'Getting all orders...',
 
+  'getting_next_orders_toast':'Getting Next Orders...',
+
   //Settings Manager: PriceSetters
 
   'priceSetters_details_settings_title':'Price Setters With Details',
 
+  'get_priceSetters_details_toast':'Getting priceSetters...',
+
   //Settings Manager: Inspectors
 
   'inspectors_details_settings_title':'Inspectors With Details',
+
+  'get_inspectors_details_toast':'Getting Inspectors...',
+
+
+  //Settings Manager: Search
+
+  'search':'Search',
+
+  'search_by_id':'Search By ID',
+
+  'search_by_id_label':'ID',
+
+  'search_by_worker':'Search By Worker',
+
+  'search_by_worker_label':'Worker',
+
+  'search_by_priceSetter':'Search By PriceSetter',
+
+  'search_by_priceSetter_label':'PriceSetter',
+
+  'search_by_inspector':'Search By Inspector:',
+
+  'search_by_inspector_label':'Inspector',
+
+  'search_button':'Search',
+
+  'search_results_title':'Search Results',
+
+  'no_available_results':'No Orders have been found!',
+
+
+
+
+
+
 
 
   //WORKER ORDER FAILURE REASONS: FOR CONSTANT ARRAY TYPES

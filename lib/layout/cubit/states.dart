@@ -321,3 +321,13 @@ class AppAddDatabaseLoadingState extends AppStates{}
 class AppAddDatabaseSuccessState extends AppStates{}
 
 class AppAddDatabaseErrorState extends AppStates{}
+
+//------------------------------------
+
+// SEARCH ORDER
+
+class AppSearchOrdersLoadingState extends AppStates{}
+
+class AppSearchOrdersErrorState extends AppStates{}
+
+class AppSearchOrdersSuccessState extends AppStates{}

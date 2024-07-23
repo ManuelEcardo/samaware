@@ -9,7 +9,14 @@ class ManagerInspectorsSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit,AppStates>(
-        listener: (context,state){},
+        listener: (context,state)
+        {
+          if(state is AppGetInspectorsLoadingState)
+          {
+            defaultToast(msg: Localization.translate('get_inspectors_details_toast'));
+          }
+        },
+
         builder: (context,state)
         {
           var cubit= AppCubit.get(context);

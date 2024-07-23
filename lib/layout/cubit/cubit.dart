@@ -1337,6 +1337,45 @@ class AppCubit extends Cubit<AppStates>
   }
 
 
+  OrdersModel? searchOrders;
+
+  ///Searches for orders via filters provided by end user
+  void searchForOrders({String? id, String? workerId, String? priceSetterId, String? inspectorId})
+  {
+    emit(AppSearchOrdersLoadingState());
+    print('in searchOrders...');
+
+    MainDioHelper.postData(
+      url: searchFOrders,
+      data:
+      {
+        if(id !=null) 'id':id,
+
+        if(workerId !=null) 'workerId':workerId,
+
+        if(priceSetterId !=null) 'priceSetterId':priceSetterId,
+
+        if(inspectorId !=null) 'inspectorId':inspectorId,
+
+      },
+      token: token
+    ).then((value)
+    {
+      print('got search orders data...,');
+
+      searchOrders = OrdersModel.fromJson(value.data);
+
+      print(searchOrders.toString());
+
+      emit(AppSearchOrdersSuccessState());
+    }).catchError((error)
+    {
+      print('ERROR WHILE SEARCHING FOR ORDERS, ${error.toString()}');
+
+      emit(AppSearchOrdersErrorState());
+    });
+  }
+
 
   //--------------------------------------------------------\\
 

@@ -5,6 +5,7 @@ import 'package:samaware_flutter/layout/cubit/cubit.dart';
 import 'package:samaware_flutter/layout/cubit/states.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerOrderDetails/ManagerOrderDetails.dart';
+import 'package:samaware_flutter/modules/Manager/ManagerSearchOrders/ManagerSearchOrder.dart';
 import 'package:samaware_flutter/shared/components/Localization/Localization.dart';
 import 'package:samaware_flutter/shared/components/components.dart';
 import 'package:samaware_flutter/shared/components/constants.dart';
@@ -46,7 +47,13 @@ class _ManagerOrdersSettingsState extends State<ManagerOrdersSettings> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit,AppStates>(
-        listener: (context,state){},
+        listener: (context,state)
+        {
+          if(state is AppGetNextOrdersLoadingState)
+          {
+            defaultToast(msg: Localization.translate('getting_next_orders_toast'));
+          }
+        },
         builder: (context,state)
         {
           var cubit= AppCubit.get(context);
@@ -62,7 +69,7 @@ class _ManagerOrdersSettingsState extends State<ManagerOrdersSettings> {
                   IconButton(
                     onPressed: ()
                     {
-
+                      navigateTo(context, const ManagerSearchOrder());
                     },
 
                     icon: const Icon(Icons.search),

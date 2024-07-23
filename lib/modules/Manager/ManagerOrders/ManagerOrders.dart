@@ -10,7 +10,13 @@ class ManagerOrders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit,AppStates>(
-      listener: (context,state){},
+      listener: (context,state)
+      {
+        if(state is AppGetNonReadyOrdersLoadingState)
+        {
+          defaultToast(msg: Localization.translate('getting_next_orders_toast'));
+        }
+      },
       builder: (context,state)
       {
         var cubit=AppCubit.get(context);
@@ -46,6 +52,9 @@ class ManagerOrders extends StatelessWidget {
                       ),
 
                       const SizedBox(height: 25,),
+
+                      if(orders!.orders!.isEmpty)
+                      Center(child: Text(Localization.translate('no_pending_orders'), style: textStyleBuilder(),)),
 
                       Expanded(
                         child: ListView.separated(
