@@ -153,7 +153,12 @@ class AppCubit extends Cubit<AppStates>
     }
   }
 
-
+  /// Disconnect from WebSocket on Logout
+  void disconnectFromWs()
+  {
+    print('Closing WsChannel, in disconnectFromWs...');
+    wsChannel.sink.close();
+  }
   /// Register the client in ws
   void wsRegister({required String? clientId})
   {
@@ -299,11 +304,11 @@ class AppCubit extends Cubit<AppStates>
   //----------------------------------------------------\\
 
   ///Will Get the required data depending on the user's role
-  void getMyAPI({bool getAll = false, bool GetUserData =false})
+  void getMyAPI({bool getAll = false, bool getUseData =false})
   {
     if(token !='')
     {
-      if(GetUserData) getUserData();
+      if(getUseData) getUserData();
 
       switch(CacheHelper.getData(key: 'role'))
       {
@@ -509,6 +514,7 @@ class AppCubit extends Cubit<AppStates>
       CacheHelper.saveData(key: 'token', value: '').then((value)
       {
         deleteAllData(role);
+        disconnectFromWs();
 
         defaultToast(msg: Localization.translate('logout_successfully_toast'));
 
@@ -549,9 +555,9 @@ class AppCubit extends Cubit<AppStates>
         userData=null;
         allOrders=null;
         nonReadyOrders=null;
-
-        //workersDetailsModel=null; //Todo is this deleted?
         workers=null;
+        priceSetters=null;
+        inspectors=null;
 
         break;
 
@@ -578,6 +584,13 @@ class AppCubit extends Cubit<AppStates>
         break;
 
       case inspector:
+        userData=null;
+        inspectorDoneOrders=null;
+        inspectorWaitingOrders=null;
+
+        inWorkingOrder=null;
+        inspectorDoneOrders=null;
+        allInspectorOrders=null;
 
         break;
 
@@ -1130,7 +1143,7 @@ class AppCubit extends Cubit<AppStates>
 
     defaultToast(msg: Localization.translate('order_submit_loading_toast'));
 
-    print('Current Order: ${order.toString()}');
+    print('Current Order: ${order?.orderId}');
 
     List<Map<String,dynamic>> orderItems=[];
 
@@ -1273,7 +1286,7 @@ class AppCubit extends Cubit<AppStates>
     bool? isPriceSetterWaitingOrders, bool? getDoneOrdersPriceSetter,
     bool? isInspectorWaitingOrders, bool? getDoneOrdersInspector,
     bool? designatePriceSetter, bool? designateInspector,
-    String? userId,
+    String? userId, String? failureReason,
     required String orderId, required OrderState status,
     OrderDate? dateType, String? date,
 
@@ -1293,6 +1306,7 @@ class AppCubit extends Cubit<AppStates>
           if(dateType!=null) dateType.name:date,
           if(designatePriceSetter !=null && userId !=null) "priceSetterId":userId,
           if(designateInspector !=null && userId !=null) "inspectorId":userId,
+          if(failureReason !=null) "failure_reason":failureReason,
         },
         token: token,
       ).then((value)
@@ -1310,9 +1324,12 @@ class AppCubit extends Cubit<AppStates>
 
         getMyAPI(); //Update the data
 
+        defaultToast(msg: Localization.translate('patch_order_successfully_toast'));
+
         emit(AppPatchOrderSuccessState());
       }).catchError((error)
       {
+        defaultToast(msg: Localization.translate('patch_order_failed_toast'));
         print('ERROR WHILE PATCHING ORDER, ${error.toString()}');
         emit(AppPatchOrderErrorState());
       });

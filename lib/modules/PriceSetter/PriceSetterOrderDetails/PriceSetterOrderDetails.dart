@@ -37,9 +37,7 @@ class _PriceSetterOrderDetailsState extends State<PriceSetterOrderDetails> {
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit,AppStates>(
         listener: (context,state)
-        {
-          // Todo: Update order if changed
-        },
+        {},
         builder: (context,state)
         {
           var cubit=AppCubit.get(context);

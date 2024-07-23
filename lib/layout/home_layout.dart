@@ -139,7 +139,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                     child: RefreshIndicator(
                         onRefresh: ()async
                         {
-                          cubit.getMyAPI(getAll: true, GetUserData: true);
+                          cubit.getMyAPI(getAll: true, getUseData: true);
                         },
                         child: SingleChildScrollView(
                           physics: const AlwaysScrollableScrollPhysics(),

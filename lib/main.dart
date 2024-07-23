@@ -102,7 +102,7 @@ class MyApp extends StatelessWidget {
                     image: const AssetImage(
                       'assets/images/splash/alsamah.png',
                     ),
-                    color: AppCubit.get(context).isDarkTheme? Colors.white : defaultHomeDarkColor,
+                    color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultHomeDarkColor,
                     fit: BoxFit.contain,
                     width: kIsWeb? 400 : 250,
                     height: kIsWeb? 400 : 250,

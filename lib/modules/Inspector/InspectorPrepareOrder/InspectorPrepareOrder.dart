@@ -89,7 +89,64 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
         return Directionality(
           textDirection: appDirectionality(),
           child: Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(
+              actions:
+              [
+                IconButton(
+                    onPressed: ()
+                    {
+                      showDialog(
+                          context: context,
+                          builder: (dialogContext)
+                          {
+                            return defaultAlertDialog(
+                              context: dialogContext,
+                              title: Localization.translate('deny_order'),
+                              content: SingleChildScrollView(
+                                child:Column(
+                                  children:
+                                  [
+                                    Text(
+                                      Localization.translate('deny_order_secondary'),
+                                      style: textStyleBuilder(),
+                                    ),
+
+                                    const SizedBox(height: 5,),
+
+                                    Row(
+                                      children:
+                                      [
+                                        TextButton(
+                                            onPressed: ()
+                                            {
+                                              Navigator.of(dialogContext).pop(false);
+                                              denyOrder(context: context, cubit: cubit, order: order!);
+                                            },
+                                            child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                        ),
+
+                                        const Spacer(),
+
+                                        TextButton(
+                                          onPressed: ()
+                                          {
+                                            Navigator.of(dialogContext).pop(false);
+                                          },
+                                          child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                      );
+                    },
+                    icon: const Icon(Icons.delete, color: Colors.red)
+                ),
+              ],
+            ),
 
             body: OrientationBuilder(
               builder: (context,orientation)
@@ -846,10 +903,74 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
         }
         catch (e)
         {
-          print('Could not parse date..., ${e.toString()}');
+          //print('Could not parse date..., ${e.toString()}');
           //print(stackTrace);
         }
       });
     });
+  }
+
+  ///Deny an Order
+  void denyOrder({required BuildContext context, required AppCubit cubit, required OrderModel order})
+  {
+    showDialog(
+      context: context,
+      builder: (dialogContext)
+      {
+        return defaultAlertDialog(
+          context: dialogContext,
+          title: Localization.translate('deny_order_details_title'),
+          content: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                Text(Localization.translate('deny_order_details_secondary'), style: textStyleBuilder(),),
+
+                const SizedBox(height: 15,),
+
+                denyOrderReasonBuilder(cubit: cubit, reason: inspectorOrderFailureReasons[0], context: context, dialogContext: dialogContext, order: order),
+
+                const SizedBox(height: 10,),
+
+                denyOrderReasonBuilder(cubit: cubit, reason: inspectorOrderFailureReasons[1], context: context, dialogContext: dialogContext, order:order),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  ///Denied Order Reasons builder
+  Widget denyOrderReasonBuilder({required AppCubit cubit, required String reason, required BuildContext context, required BuildContext dialogContext, required OrderModel order})
+  {
+    return defaultBox(
+      cubit: cubit,
+      highlightColor: cubit.isDarkTheme? defaultDarkColor.withOpacity(0.2) : defaultColor.withOpacity(0.2),
+      onTap: ()
+      {
+        cubit.patchOrder(orderId: order.objectId!, status: OrderState.failed, failureReason: reason,);
+
+        Navigator.of(dialogContext).pop();
+        Navigator.of(context).pop();
+      },
+      padding: 15,
+      paddingOptions: true,
+      boxColor: null,
+      borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor,
+      manualBorderColor: true,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children:
+        [
+          Expanded(
+            child: Text(
+              Localization.translate(reason),
+              style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

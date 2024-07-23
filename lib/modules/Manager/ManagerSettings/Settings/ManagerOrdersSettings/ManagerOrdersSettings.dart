@@ -54,7 +54,21 @@ class _ManagerOrdersSettingsState extends State<ManagerOrdersSettings> {
 
             textDirection: appDirectionality(),
             child: Scaffold(
-              appBar: defaultAppBar(cubit: cubit, text: 'orders_settings_title'),
+              appBar: defaultAppBar(
+                cubit: cubit,
+                text: 'orders_settings_title',
+                actions:
+                [
+                  IconButton(
+                    onPressed: ()
+                    {
+
+                    },
+
+                    icon: const Icon(Icons.search),
+                  ),
+                ]
+              ),
 
               body: ConditionalBuilder(
                 condition: cubit.allOrders !=null,
@@ -102,6 +116,9 @@ class _ManagerOrdersSettingsState extends State<ManagerOrdersSettings> {
                                     itemCount: cubit.allOrders!.orders!.length,
                                   ),
                                 ),
+
+                                if(state is AppGetNextOrdersLoadingState)
+                                  defaultLinearProgressIndicator(context),
                               ],
                             ),
                           ),

@@ -91,6 +91,7 @@ class OrderModel
 
   String? status;
   List<OrderItem>? items=[];
+  String? failureReason;
 
   //IsWorkerPassed and w are written for when we return the api /workers/details => we won't send in each order the worker details again, so we pass it literally since we have it.
   OrderModel.fromJson(Map<String,dynamic>json, {bool isWorkerPassed=false, UserData? worker, bool isPriceSetterPassed=false, UserData? priceSetter, bool isInspectorPassed=false, UserData? inspector})
@@ -171,7 +172,7 @@ class OrderModel
 
     if(json['order']['shipped_date']!=null)
     {
-      shippingDate=json['order']['shipped_date'];
+      shippedDate=json['order']['shipped_date'];
     }
 
     if(json['order']['failed_date']!=null)
@@ -182,6 +183,11 @@ class OrderModel
     if(json['order']['re_prepare_date']!=null)
     {
       rePrepareDate=json['order']['re_prepare_date'];
+    }
+
+    if(json['order']['failure_reason'] !=null)
+    {
+      failureReason = json['order']['failure_reason'];
     }
 
   }

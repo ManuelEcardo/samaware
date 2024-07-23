@@ -70,9 +70,9 @@ const Map<String,String> ar={
 
   'order_items_number_dialog':'عدد العناصر:',
 
-  'order_reg_dialog':'تاريخ تسحيل الطلبية:',
+  'order_reg_dialog':'تاريخ تسحيل الطلبية (الاداري):',
 
-  'order_ship_dialog':'تاريخ شحن الطلبية:',
+  'order_ship_dialog':'تاريخ شحن الطلبية (الاداري):',
 
   'remove_an_item_swap':'تم حذف العنصر بنجاح',
 
@@ -146,7 +146,23 @@ const Map<String,String> ar={
 
   'to_start_verifying_time':'الوقت لبدء التوثيق',
 
+  'storing_date':'تاريخ التخزين',
+
+  'shipped_date':'تاريخ الشحن',
+
   'verifying_time':'وقت التوثيق',
+
+  'failure_reason_odm':'سبب الفشل',
+
+  'to_shipment_store':'إلى الشحن - التخزين',
+
+  'next_status_after_verify_title':'حالة الطلب القادمة',
+
+  'next_status_after_verify_secondary':'اختر حالة الطلب القادمة',
+
+  'to_shipment_button':'الشحن',
+
+  'to_storage_button':'التخزين',
 
 
   //Settings Manager
@@ -191,6 +207,15 @@ const Map<String,String> ar={
   'inspectors_details_settings_title':'المدقّقون وتفاصيلهم',
 
 
+  //WORKER ORDER FAILURE REASONS: FOR CONSTANT ARRAY TYPES
+
+  'no_available_items_failure':'أحد العناصر غير متواجد',
+
+  'other_reason_failure':'أسباب آخرى',
+
+  // INSPECTOR ORDER FAILURE REASONS: FOR CONSTANT ARRAY TYPES
+
+  'wrong_items_failure':'يوجد منتجات خاطئة في الطلب',
 
   //WORKER: HOME PAGE
 
@@ -212,9 +237,26 @@ const Map<String,String> ar={
 
   'finish_prepare_dialog_secondary_title':'هل انتهيت من التحضير؟',
 
+  'deny_order':'رفض الطلبية',
+
+  'deny_order_secondary':'هل تريد رفض الطلبية؟\nسيطلب منك تحديد السبب',
+
+  'deny_order_details_title':'حدد سبباً',
+
+  'deny_order_details_secondary':'حدد من الأسباب التالية لماذا رفضت الطلب',
+
+
+
   //WORKER PREVIOUS ORDERS PAGE:
 
   'my_orders_title_worker':'طلبياتك',
+
+
+  //PATCH ORDER
+
+  'patch_order_successfully_toast':'تم تعديل حالة الطلب',
+
+  'patch_order_failed_toast':'حدث خطأ أثناء تعديل الطلب',
 
 
   //DATES
@@ -437,6 +479,22 @@ const Map<String,String> en={
 
   'to_start_verifying_time':'Time to start verifying',
 
+  'storing_date':'Storing Date',
+
+  'shipped_date':'Shipped At Date',
+
+  'failure_reason_odm':'Failure Reason: ',
+
+  'to_shipment':'To Shipment - Storage',
+
+  'next_status_after_verify_title':'CHOOSE NEXT STATUS',
+
+  'next_status_after_verify_secondary':'Choose next status for this order',
+
+  'to_shipment_button':'Shipment',
+
+  'to_storage_button':'Store',
+
   'verifying_time':'Verifying Time',
 
 
@@ -484,6 +542,15 @@ const Map<String,String> en={
   'inspectors_details_settings_title':'Inspectors With Details',
 
 
+  //WORKER ORDER FAILURE REASONS: FOR CONSTANT ARRAY TYPES
+
+  'no_available_items_failure':'Item was not available',
+
+  'other_reason_failure':'Other reason',
+
+  // INSPECTOR ORDER FAILURE REASONS: FOR CONSTANT ARRAY TYPES
+
+  'wrong_items_failure':'Wrong Items in Order',
 
   //WORKER: HOME PAGE
 
@@ -505,11 +572,24 @@ const Map<String,String> en={
 
   'finish_prepare_dialog_secondary_title':'Have you finished preparing the order?',
 
+  'deny_order':'DENY AN ORDER',
+
+  'deny_order_secondary':'Are you sure you want to delete this order?\nYou will choose a reason',
+
+  'deny_order_details_title':'SPECIFY A REASON',
+
+  'deny_order_details_secondary':'Choose a reason why you denied this order',
+
   //WORKER PREVIOUS ORDERS PAGE:
 
   'my_orders_title_worker':'Your Orders: ',
 
 
+  //PATCH ORDER
+
+  'patch_order_successfully_toast':'Order has been patched',
+
+  'patch_order_failed_toast':'Error while patching order...',
 
 
   //DATES

@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
+import 'package:samaware_flutter/layout/cubit/cubit.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerOrderDetails/ManagerOrderItemsDetails.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
-import 'package:samaware_flutter/shared/components/constants.dart';
 
 class MOD
 {
@@ -54,20 +56,29 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit,AppStates>(
         listener: (context,state)
-        {
-          // Todo: Update order if changed
-        },
+        {},
         builder: (context,state)
         {
           var cubit=AppCubit.get(context);
 
-          return Scaffold(
-            appBar: AppBar(),
+          return Directionality(
+            textDirection: appDirectionality(),
+            child: Scaffold(
+              appBar: AppBar(
+                actions:
+                [
+                  if(widget.order.status == OrderState.verified.name)
+                    IconButton(
+                      onPressed: ()
+                      {
+                        navigateTo(context, ManagerOrderItemsDetails(order: widget.order,));
+                      },
+                      icon: const Icon(Icons.list),
+                    ),
+                ],
+              ),
 
-            body: Directionality(
-              textDirection: appDirectionality(),
-
-              child: OrientationBuilder(
+              body: OrientationBuilder(
                 builder: (context,orientation)
                 {
                   if(orientation == Orientation.portrait)
@@ -84,7 +95,18 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
                               {
                                 return index != items.length-1
                                     ?itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style)
-                                    : Column(children:[itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style), datesBuilder(widget.order),],);
+                                    : Column(children:[
+
+                                      itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style),
+
+                                      datesBuilder(widget.order),
+
+                                      if(widget.order.status == OrderState.failed.name)
+                                        const SizedBox(height: 25,),
+
+                                      if(widget.order.status == OrderState.failed.name)
+                                        itemBuilder(title: Localization.translate('failure_reason_odm'), value: Localization.translate('${widget.order.failureReason}')),
+                                ],);
                               },
 
                               separatorBuilder: (context,index)
@@ -116,12 +138,18 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
                           const SizedBox(height: 40,),
 
                           defaultButton(
-                              title: Localization.translate('view_items_details'),
+                              title: widget.order.status != OrderState.verified.name
+                                  ? (widget.order.status != OrderState.stored.name)? Localization.translate('view_items_details') : Localization.translate('to_shipment_button')
+                                  : Localization.translate('to_shipment_store'),
                               color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
                               textColor: cubit.isDarkTheme? Colors.black : defaultFontColor,
                               onTap: ()
                               {
-                                navigateTo(context, ManagerOrderItemsDetails(order: widget.order,));
+
+                                widget.order.status != OrderState.verified.name
+                                    ? (widget.order.status != OrderState.stored.name)? navigateTo(context, ManagerOrderItemsDetails(order: widget.order,)) : toShip(cubit: cubit, order: widget.order, context: context)
+
+                                    :alertDialog(context: context, order: widget.order, cubit: cubit);
                               }
                           ),
 
@@ -145,7 +173,21 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
 
                                 itemBuilder: (context,index)
                                 {
-                                  return itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style);
+                                  return index != items.length-1
+                                      ?itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style)
+                                      : Column(children:[
+
+                                    itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style),
+
+                                    datesBuilder(widget.order),
+
+                                    if(widget.order.status == OrderState.failed.name)
+                                      const SizedBox(height: 25,),
+
+                                    if(widget.order.status == OrderState.failed.name)
+                                      itemBuilder(title: Localization.translate('failure_reason_odm'), value: Localization.translate('${widget.order.failureReason}')),
+                                  ],);
+                                  //return itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style);
                                 },
 
                                 separatorBuilder: (context,index)
@@ -174,12 +216,18 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
                             const SizedBox(height: 60,),
 
                             defaultButton(
-                                title: Localization.translate('view_items_details'),
+                                title: widget.order.status != OrderState.verified.name
+                                    ? (widget.order.status != OrderState.stored.name)? Localization.translate('view_items_details') : Localization.translate('to_shipment_button')
+                                    : Localization.translate('to_shipment_store'),
+                                
                                 color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
                                 textColor: cubit.isDarkTheme? Colors.black : defaultFontColor,
                                 onTap: ()
                                 {
-                                  navigateTo(context, ManagerOrderItemsDetails(order: widget.order,));
+                                  widget.order.status != OrderState.verified.name
+                                      ? (widget.order.status != OrderState.stored.name)? navigateTo(context, ManagerOrderItemsDetails(order: widget.order,)) : toShip(cubit: cubit, order: widget.order, context: context)
+
+                                      :alertDialog(context: context, order: widget.order, cubit: cubit);
                                 }
                             ),
 
@@ -264,18 +312,21 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
     return Column(
       children:
       [
-        if(order.waitingToBePreparedDate !=null && order.beingPreparedDate !=null) dateItemBuilder(title:Localization.translate('to_start_prepare_time'), value: localFormatter(order.waitingToBePreparedDate!, order.beingPreparedDate!)),
+        if(order.waitingToBePreparedDate !=null && order.beingPreparedDate !=null) dateItemBuilder(title:'to_start_prepare_time', value: localFormatter(order.waitingToBePreparedDate!, order.beingPreparedDate!)),
 
-        if(order.preparedDate !=null && order.beingPreparedDate !=null) dateItemBuilder(title:Localization.translate('preparation_time'), value: localFormatter(order.beingPreparedDate!, order.preparedDate!)),
+        if(order.preparedDate !=null && order.beingPreparedDate !=null) dateItemBuilder(title:'preparation_time', value: localFormatter(order.beingPreparedDate!, order.preparedDate!)),
 
-        if(order.preparedDate !=null && order.beingPricedDate !=null) dateItemBuilder(title:Localization.translate('to_start_pricing_time') , value: localFormatter(order.preparedDate!, order.beingPricedDate!)),
+        if(order.preparedDate !=null && order.beingPricedDate !=null) dateItemBuilder(title:'to_start_pricing_time' , value: localFormatter(order.preparedDate!, order.beingPricedDate!)),
 
-        if(order.beingPricedDate !=null && order.pricedDate !=null) dateItemBuilder(title:Localization.translate('pricing_time'), value: localFormatter(order.beingPricedDate!, order.pricedDate!)),
+        if(order.beingPricedDate !=null && order.pricedDate !=null) dateItemBuilder(title:'pricing_time', value: localFormatter(order.beingPricedDate!, order.pricedDate!)),
 
-        if(order.pricedDate !=null && order.beingVerifiedDate !=null) dateItemBuilder(title:Localization.translate('to_start_verifying_time'), value: localFormatter(order.pricedDate!, order.beingVerifiedDate!)),
+        if(order.pricedDate !=null && order.beingVerifiedDate !=null) dateItemBuilder(title:'to_start_verifying_time', value: localFormatter(order.pricedDate!, order.beingVerifiedDate!)),
 
-        if(order.beingVerifiedDate !=null && order.verifiedDate !=null) dateItemBuilder(title:Localization.translate('verifying_time'), value: localFormatter(order.beingVerifiedDate!, order.verifiedDate!)),
+        if(order.beingVerifiedDate !=null && order.verifiedDate !=null) dateItemBuilder(title:'verifying_time', value: localFormatter(order.beingVerifiedDate!, order.verifiedDate!)),
 
+        if(order.storedDate !=null) dateItemBuilder(title: 'storing_date', value:  DateFormat('dd/MM/yyyy').format(DateFormat('dd/MM/yyyy').parse(order.storedDate!)) ),
+
+        if(order.shippedDate !=null) dateItemBuilder(title: 'shipped_date', value:  DateFormat('dd/MM/yyyy').format(DateFormat('dd/MM/yyyy').parse(order.shippedDate!)) ),
       ],
     );
   }
@@ -283,5 +334,68 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
   String localFormatter(String t1, String t2)
   {
     return durationFormatToHMS( defaultDateFormatter.parse(t2).difference(defaultDateFormatter.parse(t1)));
+  }
+
+  ///Shows a dialog between [shipment - storage]
+  void alertDialog({required BuildContext context, required AppCubit cubit ,required OrderModel order})
+  {
+    showDialog(
+      context: context,
+      builder: (dialogContext)
+      {
+        return defaultAlertDialog(
+            context: dialogContext,
+            title: Localization.translate('next_status_after_verify_title'),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Text(
+                    Localization.translate('next_status_after_verify_secondary'),
+                  ),
+
+                  const SizedBox(height: 5,),
+
+                  Row(
+                    children:
+                    [
+                      TextButton(
+                          onPressed: ()
+                          {
+                            cubit.patchOrder(orderId: widget.order.objectId!, status: OrderState.stored,dateType: OrderDate.stored_date, date: defaultDateFormatter.format(DateTime.now()));
+
+                            Navigator.of(dialogContext).pop();
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(Localization.translate('to_shipment_button'))
+                      ),
+
+                      const Spacer(),
+
+                      TextButton(
+                        onPressed: ()
+                        {
+                          cubit.patchOrder(orderId: widget.order.objectId!, status: OrderState.shipped,dateType: OrderDate.shipped_date, date: defaultDateFormatter.format(DateTime.now()));
+
+                          Navigator.of(dialogContext).pop();
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(Localization.translate('to_storage_button')),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+        );
+      },
+    );
+  }
+
+  ///Sets the order state to shipped
+  void toShip({required AppCubit cubit, required OrderModel order, required BuildContext context})
+  {
+    cubit.patchOrder(orderId: order.objectId!, status: OrderState.shipped, dateType: OrderDate.shipped_date, date: defaultDateFormatter.format(DateTime.now()) );
+
+    Navigator.of(context).pop();
   }
 }

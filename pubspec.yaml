@@ -93,7 +93,6 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/images/lottie/
     - assets/images/splash/
     - assets/images/profile/
 
