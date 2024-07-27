@@ -17,6 +17,11 @@ class ManageSearchOrderDetails extends StatelessWidget {
         var cubit=AppCubit.get(context);
         
         return PopScope(
+          canPop: true,
+          onPopInvoked: (pop)
+          {
+            cubit.searchOrders=null;
+          },
           child: Directionality(
               textDirection: appDirectionality(),
               child: Scaffold(
@@ -107,11 +112,6 @@ class ManageSearchOrderDetails extends StatelessWidget {
                 ),
               ),
           ),
-          canPop: true,
-          onPopInvoked: (pop)
-          {
-            cubit.searchOrders=null;
-          },
         );
       },
     );

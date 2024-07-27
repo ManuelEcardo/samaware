@@ -64,17 +64,6 @@ class _ManagerOrdersSettingsState extends State<ManagerOrdersSettings> {
               appBar: defaultAppBar(
                 cubit: cubit,
                 text: 'orders_settings_title',
-                actions:
-                [
-                  IconButton(
-                    onPressed: ()
-                    {
-                      navigateTo(context, const ManagerSearchOrder());
-                    },
-
-                    icon: const Icon(Icons.search),
-                  ),
-                ]
               ),
 
               body: ConditionalBuilder(

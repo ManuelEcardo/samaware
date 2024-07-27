@@ -61,7 +61,7 @@ class ManagerOrders extends StatelessWidget {
                           physics: const AlwaysScrollableScrollPhysics(),
                           itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, order: orders.orders?[index]),
                           separatorBuilder: (context,index)=> const SizedBox(height: 20,),
-                          itemCount: orders!.orders!.length,
+                          itemCount: orders.orders!.length,
                         ),
                       ),
                     ],

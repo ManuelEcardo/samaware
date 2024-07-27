@@ -189,6 +189,8 @@ const Map<String,String> ar={
 
   'inspectors_settings_title':'المدقّقون',
 
+  'search_orders_settings_title':'البحث في الطلبيات',
+
   //Settings Manager: Workers
 
   'workers_details_settings_title':'العمال وتفاصيلهم: ',
@@ -238,16 +240,13 @@ const Map<String,String> ar={
 
   'search_by_inspector_label':'المدقق',
 
+  'serach_by_status':'البحث عن طريق حالة الطلب',
+
   'search_button':'ابحث',
 
   'search_results_title':'نتائج البحث',
 
   'no_available_results':'لم يتم إيجاد أية نتائج...',
-
-
-
-
-
 
 
 
@@ -567,6 +566,8 @@ const Map<String,String> en={
 
   'inspectors_settings_title':'Inspectors',
 
+  'search_orders_settings_title':'Orders Search',
+
   //Settings Manager: Workers
 
   'workers_details_settings_title':'Workers With Details',
@@ -615,6 +616,8 @@ const Map<String,String> en={
   'search_by_inspector':'Search By Inspector:',
 
   'search_by_inspector_label':'Inspector',
+
+  'serach_by_status':'Order State',
 
   'search_button':'Search',
 

@@ -1340,7 +1340,7 @@ class AppCubit extends Cubit<AppStates>
   OrdersModel? searchOrders;
 
   ///Searches for orders via filters provided by end user
-  void searchForOrders({String? id, String? workerId, String? priceSetterId, String? inspectorId})
+  void searchForOrders({String? id, String? workerId, String? priceSetterId, String? inspectorId, String? status})
   {
     emit(AppSearchOrdersLoadingState());
     print('in searchOrders...');
@@ -1357,6 +1357,8 @@ class AppCubit extends Cubit<AppStates>
 
         if(inspectorId !=null) 'inspectorId':inspectorId,
 
+        if(status !=null) 'status':status,
+
       },
       token: token
     ).then((value)
@@ -1364,8 +1366,6 @@ class AppCubit extends Cubit<AppStates>
       print('got search orders data...,');
 
       searchOrders = OrdersModel.fromJson(value.data);
-
-      print(searchOrders.toString());
 
       emit(AppSearchOrdersSuccessState());
     }).catchError((error)

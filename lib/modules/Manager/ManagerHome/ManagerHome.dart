@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerCreateOrder/ManagerCreateOrder.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
-import 'package:samaware_flutter/shared/styles/colors.dart';
 import 'package:string_extensions/string_extensions.dart';
 
 class ManagerHome extends StatelessWidget {

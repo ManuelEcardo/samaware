@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
-import 'package:samaware_flutter/layout/cubit/cubit.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerOrderDetails/ManagerOrderItemsDetails.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';

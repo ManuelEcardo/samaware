@@ -1,3 +1,5 @@
+import 'package:samaware_flutter/modules/Manager/ManagerSearchOrders/ManagerSearchOrder.dart';
+import 'package:samaware_flutter/modules/Manager/ManagerSearchOrders/ManagerSearchOrder.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerGeneralSettings/ManagerGeneralSettings.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerInspectorsSettings/ManagerInspectorsSettings.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerOrdersSettings/ManagerOrdersSettings.dart';
@@ -74,6 +76,20 @@ class _ManagerSettingsState extends State<ManagerSettings> {
 
                                     navigateTo(context, const ManagerOrdersSettings());
                                   }
+                              ),
+
+                                const SizedBox(height: 10),
+
+                                myDivider(color: Colors.white),
+
+                              itemBuilder(
+                                  icon: Icons.search_outlined,
+                                  text: Localization.translate('search_orders_settings_title'),
+                                  onTap: ()
+                                  {
+                                    navigateTo(context, const ManagerSearchOrder());
+                                  },
+                                  cubit: cubit
                               ),
                             ],
                           ),
@@ -265,6 +281,20 @@ class _ManagerSettingsState extends State<ManagerSettings> {
 
                                       navigateTo(context, const ManagerOrdersSettings());
                                     }
+                                ),
+
+                                  const SizedBox(height: 10),
+
+                                myDivider(color: Colors.white),
+
+                                itemBuilder(
+                                    icon: Icons.search_outlined,
+                                    text: Localization.translate('search_orders_settings_title'),
+                                    onTap: ()
+                                    {
+                                      navigateTo(context, const ManagerSearchOrder());
+                                    },
+                                    cubit: cubit
                                 ),
                               ],
                             ),

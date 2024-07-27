@@ -1,9 +1,7 @@
-
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
-import 'package:samaware_flutter/shared/styles/colors.dart';
 
 class ManagerCreateOrder extends StatefulWidget {
   const ManagerCreateOrder({super.key});

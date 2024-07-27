@@ -1,9 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:samaware_flutter/layout/cubit/cubit.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
-
-import 'colors.dart';
 
 //Refer to: https://docs.flutter.dev/release/breaking-changes/theme-data-accent-properties
 //Refer to: https://github.com/flutter/flutter/issues/91605
@@ -277,7 +273,6 @@ ThemeData darkTheme(context)=> ThemeData(
       foregroundColor: WidgetStateProperty.all(Colors.white),
     ),
   ),
-
 
 
   textTheme: Theme.of(context).textTheme.apply(

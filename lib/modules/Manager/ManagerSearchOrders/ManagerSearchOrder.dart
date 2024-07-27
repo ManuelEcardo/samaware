@@ -1,5 +1,6 @@
+import 'dart:ffi';
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:samaware_flutter/models/UserDataModel/UserData.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerSearchOrders/ManageSearchOrderDetails.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 
@@ -18,6 +19,7 @@ class _ManagerSearchOrderState extends State<ManagerSearchOrder> {
   String? workerId;
   String? priceSetterId;
   String? inspectorId;
+  String? status;
 
   @override
   Widget build(BuildContext context) {
@@ -60,24 +62,25 @@ class _ManagerSearchOrderState extends State<ManagerSearchOrder> {
                         [
                           Text(Localization.translate('search_by_id'), style: textStyleBuilder(),),
 
-                          const SizedBox(height: 25,),
+                          const SizedBox(height: 15,),
 
                           defaultFormField(
                               controller: idController,
                               keyboard: TextInputType.text,
                               label: Localization.translate('search_by_id_label'),
                               prefix: Icons.numbers_outlined,
+                              contentPadding: 20,
                               validate: (value)
                               {
                                 return null;
                               }
                           ),
 
-                          const SizedBox(height: 35,),
+                          const SizedBox(height: 15,),
 
                           Text(Localization.translate('search_by_worker'), style: textStyleBuilder(),),
 
-                          const SizedBox(height: 25,),
+                          const SizedBox(height: 15,),
 
                           FormField<String>(
                             builder: (FormFieldState<String> state) {
@@ -126,11 +129,11 @@ class _ManagerSearchOrderState extends State<ManagerSearchOrder> {
                           ),
 
 
-                          const SizedBox(height: 35,),
+                          const SizedBox(height: 15,),
 
                           Text(Localization.translate('search_by_priceSetter'), style: textStyleBuilder(),),
 
-                          const SizedBox(height: 25,),
+                          const SizedBox(height: 15,),
 
                           FormField<String>(
                             builder: (FormFieldState<String> state) {
@@ -178,11 +181,11 @@ class _ManagerSearchOrderState extends State<ManagerSearchOrder> {
 
                           ),
 
-                          const SizedBox(height: 35,),
+                          const SizedBox(height: 15,),
 
                           Text(Localization.translate('search_by_inspector'), style: textStyleBuilder(),),
 
-                          const SizedBox(height: 25,),
+                          const SizedBox(height: 15,),
 
                           FormField<String>(
                             builder: (FormFieldState<String> state) {
@@ -230,6 +233,59 @@ class _ManagerSearchOrderState extends State<ManagerSearchOrder> {
 
                           ),
 
+                          const SizedBox(height: 15,),
+
+                          Text(Localization.translate('serach_by_status'), style: textStyleBuilder(),),
+
+                          const SizedBox(height: 15,),
+
+                          FormField<String>(
+                            builder: (FormFieldState<String> state) {
+                              return InputDecorator(
+                                decoration: const InputDecoration(
+                                  focusedBorder: InputBorder.none,
+                                  errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                                ),
+
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    style: TextStyle(
+                                        color: AppCubit.get(context).isDarkTheme? defaultDarkColor : defaultColor,
+                                        fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'Railway'
+                                    ),
+                                    value: status, //!=null? Localization.translate(status!) : status,
+                                    isDense: true,
+                                    onChanged: (newValue)
+                                    {
+                                      setState(() {
+                                        status=newValue;
+                                      });
+                                    },
+                                    items: OrderState.values.toList().map((value){
+                                        return DropdownMenuItem<String>(
+                                          value: value.name,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                Localization.translate(value.name),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                    }).toList(),
+
+
+
+                                  ),
+                                ),
+                              );
+                            },
+
+                          ),
+
                           const Spacer(),
 
                           ConditionalBuilder(
@@ -245,13 +301,14 @@ class _ManagerSearchOrderState extends State<ManagerSearchOrder> {
                                 {
                                   if(formKey.currentState!.validate())
                                   {
-                                    if(priceSetterId == null && workerId == null && inspectorId ==null && idController.value.text.isEmpty)
+                                    if(priceSetterId == null && workerId == null && inspectorId ==null && idController.value.text.isEmpty && status == null)
                                     {
                                       defaultToast(msg: 'All Filters are empty');
                                     }
+
                                     else
                                     {
-                                      cubit.searchForOrders(id: idController.value.text, workerId: workerId, inspectorId: inspectorId, priceSetterId: priceSetterId);
+                                      cubit.searchForOrders(id: idController.value.text, workerId: workerId, inspectorId: inspectorId, priceSetterId: priceSetterId, status: status);
                                     }
                                   }
                                 },
@@ -287,7 +344,7 @@ class _ManagerSearchOrderState extends State<ManagerSearchOrder> {
                                 }
                             ),
 
-                            const SizedBox(height: 35,),
+                            const SizedBox(height: 25,),
 
                             Text(Localization.translate('search_by_worker'), style: textStyleBuilder(),),
 
@@ -340,7 +397,7 @@ class _ManagerSearchOrderState extends State<ManagerSearchOrder> {
                             ),
 
 
-                            const SizedBox(height: 35,),
+                            const SizedBox(height: 25,),
 
                             Text(Localization.translate('search_by_priceSetter'), style: textStyleBuilder(),),
 
@@ -392,7 +449,7 @@ class _ManagerSearchOrderState extends State<ManagerSearchOrder> {
 
                             ),
 
-                            const SizedBox(height: 35,),
+                            const SizedBox(height: 25,),
 
                             Text(Localization.translate('search_by_inspector'), style: textStyleBuilder(),),
 
@@ -444,7 +501,60 @@ class _ManagerSearchOrderState extends State<ManagerSearchOrder> {
 
                             ),
 
-                            const SizedBox(height: 35,),
+                            const SizedBox(height: 25,),
+
+                            Text(Localization.translate('serach_by_status'), style: textStyleBuilder(),),
+
+                            const SizedBox(height: 15,),
+
+                            FormField<String>(
+                              builder: (FormFieldState<String> state) {
+                                return InputDecorator(
+                                  decoration: const InputDecoration(
+                                    focusedBorder: InputBorder.none,
+                                    errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                                  ),
+
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<String>(
+                                      style: TextStyle(
+                                          color: AppCubit.get(context).isDarkTheme? defaultDarkColor : defaultColor,
+                                          fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'Railway'
+                                      ),
+                                      value: status, //!=null? Localization.translate(status!) : status,
+                                      isDense: true,
+                                      onChanged: (newValue)
+                                      {
+                                        setState(() {
+                                          status=newValue;
+                                        });
+                                      },
+                                      items: OrderState.values.toList().map((value){
+                                        return DropdownMenuItem<String>(
+                                          value: value.name,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                Localization.translate(value.name),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+
+
+
+                                    ),
+                                  ),
+                                );
+                              },
+
+                            ),
+
+                            const SizedBox(height: 25,),
 
                             ConditionalBuilder(
                               condition: state is AppSearchOrdersLoadingState,
@@ -459,14 +569,14 @@ class _ManagerSearchOrderState extends State<ManagerSearchOrder> {
                                   {
                                     if(formKey.currentState!.validate())
                                     {
-                                      if(priceSetterId == null && workerId == null && inspectorId ==null && idController.value.text.isEmpty)
+                                      if(priceSetterId == null && workerId == null && inspectorId ==null && idController.value.text.isEmpty && status == null)
                                       {
                                         defaultToast(msg: 'All Filters are empty');
                                       }
                                       else
                                       {
 
-                                        cubit.searchForOrders(id: idController.value.text, workerId: workerId, inspectorId: inspectorId, priceSetterId: priceSetterId);
+                                        cubit.searchForOrders(id: idController.value.text, workerId: workerId, inspectorId: inspectorId, priceSetterId: priceSetterId, status: status);
                                       }
                                     }
                                   },
