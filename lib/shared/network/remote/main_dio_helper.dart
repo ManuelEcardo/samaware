@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
+import 'package:flutter/services.dart';
 import '../end_points.dart';
 
 // Dio is an HTTP client, we declare in the init() giving the url to get the data from, and it getData we give him the method and queries.
@@ -6,7 +10,7 @@ class MainDioHelper
 {
   static Dio ? dio;
 
-  static init()
+  static init() async
   {
     dio=Dio(
       BaseOptions(
@@ -16,6 +20,30 @@ class MainDioHelper
         // connectTimeout: Duration.zero, //30000,
         // validateStatus: (status)=>true, //Won't throw errors
       ),
+    );
+
+    dio?.httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () {
+        final SecurityContext sContext = SecurityContext();
+
+        ByteData certificate;
+
+        rootBundle.load("assets/certificate/cert.pem").then((value)
+        {
+          certificate=value;
+          sContext.setTrustedCertificatesBytes(certificate.buffer.asUint8List());
+
+          print('HTTPS CERTIFICATE READY');
+
+        }).catchError((error)
+        {
+          print('ERROR WHILE SETTING DIO HTTP CLIENT ADAPTER, ${error.toString()}');
+        });
+
+        HttpClient client = HttpClient(context: sContext);
+
+        return client;
+      },
     );
   }
 

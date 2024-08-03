@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:samaware_flutter/shared/bloc_observer.dart';
 import 'package:samaware_flutter/shared/network/end_points.dart';
+import 'package:samaware_flutter/shared/network/remote/CustomHttp.dart';
 import 'package:samaware_flutter/shared/network/remote/main_dio_helper.dart';
 import 'package:samaware_flutter/shared/styles/themes.dart';
 import 'package:samaware_flutter/shared/components/Imports/conditional_import.dart';
@@ -22,6 +25,8 @@ void main() async {
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.dumpErrorToConsole(details);
   };
+
+  HttpOverrides.global=CustomHTTP(); //Creating HTTP Client
 
   Bloc.observer = MyBlocObserver(); //Running Bloc Observer which prints change in states and errors etc...  in console
 

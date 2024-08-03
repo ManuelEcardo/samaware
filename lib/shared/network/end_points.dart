@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 //LOCAL HOST
 //
-String localhost= kIsWeb? 'http://localhost:3000/' : 'http://10.0.2.2:3000/';
+String localhost= kIsWeb? 'https://localhost:4443/' : 'https://10.0.2.2:4443/'; //kIsWeb? 'http://localhost:3000/' : 'http://10.0.2.2:3000/';
 const String webSocketLocalHost= kIsWeb? 'ws://localhost:3000/webSocket' : 'ws://10.0.2.2:3000/webSocket';
 
 
