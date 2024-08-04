@@ -55,6 +55,14 @@ class AppSetChosenWorkerState extends AppStates{}
 
 //------------------------------------
 
+// ADD TO PREPARATION TEAM
+
+class AppAddToPreparationTeamState extends AppStates{}
+
+class AppRemoveFromPreparationTeamState extends AppStates{}
+
+//------------------------------------
+
 
 // CREATE AN ORDER
 
@@ -216,6 +224,75 @@ class AppGetAllOrdersInspectorErrorState extends AppStates{}
 //------------------------------------
 
 
+//COLLECTOR GET WAITING TO BE PREPARED ORDERS
+
+class AppGetCollectorWaitingOrdersLoadingState extends AppStates{}
+
+class AppGetCollectorWaitingOrdersSuccessState extends AppStates{}
+
+class AppGetCollectorWaitingOrdersErrorState extends AppStates{}
+
+
+//------------------------------------
+
+
+//GET DONE ORDERS BY AN COLLECTOR
+
+class AppGetCollectorDoneOrdersLoadingState extends AppStates{}
+
+class AppGetCollectorDoneOrdersErrorState extends AppStates{}
+
+class AppGetCollectorDoneOrdersSuccessState extends AppStates{}
+
+//------------------------------------
+
+
+//GET ALL ORDERS OF AN COLLECTOR
+
+class AppGetAllOrdersCollectorLoadingState extends AppStates{}
+
+class AppGetAllOrdersCollectorSuccessState extends AppStates{}
+
+class AppGetAllOrdersCollectorErrorState extends AppStates{}
+
+//------------------------------------
+
+
+//SCANNER GET WAITING TO BE PREPARED ORDERS
+
+class AppGetScannerWaitingOrdersLoadingState extends AppStates{}
+
+class AppGetScannerWaitingOrdersSuccessState extends AppStates{}
+
+class AppGetScannerWaitingOrdersErrorState extends AppStates{}
+
+
+//------------------------------------
+
+
+//GET DONE ORDERS BY AN SCANNER
+
+class AppGetScannerDoneOrdersLoadingState extends AppStates{}
+
+class AppGetScannerDoneOrdersErrorState extends AppStates{}
+
+class AppGetScannerDoneOrdersSuccessState extends AppStates{}
+
+
+
+//------------------------------------
+
+
+//GET ALL ORDERS OF AN SCANNER
+
+class AppGetAllOrdersScannerLoadingState extends AppStates{}
+
+class AppGetAllOrdersScannerSuccessState extends AppStates{}
+
+class AppGetAllOrdersScannerErrorState extends AppStates{}
+
+//------------------------------------
+
 //GET PRICE SETTERS
 
 class AppGetPriceSettersLoadingState extends AppStates{}
@@ -234,6 +311,27 @@ class AppGetInspectorsSuccessState extends AppStates{}
 
 class AppGetInspectorsErrorState extends AppStates{}
 
+
+//------------------------------------
+
+//GET COLLECTORS
+
+class AppGetCollectorsLoadingState extends AppStates{}
+
+class AppGetCollectorsSuccessState extends AppStates{}
+
+class AppGetCollectorsErrorState extends AppStates{}
+
+
+//------------------------------------
+
+//GET SCANNERS
+
+class AppGetScannersLoadingState extends AppStates{}
+
+class AppGetScannersSuccessState extends AppStates{}
+
+class AppGetScannersErrorState extends AppStates{}
 //------------------------------------
 
 
@@ -300,6 +398,53 @@ class AppGetNextInspectorOrdersILoadingState extends AppStates{}
 class AppGetNextInspectorOrdersISuccessState extends AppStates{}
 
 class AppGetNextInspectorOrdersIErrorState extends AppStates{}
+
+
+//------------------------------------
+
+//GET PAGINATED ORDERS COLLECTOR - MANAGER ROLE
+
+class AppGetNextCollectorOrdersMLoadingState extends AppStates{}
+
+class AppGetNextCollectorOrdersMSuccessState extends AppStates{}
+
+class AppGetNextCollectorOrdersMErrorState extends AppStates{}
+
+
+//------------------------------------
+
+//GET PAGINATED ORDERS COLLECTOR - COLLECTOR  ROLE
+
+class AppGetNextCollectorOrdersCLoadingState extends AppStates{}
+
+class AppGetNextCollectorOrdersCSuccessState extends AppStates{}
+
+class AppGetNextCollectorOrdersCErrorState extends AppStates{}
+
+
+//------------------------------------
+
+
+
+
+//GET PAGINATED ORDERS SCANNER - MANAGER ROLE
+
+class AppGetNextScannerOrdersMLoadingState extends AppStates{}
+
+class AppGetNextScannerOrdersMSuccessState extends AppStates{}
+
+class AppGetNextScannerOrdersMErrorState extends AppStates{}
+
+
+//------------------------------------
+
+//GET PAGINATED ORDERS SCANNER - SCANNER  ROLE
+
+class AppGetNextScannerOrdersSLoadingState extends AppStates{}
+
+class AppGetNextScannerOrdersSSuccessState extends AppStates{}
+
+class AppGetNextScannerOrdersSErrorState extends AppStates{}
 
 
 //------------------------------------

@@ -57,6 +57,7 @@ class WorkerSettings extends StatelessWidget {
                                   text: Localization.translate('orders_settings_title'),
                                   onTap: ()
                                   {
+                                    cubit.getAllWorkerOrders();
                                     navigateTo(context, const WorkerOrdersSettings());
                                   }
                               ),
@@ -177,6 +178,7 @@ class WorkerSettings extends StatelessWidget {
                                     text: Localization.translate('orders_settings_title'),
                                     onTap: ()
                                     {
+                                      cubit.getAllWorkerOrders();
                                       navigateTo(context, const WorkerOrdersSettings());
                                     }
                                 ),

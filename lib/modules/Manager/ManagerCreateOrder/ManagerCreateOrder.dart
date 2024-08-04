@@ -199,7 +199,7 @@ class _ManagerCreateOrderState extends State<ManagerCreateOrder> {
                                     child: Text(
                                       Localization.translate('worker_assignment'),
 
-                                      style: headlineTextStyleBuilder(),
+                                      style: textStyleBuilder(),
                                     ),
                                   ),
 
@@ -246,6 +246,35 @@ class _ManagerCreateOrderState extends State<ManagerCreateOrder> {
                                             ),
                                           ),
                                         );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              const SizedBox(height: 20,),
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      Localization.translate('preparing_team_assignment'),
+
+                                      style: textStyleBuilder(),
+                                    ),
+                                  ),
+
+                                  Expanded(
+                                    child: TextButton(
+                                      child: Text(
+                                        Localization.translate('choose_preparation_team'),
+                                        style: textStyleBuilder(color: cubit.isDarkTheme? defaultThirdDarkColor : defaultThirdColor),
+                                      ),
+                                      onPressed:()
+                                      {
+                                        _chooseDialog(context, cubit);
                                       },
                                     ),
                                   ),
@@ -420,6 +449,35 @@ class _ManagerCreateOrderState extends State<ManagerCreateOrder> {
                                                 ),
                                               ),
                                             );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  const SizedBox(height: 20,),
+
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          Localization.translate('preparing_team_assignment'),
+
+                                          style: textStyleBuilder(),
+                                        ),
+                                      ),
+
+                                      Expanded(
+                                        child: TextButton(
+                                          child: Text(
+                                            Localization.translate('choose_preparation_team'),
+                                            style: textStyleBuilder(color: cubit.isDarkTheme? defaultThirdDarkColor : defaultThirdColor),
+                                          ),
+                                          onPressed:()
+                                          {
+                                            _chooseDialog(context, cubit);
                                           },
                                         ),
                                       ),
@@ -714,6 +772,81 @@ class _ManagerCreateOrderState extends State<ManagerCreateOrder> {
           ),
         ],
       ),
+    );
+  }
+
+  void _chooseDialog(BuildContext context, AppCubit cubit,)
+  {
+    showDialog(
+      context: context,
+      builder: (dialogContext)
+      {
+        return Directionality(
+          textDirection: appDirectionality(),
+          child: defaultSimpleDialog(
+            context: context,
+            title: Localization.translate('choose_preparation_team'),
+            content:
+            [
+              SingleChildScrollView(
+                child: SizedBox(
+                  width: double.maxFinite,
+                  child: ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context,index)
+                      {
+                        return Padding(
+                          padding: const EdgeInsetsDirectional.symmetric(horizontal: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                preparationTeam[index],
+                                style: textStyleBuilder(
+                                    fontSize: 16,
+                                    color:  AppCubit.get(context).isDarkTheme? Colors.white: Colors.black,
+                                    fontFamily: AppCubit.language =='ar'? 'Cairo' :'Railway',
+                                    fontWeight: FontWeight.w400,),
+                              ),
+                
+                              const Spacer(),
+                
+                              Checkbox(
+                                value: cubit.chosenPreparationTeam.contains(preparationTeam[index])? true: false,
+                                onChanged: (value)
+                                {
+                                  cubit.alterChosenPreparationTeam(preparationTeam[index]);
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context,index)
+                      {
+                        return Column(
+                          children:
+                          [
+                            const SizedBox(height: 10,),
+                
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                              child: myDivider(),
+                            ),
+                
+                            const SizedBox(height: 10,),
+                          ],
+                        );
+                      },
+                      itemCount: preparationTeam.length
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
     );
   }
 }

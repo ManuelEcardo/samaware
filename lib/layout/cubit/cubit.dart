@@ -3,11 +3,16 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_excel/excel.dart';
+import 'package:samaware_flutter/models/CollectorDetailsModel/CollectorDetailsModel.dart';
 import 'package:samaware_flutter/models/InspectorsDetailsModel/InspectorsDetailsModel.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/models/PriceSettersDetailsModel/PriceSettersDetailsModel.dart';
+import 'package:samaware_flutter/models/ScannerDetailsModel/ScannerDetailsModel.dart';
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/models/WorkerDetailsModel/WorkerDetailsModel.dart';
+import 'package:samaware_flutter/modules/Collector/CollectorHome/CollectorHome.dart';
+import 'package:samaware_flutter/modules/Collector/CollectorPreviousOrders/CollectorPreviousOrders.dart';
+import 'package:samaware_flutter/modules/Collector/CollectorSettings/CollectorSettings.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorHome/InspectorHome.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorPreviousOrders/InspectorPreviousOrders.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorSettings/InspectorSettings.dart';
@@ -18,6 +23,9 @@ import 'package:samaware_flutter/modules/Manager/ManagerSettings/ManagerSettings
 import 'package:samaware_flutter/modules/PriceSetter/PriceSetterHome/PriceSetterHome.dart';
 import 'package:samaware_flutter/modules/PriceSetter/PriceSetterPreviousOrders/PriceSetterPreviousOrders.dart';
 import 'package:samaware_flutter/modules/PriceSetter/PriceSetterSettings/PriceSetterSettings.dart';
+import 'package:samaware_flutter/modules/Scanner/ScannerHome/ScannerHome.dart';
+import 'package:samaware_flutter/modules/Scanner/ScannerPreviousOrders/ScannerPreviousOrders.dart';
+import 'package:samaware_flutter/modules/Scanner/ScannerSettings/ScannerSettings.dart';
 import 'package:samaware_flutter/modules/Worker/WorkerHome/WorkerHome.dart';
 import 'package:samaware_flutter/modules/Worker/WorkerPreviousOrders/WorkerPreviousOrders.dart';
 import 'package:samaware_flutter/modules/Worker/WorkerSettings/WorkerSettings.dart';
@@ -254,6 +262,26 @@ class AppCubit extends Cubit<AppStates>
 
             break;
 
+
+          case collector:
+            bottomBarWidgets=
+            [
+              const CollectorHome(),
+              const CollectorPreviousOrders(),
+              const CollectorSettings(),
+            ];
+            break;
+
+
+          case scanner:
+            bottomBarWidgets=
+            [
+              const ScannerHome(),
+              const ScannerPreviousOrders(),
+              const ScannerSettings(),
+            ];
+            break;
+
           default:
             break;
         }
@@ -330,7 +358,6 @@ class AppCubit extends Cubit<AppStates>
           getWaitingOrders();
           getWorkerDoneOrders();
 
-
           if(getAll) getAllWorkerOrders();
 
           break;
@@ -354,6 +381,29 @@ class AppCubit extends Cubit<AppStates>
           if(getAll) getAllInspectorOrders();
 
           break;
+
+
+        case collector:
+          print('Collector Role...');
+
+          getWaitingOrdersCollector();
+          getCollectorDoneOrders();
+
+          if(getAll) getAllCollectorOrders();
+
+          break;
+
+
+        case scanner:
+          print('Scanner Role...');
+
+          getWaitingOrdersScanner();
+          getScannerDoneOrders();
+
+          if(getAll) getAllScannerOrders();
+
+          break;
+
 
         default:
           print('Default Role...');
@@ -499,6 +549,62 @@ class AppCubit extends Cubit<AppStates>
     }
   }
 
+
+  CollectorsDetailsModel? collectors;
+  ///Gets the collectors for manager
+  void getCollectors()
+  {
+    if(token!='')
+    {
+      print('In getCollectors...');
+      emit(AppGetCollectorsLoadingState());
+
+      MainDioHelper.getData(
+          url: allCollectors,
+          token: token
+      ).then((value)
+      {
+        print('Got collectors...');
+
+        collectors= CollectorsDetailsModel.fromJson(value.data);
+
+        emit(AppGetCollectorsSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING COLLECTORS, ${error.toString()}');
+        emit(AppGetCollectorsErrorState());
+      });
+
+    }
+  }
+
+  ScannersDetailsModel? scanners;
+  ///Gets the scanners for manager
+  void getScanners()
+  {
+    if(token!='')
+    {
+      print('In getScanners...');
+      emit(AppGetScannersLoadingState());
+
+      MainDioHelper.getData(
+          url: allScanners,
+          token: token
+      ).then((value)
+      {
+        print('Got scanners...');
+
+        scanners= ScannersDetailsModel.fromJson(value.data);
+
+        emit(AppGetScannersSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING SCANNERS, ${error.toString()}');
+        emit(AppGetScannersErrorState());
+      });
+
+    }
+  }
 
   ///Logout User and Remove his token from back-end side
   bool logout({required BuildContext context, required String role})
@@ -655,6 +761,38 @@ class AppCubit extends Cubit<AppStates>
 
         break;
 
+
+      case collector:
+
+        for(CollectorDetailsModel collector in collectors?.collectors ?? [])
+        {
+          if(collector.collector?.id == id)
+          {
+            collector.addOrders(value.data);
+            collector.addPagination(value.data);
+
+            break;
+          }
+        }
+
+        break;
+
+
+      case scanner:
+
+        for(ScannerDetailsModel scanner in scanners?.scanners ?? [])
+        {
+          if(scanner.scanner?.id == id)
+          {
+            scanner.addOrders(value.data);
+            scanner.addPagination(value.data);
+
+            break;
+          }
+        }
+
+        break;
+
       case 'allOrders':
 
         allOrders?.addOrders(value.data);
@@ -688,6 +826,20 @@ class AppCubit extends Cubit<AppStates>
       case inspector:
         allInspectorOrders?.addOrders(value.data);
         allInspectorOrders?.addPagination(value.data);
+
+        break;
+
+
+      case collector:
+        allCollectorOrders?.addOrders(value.data);
+        allCollectorOrders?.addPagination(value.data);
+
+        break;
+
+
+      case scanner:
+        allScannerOrders?.addOrders(value.data);
+        allScannerOrders?.addPagination(value.data);
 
         break;
 
@@ -1131,6 +1283,288 @@ class AppCubit extends Cubit<AppStates>
 
   }
 
+  //--------------------------
+  //--------------------------
+
+  // COLLECTOR ROLE
+
+  OrdersModel? collectorWaitingOrders;
+  ///Get Orders waiting for you
+  void getWaitingOrdersCollector()
+  {
+    if(token!='')
+    {
+      emit(AppGetCollectorWaitingOrdersLoadingState());
+
+      print('Collector, in getWaitingOrders...');
+
+      MainDioHelper.getData(
+        url: getAwaitingOrdersCollector,
+        token: token,
+      ).then((value)
+      {
+        print('Got Collector waitingOrders...');
+
+        collectorWaitingOrders= OrdersModel.fromJson(value.data);
+
+        emit(AppGetCollectorWaitingOrdersSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING COLLECTOR WAITING ORDERS, ${error.toString()}');
+        emit(AppGetCollectorWaitingOrdersErrorState());
+      });
+    }
+  }
+
+  OrdersModel? collectorDoneOrders;
+  ///Get the [] orders by an collector
+  void getCollectorDoneOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetCollectorDoneOrdersLoadingState());
+      print("In Getting collector's Done Orders...");
+
+      MainDioHelper.getData(
+        url: doneOrdersByUser,
+        token: token,
+      ).then((value)
+      {
+        print('Got collector Done Orders...');
+
+        collectorDoneOrders = OrdersModel.fromJson(value.data);
+
+        emit(AppGetCollectorDoneOrdersSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING COLLECTOR DONE ORDERS, ${error.toString()}');
+        emit(AppGetCollectorDoneOrdersErrorState());
+      });
+    }
+  }
+
+  OrdersModel? allCollectorOrders;
+  ///Get all the orders assigned to this collector
+  void getAllCollectorOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetAllOrdersCollectorLoadingState());
+
+      print('In getAllCollectorOrders...');
+
+      MainDioHelper.getData(
+        url: allOrdersUsers,
+        token: token,
+      ).then((value)
+      {
+        print('Got all collector Orders...');
+
+        allCollectorOrders= OrdersModel.fromJson(value.data);
+
+        emit(AppGetAllOrdersCollectorSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING ALL ORDERS OF A COLLECTOR, ${error.toString()}');
+
+        emit(AppGetAllOrdersCollectorErrorState());
+      });
+    }
+  }
+
+
+  /// Get Next Paginated Orders, Collector type
+  void getNextWorkerOrdersCollector({String? nextPage})
+  {
+    if(token != '')
+    {
+      emit(AppGetNextCollectorOrdersCLoadingState());
+      print('in getNextWorkerOrdersCollector...');
+
+      MainDioHelper.getData(
+        url: nextPage != null ? '$allOrdersUsers$nextPage' : allOrdersUsers,
+        token: token,
+      ).then((value)
+      {
+        print('got next Collector orders w...');
+
+        nextOrderHelperRoles(value: value, type: collector);
+
+        emit(AppGetNextCollectorOrdersCSuccessState());
+      }).catchError((error)
+      {
+        print("COULDN'T GET NEXT ORDERS COLLECTOR C, ${error.toString()}");
+
+        emit(AppGetNextCollectorOrdersCErrorState());
+      });
+    }
+  }
+
+  ///Gets next batch of orders for collector
+  void getNextCollectorOrdersManager({String? nextPage, required String id})
+  {
+    emit(AppGetNextCollectorOrdersMLoadingState());
+    print('In getNextCollectorOrders...');
+
+    MainDioHelper.getData(
+        url: nextPage !=null ? '$inspectorOrders/$id$nextPage' : '$inspectorOrders/$id',
+        token: token
+    ).then((value)
+    {
+      print('Got next collector orders...');
+
+      nextOrderHelperManager(id: id, type: collector, value: value);
+
+      emit(AppGetNextCollectorOrdersMSuccessState());
+    }).catchError((error)
+    {
+      print("COULDN'T GET NEXT COLLECTOR ORDERS, ${error.toString()}");
+      emit(AppGetNextCollectorOrdersMErrorState());
+    });
+
+  }
+
+  //--------------------------
+  //--------------------------
+
+  // SCANNER ROLE
+
+  OrdersModel? scannerWaitingOrders;
+  ///Get Orders waiting for you
+  void getWaitingOrdersScanner()
+  {
+    if(token!='')
+    {
+      emit(AppGetScannerWaitingOrdersLoadingState());
+
+      print('Scanner, in getWaitingOrders...');
+
+      MainDioHelper.getData(
+        url: getAwaitingOrdersScanner,
+        token: token,
+      ).then((value)
+      {
+        print('Got Scanner waitingOrders...');
+
+        scannerWaitingOrders= OrdersModel.fromJson(value.data);
+
+        emit(AppGetScannerWaitingOrdersSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING SCANNER WAITING ORDERS, ${error.toString()}');
+        emit(AppGetScannerWaitingOrdersErrorState());
+      });
+    }
+  }
+
+  OrdersModel? scannerDoneOrders;
+  ///Get the [] orders by an scanner
+  void getScannerDoneOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetScannerDoneOrdersLoadingState());
+      print("In Getting scanner's Done Orders...");
+
+      MainDioHelper.getData(
+        url: doneOrdersByUser,
+        token: token,
+      ).then((value)
+      {
+        print('Got scanner Done Orders...');
+
+        scannerDoneOrders = OrdersModel.fromJson(value.data);
+
+        emit(AppGetScannerDoneOrdersSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING SCANNER DONE ORDERS, ${error.toString()}');
+        emit(AppGetScannerDoneOrdersErrorState());
+      });
+    }
+  }
+
+
+  OrdersModel? allScannerOrders;
+  ///Get all the orders assigned to this scanner
+  void getAllScannerOrders()
+  {
+    if(token !='')
+    {
+      emit(AppGetAllOrdersScannerLoadingState());
+
+      print('In getAllScannerOrders...');
+
+      MainDioHelper.getData(
+        url: allOrdersUsers,
+        token: token,
+      ).then((value)
+      {
+        print('Got all scanner Orders...');
+
+        allScannerOrders= OrdersModel.fromJson(value.data);
+
+        emit(AppGetAllOrdersScannerSuccessState());
+      }).catchError((error)
+      {
+        print('ERROR WHILE GETTING ALL ORDERS OF A SCANNER, ${error.toString()}');
+
+        emit(AppGetAllOrdersScannerErrorState());
+      });
+    }
+  }
+
+  /// Get Next Paginated Orders, Scanner type
+  void getNextWorkerOrdersScanner({String? nextPage})
+  {
+    if(token != '')
+    {
+      emit(AppGetNextScannerOrdersSLoadingState());
+      print('in getNextWorkerOrdersScanner...');
+
+      MainDioHelper.getData(
+        url: nextPage != null ? '$allOrdersUsers$nextPage' : allOrdersUsers,
+        token: token,
+      ).then((value)
+      {
+        print('got next Scanner orders w...');
+
+        nextOrderHelperRoles(value: value, type: scanner);
+
+        emit(AppGetNextScannerOrdersSSuccessState());
+      }).catchError((error)
+      {
+        print("COULDN'T GET NEXT ORDERS SCANNER S, ${error.toString()}");
+
+        emit(AppGetNextScannerOrdersSErrorState());
+      });
+    }
+  }
+
+  ///Gets next batch of orders for Scanner
+  void getNextScannerOrdersManager({String? nextPage, required String id})
+  {
+    emit(AppGetNextScannerOrdersMLoadingState());
+    print('In getNextScannerOrders...');
+
+    MainDioHelper.getData(
+        url: nextPage !=null ? '$inspectorOrders/$id$nextPage' : '$inspectorOrders/$id',
+        token: token
+    ).then((value)
+    {
+      print('Got next scanner orders...');
+
+      nextOrderHelperManager(id: id, type: scanner, value: value);
+
+      emit(AppGetNextScannerOrdersMSuccessState());
+    }).catchError((error)
+    {
+      print("COULDN'T GET NEXT SCANNER ORDERS, ${error.toString()}");
+      emit(AppGetNextScannerOrdersMErrorState());
+    });
+
+  }
+
   //----------------------
 
   //GLOBAL ORDERS
@@ -1156,6 +1590,14 @@ class AppCubit extends Cubit<AppStates>
       });
     });
 
+
+    List<Map<String,dynamic>> orderPreparationTeam=[];
+
+    for (var member in chosenPreparationTeam)
+    {
+      orderPreparationTeam.add({'name':member});
+    }
+
     MainDioHelper.postData(
       url: createAnOrder,
       data:
@@ -1168,6 +1610,8 @@ class AppCubit extends Cubit<AppStates>
         'waiting_to_be_prepared_date': defaultDateFormatter.format(DateTime.now()),
 
         'items':orderItems,
+
+        'preparationTeam':orderPreparationTeam,
       },
       token: token,
     ).then((value)
@@ -1285,7 +1729,10 @@ class AppCubit extends Cubit<AppStates>
     bool? isWorkerWaitingOrders, bool? getDoneOrdersWorker,
     bool? isPriceSetterWaitingOrders, bool? getDoneOrdersPriceSetter,
     bool? isInspectorWaitingOrders, bool? getDoneOrdersInspector,
+    bool? isCollectorWaitingOrders, bool? getDoneOrdersCollector,
+    bool? isScannerWaitingOrders, bool? getDoneOrdersScanner,
     bool? designatePriceSetter, bool? designateInspector,
+    bool? designateCollector, bool? designateScanner,
     String? userId, String? failureReason,
     required String orderId, required OrderState status,
     OrderDate? dateType, String? date,
@@ -1306,6 +1753,10 @@ class AppCubit extends Cubit<AppStates>
           if(dateType!=null) dateType.name:date,
           if(designatePriceSetter !=null && userId !=null) "priceSetterId":userId,
           if(designateInspector !=null && userId !=null) "inspectorId":userId,
+
+          if(designateCollector !=null && userId !=null) "collectorId":userId,
+          if(designateScanner !=null && userId !=null) "scannerId":userId,
+
           if(failureReason !=null) "failure_reason":failureReason,
         },
         token: token,
@@ -1318,6 +1769,12 @@ class AppCubit extends Cubit<AppStates>
 
         isPriceSetterWaitingOrders !=null? getWaitingOrdersPriceSetter() : null;
         getDoneOrdersPriceSetter !=null? getPriceSetterDoneOrders() : null;
+
+        isCollectorWaitingOrders !=null? getWaitingOrdersCollector() : null;
+        getDoneOrdersCollector !=null? getCollectorDoneOrders() : null;
+
+        isScannerWaitingOrders !=null? getWaitingOrdersScanner() : null;
+        getDoneOrdersScanner !=null? getScannerDoneOrders() : null;
 
         isInspectorWaitingOrders !=null? getWaitingOrdersInspector(): null;
         getDoneOrdersInspector !=null? getInspectorDoneOrders() :null;
@@ -1529,6 +1986,7 @@ class AppCubit extends Cubit<AppStates>
   {
     orderFromExcel=null;
     excelFile=null;
+    chosenPreparationTeam=[];
 
     emit(AppClearOrderState());
   }
@@ -1635,6 +2093,24 @@ class AppCubit extends Cubit<AppStates>
         orderFromExcel?.workerId=w?.id;
       }
     emit(AppSetChosenWorkerState());
+  }
+
+  ///List that contains preparation team members
+  List<String> chosenPreparationTeam=[];
+
+  void alterChosenPreparationTeam(String item)
+  {
+    if(chosenPreparationTeam.contains(item))
+    {
+      chosenPreparationTeam.remove(item);
+      emit(AppRemoveFromPreparationTeamState());
+    }
+
+    else
+    {
+      chosenPreparationTeam.add(item);
+      emit(AppAddToPreparationTeamState());
+    }
   }
 
 

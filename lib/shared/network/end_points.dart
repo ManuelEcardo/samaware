@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 //LOCAL HOST
-//
-String localhost= kIsWeb? 'https://localhost:4443/' : 'https://10.0.2.2:4443/'; //kIsWeb? 'http://localhost:3000/' : 'http://10.0.2.2:3000/';
-const String webSocketLocalHost= kIsWeb? 'ws://localhost:3000/webSocket' : 'ws://10.0.2.2:3000/webSocket';
+
+String localhost= kIsWeb? 'http://localhost:3000/' : 'https://10.0.2.2:4443/'; //kIsWeb? 'http://localhost:3000/' : 'http://10.0.2.2:3000/';
+String webSocketLocalHost= kIsWeb? 'ws://localhost:3000/webSocket' : 'ws://10.0.2.2:3000/webSocket';
 
 
 //LOCAL NETWORK
@@ -16,6 +16,11 @@ const String webSocketLocalHost= kIsWeb? 'ws://localhost:3000/webSocket' : 'ws:/
 //String localhost= 'https://conversely-inviting-gelding.ngrok-free.app/';
 //String webSocketLocalHost = 'ws://conversely-inviting-gelding.ngrok-free.app/webSocket';
 
+
+//Render.com
+
+// String localhost='https://samaware-backend.onrender.com/';
+// String webSocketLocalHost= 'ws://samaware-backend.onrender.com/webSocket';
 
 //USER ENDPOINTS
 
@@ -53,6 +58,18 @@ const inspectorWithDetail='inspectors/details';
 const allInspectors='inspectors/all';
 
 
+//COLLECTOR ENDPOINTS
+
+const getAwaitingOrdersCollector = 'orders/collector/waiting_me';
+
+const allCollectors='collectors/all';
+
+
+//SCANNER ENDPOINTS
+
+const getAwaitingOrdersScanner = 'orders/scanner/waiting_me';
+
+const allScanners='scanners/all';
 
 //ORDER ENDPOINTS
 
@@ -81,3 +98,11 @@ const priceSetterOrders='orders/priceSetter';
 //ORDER INSPECTOR
 
 const inspectorOrders='orders/inspector';
+
+//ORDER COLLECTOR
+
+const collectorOrders='orders/collector';
+
+//ORDER SCANNER
+
+const scannerOrders='orders/scanner';

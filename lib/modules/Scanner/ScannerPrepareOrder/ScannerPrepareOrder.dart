@@ -1,18 +1,20 @@
 import 'dart:async';
 import 'dart:ui';
+
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 
-class WorkerPrepareOrder extends StatefulWidget {
+class ScannerPrepareOrder extends StatefulWidget {
   String orderId;
-  WorkerPrepareOrder({super.key, required this.orderId});
+  ScannerPrepareOrder({super.key, required this.orderId});
 
   @override
-  State<WorkerPrepareOrder> createState() => _WorkerPrepareOrderState();
+  State<ScannerPrepareOrder> createState() => _ScannerPrepareOrderState();
 }
 
-class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
+class _ScannerPrepareOrderState extends State<ScannerPrepareOrder>
+{
 
   late ScrollController scrollController;
   List<bool> checkBoxValues=[];
@@ -22,6 +24,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
   //timer to click each second to show the time
   Timer? timer;
+
 
   late DateTime date;
 
@@ -48,12 +51,12 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
     WidgetsBinding.instance.addPostFrameCallback((_)
     {
-      if (cu.inWorkingOrder!.status == OrderState.waiting_to_be_prepared.name) //'waiting_to_be_prepared'
+      if (cu.inWorkingOrder!.status == OrderState.collected.name)
       {
         _showDialog(context, cu.inWorkingOrder!);
       }
 
-      if(cu.inWorkingOrder!.beingPreparedDate !=null)
+      if(cu.inWorkingOrder!.beingScannedDate !=null)
       {
         date = DateTime.now();
         setTimer(cubit: cu);
@@ -70,6 +73,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -89,57 +93,57 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
               actions:
               [
                 IconButton(
-                  onPressed: ()
-                  {
-                    showDialog(
-                      context: context,
-                      builder: (dialogContext)
-                      {
-                        return defaultAlertDialog(
-                          context: dialogContext,
-                          title: Localization.translate('deny_order'),
-                          content: SingleChildScrollView(
-                            child:Column(
-                              children:
-                              [
-                                Text(
-                                  Localization.translate('deny_order_secondary'),
-                                  style: textStyleBuilder(),
-                                ),
-
-                                const SizedBox(height: 5,),
-
-                                Row(
+                    onPressed: ()
+                    {
+                      showDialog(
+                          context: context,
+                          builder: (dialogContext)
+                          {
+                            return defaultAlertDialog(
+                              context: dialogContext,
+                              title: Localization.translate('deny_order'),
+                              content: SingleChildScrollView(
+                                child:Column(
                                   children:
                                   [
-                                    TextButton(
-                                        onPressed: ()
-                                        {
-                                          Navigator.of(dialogContext).pop(false);
-                                          denyOrder(context: context, cubit: cubit, order: order!);
-                                        },
-                                        child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                    Text(
+                                      Localization.translate('deny_order_secondary'),
+                                      style: textStyleBuilder(),
                                     ),
 
-                                    const Spacer(),
+                                    const SizedBox(height: 5,),
 
-                                    TextButton(
-                                      onPressed: ()
-                                      {
-                                        Navigator.of(dialogContext).pop(false);
-                                      },
-                                      child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                    Row(
+                                      children:
+                                      [
+                                        TextButton(
+                                            onPressed: ()
+                                            {
+                                              Navigator.of(dialogContext).pop(false);
+                                              denyOrder(context: context, cubit: cubit, order: order!);
+                                            },
+                                            child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                        ),
+
+                                        const Spacer(),
+
+                                        TextButton(
+                                          onPressed: ()
+                                          {
+                                            Navigator.of(dialogContext).pop(false);
+                                          },
+                                          child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-                    );
-                  },
-                  icon: const Icon(Icons.delete, color: Colors.red)
+                              ),
+                            );
+                          }
+                      );
+                    },
+                    icon: const Icon(Icons.delete, color: Colors.red)
                 ),
               ],
             ),
@@ -149,7 +153,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
               {
                 if(orientation == Orientation.portrait)
                 {
-                  if(order?.status == 'waiting_to_be_prepared')
+                  if(order?.status == OrderState.priced.name)
                   {
 
                     return Stack(
@@ -240,7 +244,8 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                                                             {
                                                               setState(()
                                                               {
-                                                                cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrdersWorker: true);
+                                                                cubit.patchOrder(orderId: order.objectId!, status: OrderState.scanned, date: defaultDateFormatter.format(DateTime.now()),
+                                                                    dateType: OrderDate.scanned_date, isScannerWaitingOrders: true, getDoneOrdersScanner: true);
 
                                                                 Navigator.of(dialogContext).pop();
                                                                 Navigator.of(context).pop();
@@ -343,65 +348,66 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                           const SizedBox(height: 30,),
 
                           defaultButton(
-                            color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
-                            textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
-                            title: Localization.translate('finish_prepare_title'),
-                            onTap: ()
-                            {
-                              showDialog(
-                                context: context,
-                                builder: (dialogContext)
-                                {
-                                  return defaultAlertDialog(
-                                    context: dialogContext,
-                                    title: Localization.translate('finish_prepare_dialog_title'),
-                                    content: SingleChildScrollView(
-                                        child: Column(
-                                          children:
-                                          [
-                                            Text(
-                                              Localization.translate('finish_prepare_dialog_secondary_title'),
-                                              style: textStyleBuilder(),
-                                            ),
-
-                                            const SizedBox(height: 5,),
-
-                                            Row(
+                              color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                              textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                              title: Localization.translate('finish_prepare_title'),
+                              onTap: ()
+                              {
+                                showDialog(
+                                    context: context,
+                                    builder: (dialogContext)
+                                    {
+                                      return defaultAlertDialog(
+                                        context: dialogContext,
+                                        title: Localization.translate('finish_prepare_dialog_title'),
+                                        content: SingleChildScrollView(
+                                            child: Column(
                                               children:
                                               [
-                                                TextButton(
-                                                    onPressed: ()
-                                                    {
-                                                      setState(()
-                                                      {
-                                                        cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrdersWorker: true);
-
-                                                        Navigator.of(dialogContext).pop();
-                                                        Navigator.of(context).pop();
-                                                      });
-                                                    },
-                                                    child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                                Text(
+                                                  Localization.translate('finish_prepare_dialog_secondary_title'),
+                                                  style: textStyleBuilder(),
                                                 ),
 
-                                                const Spacer(),
+                                                const SizedBox(height: 5,),
 
-                                                TextButton(
-                                                  onPressed: ()
-                                                  {
-                                                    Navigator.of(dialogContext).pop(false);
-                                                  },
-                                                  child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                                Row(
+                                                  children:
+                                                  [
+                                                    TextButton(
+                                                        onPressed: ()
+                                                        {
+                                                          setState(()
+                                                          {
+                                                            cubit.patchOrder(orderId: order.objectId!, status: OrderState.scanned, date: defaultDateFormatter.format(DateTime.now()),
+                                                                dateType: OrderDate.scanned_date, isScannerWaitingOrders: true, getDoneOrdersScanner: true);
+
+                                                            Navigator.of(dialogContext).pop();
+                                                            Navigator.of(context).pop();
+                                                          });
+                                                        },
+                                                        child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                                    ),
+
+                                                    const Spacer(),
+
+                                                    TextButton(
+                                                      onPressed: ()
+                                                      {
+                                                        Navigator.of(dialogContext).pop(false);
+                                                      },
+                                                      child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                                    ),
+                                                  ],
                                                 ),
                                               ],
-                                            ),
-                                          ],
-                                        )
-                                    ),
-                                  );
-                                }
-                              );
+                                            )
+                                        ),
+                                      );
+                                    }
+                                );
 
-                            }
+                              }
                           ),
                         ],
 
@@ -412,7 +418,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
                 else
                 {
-                  if(order?.status == 'waiting_to_be_prepared')
+                  if(order?.status == OrderState.priced.name)
                   {
                     return Stack(
 
@@ -503,7 +509,8 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                                                             {
                                                               setState(()
                                                               {
-                                                                cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrdersWorker: true);
+                                                                cubit.patchOrder(orderId: order.objectId!, status: OrderState.scanned, date: defaultDateFormatter.format(DateTime.now()),
+                                                                    dateType: OrderDate.scanned_date, isScannerWaitingOrders: true, getDoneOrdersScanner: true);
 
                                                                 Navigator.of(dialogContext).pop();
                                                                 Navigator.of(context).pop();
@@ -637,7 +644,8 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                                                         {
                                                           setState(()
                                                           {
-                                                            cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrdersWorker: true);
+                                                            cubit.patchOrder(orderId: order.objectId!, status: OrderState.scanned, date: defaultDateFormatter.format(DateTime.now()),
+                                                                dateType: OrderDate.scanned_date, isScannerWaitingOrders: true, getDoneOrdersScanner: true);
 
                                                             Navigator.of(dialogContext).pop();
                                                             Navigator.of(context).pop();
@@ -678,6 +686,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
       },
     );
   }
+
 
   ///Prepare the showDialog
   void _showDialog(BuildContext context, OrderModel order)
@@ -860,7 +869,8 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
       date = DateTime.now();
 
-      cubit.patchOrder(orderId: order.objectId!, status: OrderState.being_prepared, date: defaultDateFormatter.format(date), dateType: OrderDate.being_prepared_date, isWorkerWaitingOrders: true);
+      cubit.patchOrder(orderId: order.objectId!, status: OrderState.being_scanned, date: defaultDateFormatter.format(date),
+          dateType: OrderDate.being_scanned_date, isScannerWaitingOrders: true, designateScanner: true, userId: AppCubit.userData?.id);
 
       setTimer(cubit: cubit, passedDate: date);
     });
@@ -879,7 +889,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
           if(passedDate ==null)
           {
-            passedTime= durationFormatToHMS(date.difference(defaultDateFormatter.parse(cubit.inWorkingOrder!.beingPreparedDate!)));
+            passedTime= durationFormatToHMS(date.difference(defaultDateFormatter.parse(cubit.inWorkingOrder!.beingVerifiedDate!)));
 
             //print('diff: ${date.difference(defaultDateFormatter.parse(cubit.inWorkingOrder!.beingPreparedDate!))}');
           }
@@ -891,10 +901,10 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
             //print('diff: ${date.difference(passedDate!)}');
           }
         }
-        catch (e, stackTrace)
+        catch (e)
         {
-          print('Could not parse date..., ${e.toString()}');
-          print(stackTrace);
+          //print('Could not parse date..., ${e.toString()}');
+          //print(stackTrace);
         }
       });
     });
@@ -918,11 +928,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
                 const SizedBox(height: 15,),
 
-                denyOrderReasonBuilder(cubit: cubit, reason: workerOrderFailureReasons[0], context: context, dialogContext: dialogContext, order: order),
-
-                const SizedBox(height: 10,),
-
-                denyOrderReasonBuilder(cubit: cubit, reason: workerOrderFailureReasons[1], context: context, dialogContext: dialogContext, order:order),
+                denyOrderReasonBuilder(cubit: cubit, reason: scannerOrderFailureReasons[0], context: context, dialogContext: dialogContext, order: order),
               ],
             ),
           ),
@@ -955,14 +961,12 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
         [
           Expanded(
             child: Text(
-                  Localization.translate(reason),
-                  style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
-                ),
+              Localization.translate(reason),
+              style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
+            ),
           ),
         ],
       ),
     );
   }
-
-
 }

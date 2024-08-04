@@ -8,8 +8,9 @@ class MOD
   String title;
   dynamic value;
   TextStyle? style;
+  Widget? customWidget;
 
-  MOD({required this.title, required this.value, this.style});
+  MOD({required this.title, required this.value, this.style, this.customWidget});
 
 }
 
@@ -31,12 +32,28 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
   {
     super.initState();
 
+    //debugPrint(widget.order.toString(), wrapWidth: 1024);
+
     items.add(MOD(title: 'order_number', value: widget.order.orderId, style: headlineTextStyleBuilder()));
     items.add(MOD(title: 'chosen_worker', value: '${widget.order.worker?.name} ${widget.order.worker?.lastName}'));
 
-    (widget.order.priceSetter?.name !=null && widget.order.priceSetter?.name !=null)? items.add(MOD(title: 'chosen_priceSetter', value: '${widget.order.priceSetter?.name} ${widget.order.priceSetter?.lastName}')) : null;
+    (widget.order.preparationTeam!.isNotEmpty)? items.add(MOD(title: 'chosen_preparation_team', value: '', customWidget:Align(
+      alignment: AlignmentDirectional.topEnd,
+      child: TextButton(
+        child: Text(Localization.translate('show_preparation_members'),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: textStyleBuilder(),),
+        onPressed: (){_showDialog(context, widget.order.preparationTeam!);},),),) ) : null;
+
+    (widget.order.priceSetter?.name !=null && widget.order.priceSetter?.name !=null)? items.add(MOD(title: 'chosen_preparation_team', value: '${widget.order.priceSetter?.name} ${widget.order.priceSetter?.lastName}')) : null;
+
+    (widget.order.collector?.name !=null && widget.order.collector?.name !=null)? items.add(MOD(title:'chosen_collector', value:'${widget.order.collector?.name} ${widget.order.collector?.lastName}')) : null;
+
+    (widget.order.scanner?.name !=null && widget.order.scanner?.name !=null)? items.add(MOD(title:'chosen_scanner', value:'${widget.order.scanner?.name} ${widget.order.scanner?.lastName}')) : null;
 
     (widget.order.inspector?.name !=null && widget.order.inspector?.name !=null)? items.add(MOD(title: 'chosen_inspector', value: '${widget.order.inspector?.name} ${widget.order.inspector?.lastName}')) : null;
+
 
     items.add(MOD(title: 'order_reg_dialog', value: widget.order.registrationDate));
     items.add(MOD(title: 'order_ship_dialog', value: widget.order.shippingDate));
@@ -92,10 +109,10 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
                               itemBuilder: (context,index)
                               {
                                 return index != items.length-1
-                                    ?itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style)
+                                    ?itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style, customWidget: items[index].customWidget)
                                     : Column(children:[
 
-                                      itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style),
+                                      itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style, customWidget: items[index].customWidget),
 
                                       datesBuilder(widget.order),
 
@@ -103,7 +120,7 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
                                         const SizedBox(height: 25,),
 
                                       if(widget.order.status == OrderState.failed.name)
-                                        itemBuilder(title: Localization.translate('failure_reason_odm'), value: Localization.translate('${widget.order.failureReason}')),
+                                        itemBuilder(title: Localization.translate('failure_reason_odm'), value: Localization.translate('${widget.order.failureReason}'), customWidget: items[index].customWidget),
                                 ],);
                               },
 
@@ -124,10 +141,6 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
                               itemCount: items.length
                             ),
                           ),
-
-                          //datesBuilder(widget.order),
-
-                          //const Spacer(),
 
                           const SizedBox(height: 40,),
 
@@ -172,10 +185,10 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
                                 itemBuilder: (context,index)
                                 {
                                   return index != items.length-1
-                                      ?itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style)
+                                      ?itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style, customWidget: items[index].customWidget)
                                       : Column(children:[
 
-                                    itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style),
+                                    itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style, customWidget: items[index].customWidget),
 
                                     datesBuilder(widget.order),
 
@@ -183,9 +196,9 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
                                       const SizedBox(height: 25,),
 
                                     if(widget.order.status == OrderState.failed.name)
-                                      itemBuilder(title: Localization.translate('failure_reason_odm'), value: Localization.translate('${widget.order.failureReason}')),
+                                      itemBuilder(title: Localization.translate('failure_reason_odm'), value: Localization.translate('${widget.order.failureReason}'), customWidget: items[index].customWidget),
                                   ],);
-                                  //return itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style);
+
                                 },
 
                                 separatorBuilder: (context,index)
@@ -243,7 +256,7 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
   }
 
   ///Build the information items
-  Widget itemBuilder({required String title, required var value, TextStyle? style})
+  Widget itemBuilder({required String title, required var value, TextStyle? style, Widget? customWidget})
   {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -257,6 +270,7 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
           ),
         ),
 
+        customWidget ??
         Align(
           alignment: AlignmentDirectional.topEnd,
           child: Text(
@@ -318,7 +332,15 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
 
         if(order.beingPricedDate !=null && order.pricedDate !=null) dateItemBuilder(title:'pricing_time', value: localFormatter(order.beingPricedDate!, order.pricedDate!)),
 
-        if(order.pricedDate !=null && order.beingVerifiedDate !=null) dateItemBuilder(title:'to_start_verifying_time', value: localFormatter(order.pricedDate!, order.beingVerifiedDate!)),
+        if(order.pricedDate !=null && order.beingCollectedDate !=null) dateItemBuilder(title:'to_start_collecting_time' , value: localFormatter(order.pricedDate!, order.beingCollectedDate!)),
+
+        if(order.beingCollectedDate !=null && order.collectedDate !=null) dateItemBuilder(title:'collecting_time' , value: localFormatter(order.beingCollectedDate!, order.collectedDate!)),
+
+        if(order.collectedDate !=null && order.beingScannedDate !=null) dateItemBuilder(title:'to_start_scanning_time' , value: localFormatter(order.collectedDate!, order.beingScannedDate!)),
+
+        if(order.beingScannedDate !=null && order.scannedDate !=null) dateItemBuilder(title:'scanning_time' , value: localFormatter(order.beingScannedDate!, order.scannedDate!)),
+
+        if(order.scannedDate !=null && order.beingVerifiedDate !=null) dateItemBuilder(title:'to_start_verifying_time', value: localFormatter(order.scannedDate!, order.beingVerifiedDate!)),
 
         if(order.beingVerifiedDate !=null && order.verifiedDate !=null) dateItemBuilder(title:'verifying_time', value: localFormatter(order.beingVerifiedDate!, order.verifiedDate!)),
 
@@ -395,5 +417,66 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
     cubit.patchOrder(orderId: order.objectId!, status: OrderState.shipped, dateType: OrderDate.shipped_date, date: defaultDateFormatter.format(DateTime.now()) );
 
     Navigator.of(context).pop();
+  }
+
+
+  void _showDialog(BuildContext context, List<String> members)
+  {
+    showDialog(
+      context: context,
+      builder: (dialogContext)
+      {
+        return defaultSimpleDialog(
+            context: dialogContext,
+            title: Localization.translate('show_preparation_members'),
+            content:
+            [
+              Directionality(
+                textDirection: appDirectionality(),
+                child: SingleChildScrollView(
+                  child: SizedBox(
+                    width: double.maxFinite,
+                    child: ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context,index)
+                        {
+                          return Padding(
+                            padding: const EdgeInsetsDirectional.symmetric(horizontal: 8.0),
+                            child: Text(
+                              members[index],
+                              style: textStyleBuilder(
+                                fontSize: 16,
+                                color:  AppCubit.get(context).isDarkTheme? Colors.white: Colors.black,
+                                fontFamily: AppCubit.language =='ar'? 'Cairo' :'Railway',
+                                fontWeight: FontWeight.w400,),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (context,index)
+                        {
+                          return Column(
+                            children:
+                            [
+                              const SizedBox(height: 10,),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                                child: myDivider(),
+                              ),
+
+                              const SizedBox(height: 10,),
+                            ],
+                          );
+                        },
+                        itemCount: members.length
+                    ),
+                  ),
+                ),
+              ),
+            ],
+        );
+      },
+    );
   }
 }

@@ -1,28 +1,20 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
-import 'package:samaware_flutter/modules/Manager/ManagerOrderDetails/ManagerOrderDetails.dart';
+import 'package:samaware_flutter/modules/Scanner/ScannerOrderDetails/ScannerOrderDetails.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
-import 'package:string_extensions/string_extensions.dart';
 
-//ToDo: add Categorize Orders by Date => Show Today Orders, Yesterday etc...
-
-class ManagerOrders extends StatelessWidget {
-  const ManagerOrders({super.key});
+class ScannerPreviousOrders extends StatelessWidget {
+  const ScannerPreviousOrders({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit,AppStates>(
-      listener: (context,state)
-      {
-        if(state is AppGetNonReadyOrdersLoadingState)
-        {
-          defaultToast(msg: Localization.translate('getting_next_orders_toast'));
-        }
-      },
+      listener: (context,state){},
       builder: (context,state)
       {
         var cubit=AppCubit.get(context);
-        var orders= cubit.nonReadyOrders;
+        var orders = cubit.scannerDoneOrders;
+
         return ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(
             physics: const BouncingScrollPhysics(),
@@ -31,7 +23,7 @@ class ManagerOrders extends StatelessWidget {
           child: RefreshIndicator(
             onRefresh: () async
             {
-              cubit.getNonReadyOrders();
+              cubit.getScannerDoneOrders();
             },
             child: Directionality(
               textDirection: appDirectionality(),
@@ -48,22 +40,19 @@ class ManagerOrders extends StatelessWidget {
                       Align(
                         alignment: AlignmentDirectional.topStart,
                         child: Text(
-                          Localization.translate('available_order_title'),
+                          Localization.translate('my_orders_title_worker'),
                           style: headlineTextStyleBuilder(),
                         ),
                       ),
 
                       const SizedBox(height: 25,),
 
-                      if(orders!.orders!.isEmpty)
-                      Center(child: Text(Localization.translate('no_pending_orders'), style: textStyleBuilder(),)),
-
                       Expanded(
                         child: ListView.separated(
                           physics: const AlwaysScrollableScrollPhysics(),
                           itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, order: orders.orders?[index]),
                           separatorBuilder: (context,index)=> const SizedBox(height: 20,),
-                          itemCount: orders.orders!.length,
+                          itemCount: orders!.orders!.length,
                         ),
                       ),
                     ],
@@ -89,7 +78,7 @@ class ManagerOrders extends StatelessWidget {
       highlightColor: cubit.isDarkTheme? defaultDarkColor.withOpacity(0.2) : defaultColor.withOpacity(0.2),
       onTap: ()
       {
-        navigateTo(context, ManagerOrderDetails(order: order!));
+        navigateTo(context, ScannerOrderDetails(order: order!));
       },
       boxColor: null,
       borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor,
@@ -107,19 +96,6 @@ class ManagerOrders extends StatelessWidget {
                 style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
               ),
 
-              const SizedBox(width: 10,),
-
-              Text(
-                '|',
-                style: textStyleBuilder(fontSize: 24, fontWeight: FontWeight.w700),
-              ),
-
-              const SizedBox(width: 10,),
-
-              Text(
-                '${order?.worker?.name.capitalize?? 'Name'} ${order?.worker?.lastName.capitalize?? 'Last' }',
-                style: textStyleBuilder(fontSize: 22, fontWeight: FontWeight.w700),
-              ),
             ],
           ),
 

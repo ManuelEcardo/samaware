@@ -57,6 +57,7 @@ class PriceSetterSettings extends StatelessWidget {
                                   text: Localization.translate('orders_settings_title'),
                                   onTap: ()
                                   {
+                                    cubit.getAllPriceSetterOrders();
                                     navigateTo(context, const PriceSetterOrdersSettings());
                                   }
                               ),
@@ -177,6 +178,7 @@ class PriceSetterSettings extends StatelessWidget {
                                     text: Localization.translate('orders_settings_title'),
                                     onTap: ()
                                     {
+                                      cubit.getAllPriceSetterOrders();
                                       navigateTo(context, const PriceSetterOrdersSettings());
                                     }
                                 ),

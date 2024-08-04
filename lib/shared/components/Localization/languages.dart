@@ -40,7 +40,9 @@ const Map<String,String> ar={
 
   'inspector':'مدقق',
 
-  'priceSetter':'مسعر',
+  'collector':'مُجمّع',
+
+  'scanner':'قاطع الطلبات',
 
   'add_new_order':'أضف طلباً جديداً:',
 
@@ -63,6 +65,7 @@ const Map<String,String> ar={
 
   'piece':'قطعة',
 
+  'choose_preparation_team':'اختر عمالاً',
 
   'order_description_dialog':'توصيف الطلبية',
 
@@ -77,6 +80,8 @@ const Map<String,String> ar={
   'remove_an_item_swap':'تم حذف العنصر بنجاح',
 
   'worker_assignment':'اختر عاملاً',
+
+  'preparing_team_assignment':'اختر الأشخاص',
 
   'delete_item_dialog_title':'هل انت متأكد؟',
 
@@ -101,6 +106,14 @@ const Map<String,String> ar={
   'being_priced':'يتم تسعيرها',
 
   'priced':'تم تسعيرها',
+
+  'being_collected':'يتم تجميعها',
+
+  'collected':'تم تجميعها',
+
+  'being_scanned':'يتم قطعها',
+
+  'scanned':'تم قطعها',
 
   'being_verified':'يتم التوثيق',
 
@@ -134,6 +147,12 @@ const Map<String,String> ar={
 
   'chosen_inspector':'المدقّق:',
 
+  'chosen_collector':'المُجمّع',
+
+  'chosen_scanner':'القاطع',
+
+  'chosen_preparation_team':'العمال: ',
+
   'view_items_details':'عرض المواد: ',
 
   'items_details_title':'عناصر هذه الطلبية',
@@ -145,6 +164,14 @@ const Map<String,String> ar={
   'to_start_pricing_time':'الوقت لبدء التسعير',
 
   'pricing_time':'وقت التسعير',
+
+  'to_start_collecting_time':'الوقت لبدأ التجميع',
+
+  'collecting_time':'وقت التجميع',
+
+  'to_start_scanning_time':'الوقت لبدأ القطع',
+
+  'scanning_time':'وقت القطع',
 
   'to_start_verifying_time':'الوقت لبدء التوثيق',
 
@@ -165,6 +192,8 @@ const Map<String,String> ar={
   'to_shipment_button':'الشحن',
 
   'to_storage_button':'التخزين',
+
+  'show_preparation_members':'عرض العمال',
 
 
   //Settings Manager
@@ -395,6 +424,10 @@ const Map<String,String> en={
 
   'priceSetter':'Price Setter',
 
+  'collector':'Collector',
+
+  'scanner':'Scanner',
+
   'add_new_order':'Add Order:',
 
   'add_new_order_now':'Add Now!',
@@ -415,6 +448,7 @@ const Map<String,String> en={
 
   'piece':'Piece',
 
+  'choose_preparation_team':'Choose Workers',
 
   'order_description_dialog':'Order Description',
 
@@ -429,6 +463,8 @@ const Map<String,String> en={
   'remove_an_item_swap':'Removed Successfully',
 
   'worker_assignment':'Choose a Worker',
+
+  'preparing_team_assignment':'Choose preparation members',
 
   'delete_item_dialog_title':'Are You Sure?',
 
@@ -453,6 +489,14 @@ const Map<String,String> en={
   'being_priced':'Being priced',
 
   'priced':'Priced',
+
+  'being_collected':'Being Collected',
+
+  'collected':'Collected',
+
+  'being_scanned':'Being Scanned',
+
+  'scanned':'Scanned',
 
   'being_verified':'Being verified',
 
@@ -510,6 +554,12 @@ const Map<String,String> en={
 
   'chosen_inspector':'Inspector: ',
 
+  'chosen_collector':'Collector: ',
+
+  'chosen_scanner':'Scanner: ',
+
+  'chosen_preparation_team':'Chosen Members: ',
+
   'view_items_details':'View Items',
 
   'items_details_title':'This Order Items: ',
@@ -521,6 +571,14 @@ const Map<String,String> en={
   'to_start_pricing_time':'Time To start pricing',
 
   'pricing_time':'Pricing Time',
+
+  'to_start_collecting_time':'Time to start collecting',
+
+  'collecting_time':'Collecting Time',
+
+  'to_start_scanning_time':'Time to start scanning',
+
+  'scanning_time':'Scanning Time',
 
   'to_start_verifying_time':'Time to start verifying',
 
@@ -539,6 +597,8 @@ const Map<String,String> en={
   'to_shipment_button':'Shipment',
 
   'to_storage_button':'Store',
+
+  'show_preparation_members':'Show Members',
 
   'verifying_time':'Verifying Time',
 

@@ -42,9 +42,9 @@ class LoginCubit extends Cubit<LoginStates>
 
       emit(LoginSuccessState(loginModel!));
 
-    }).catchError((error)
+    }).catchError((error, stackTrace)
     {
-      print('ERROR WHILE LOGGING IN, ${error.toString()}');
+      print('ERROR WHILE LOGGING IN, ${error.toString()}, $stackTrace');
       
       emit(LoginErrorState(error.toString()));
     });

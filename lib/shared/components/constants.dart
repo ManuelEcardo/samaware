@@ -28,20 +28,24 @@ const String inspector= 'inspector';
 
 const String priceSetter= 'priceSetter';
 
+const String collector='collector';
+
+const String scanner='scanner';
+
 
 ///Order State types as enums
 enum OrderState
 {
   waiting_to_be_prepared, being_prepared, prepared, being_priced, priced,
-  being_verified,verified,re_prepare,waiting_to_ship,stored,shipped,failed
+  being_collected, collected, being_scanned, scanned, being_verified,verified,re_prepare,waiting_to_ship,stored,shipped,failed
 }
 
 ///Order Date types as enums
 enum OrderDate
 {
   waiting_to_be_prepared_date, being_prepared_date, prepared_date, being_priced_date,
-  priced_date, being_verified_date, verified_date, waiting_to_ship_date, stored_date,
-  shipped_date, failed_date, re_prepare_date
+  priced_date, being_collected_date, collected_date, being_scanned_date, scanned_date, being_verified_date, verified_date, waiting_to_ship_date, stored_date,
+  shipped_date, failed_date, re_prepare_date,
 
 }
 
@@ -50,3 +54,12 @@ List<String> workerOrderFailureReasons=['no_available_items_failure','other_reas
 
 ///Inspector Order Failure Reasons
 List<String> inspectorOrderFailureReasons=['wrong_items_failure','other_reason_failure'];
+
+///Collector Order Failure Reasons
+List<String> collectorOrderFailureReasons=['other_reason_failure'];
+
+///Scanner Order Failure Reasons
+List<String> scannerOrderFailureReasons=['other_reason_failure'];
+
+///Preparation Team
+List<String> preparationTeam=['صالح مشمش', 'شادي صارم', 'مهند عبد الكريم', 'علاء وهبة', 'محمد حمزة', 'علي فاعور', 'حسن زين', 'عمار سركل', 'بسام الصيادي', 'حسام الكردي', 'عبد القادر الحوت', 'مثقال عبد الخالق', 'امير شاهين', 'حسان الفرخ'];

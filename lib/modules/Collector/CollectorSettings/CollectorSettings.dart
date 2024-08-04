@@ -1,9 +1,9 @@
-import 'package:samaware_flutter/modules/Inspector/InspectorSettings/InspectorGeneralSettings/InspectorGeneralSettings.dart';
-import 'package:samaware_flutter/modules/Inspector/InspectorSettings/InspectorOrdersSettings/InspectorOrdersSettings.dart';
+import 'package:samaware_flutter/modules/Collector/CollectorSettings/CollectorGeneralSettings/CollectorGeneralSettings.dart';
+import 'package:samaware_flutter/modules/Collector/CollectorSettings/CollectorOrdersSettings/CollectorOrdersSettings.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 
-class InspectorSettings extends StatelessWidget {
-  const InspectorSettings({super.key});
+class CollectorSettings extends StatelessWidget {
+  const CollectorSettings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class InspectorSettings extends StatelessWidget {
                                   text: Localization.translate('general_settings_title'),
                                   onTap: ()
                                   {
-                                    navigateTo(context, const InspectorGeneralSettings());
+                                    navigateTo(context, const CollectorGeneralSettings());
                                   }
                               ),
 
@@ -57,8 +57,8 @@ class InspectorSettings extends StatelessWidget {
                                   text: Localization.translate('orders_settings_title'),
                                   onTap: ()
                                   {
-                                    cubit.getAllInspectorOrders();
-                                    navigateTo(context, const InspectorOrdersSettings());
+                                    cubit.getAllCollectorOrders();
+                                    navigateTo(context, const CollectorOrdersSettings());
                                   }
                               ),
                             ],
@@ -83,9 +83,6 @@ class InspectorSettings extends StatelessWidget {
                                   text: Localization.translate('logout_profile'),
                                   onTap: ()
                                   {
-                                    //cubit.logout(context: context, role: AppCubit.userData!.role!);
-
-
                                     showDialog(
                                         context: context,
                                         builder: (dialogContext)
@@ -164,7 +161,8 @@ class InspectorSettings extends StatelessWidget {
                                     text: Localization.translate('general_settings_title'),
                                     onTap: ()
                                     {
-                                      navigateTo(context, const InspectorGeneralSettings());
+
+                                      navigateTo(context, const CollectorGeneralSettings());
                                     }
                                 ),
 
@@ -178,8 +176,8 @@ class InspectorSettings extends StatelessWidget {
                                     text: Localization.translate('orders_settings_title'),
                                     onTap: ()
                                     {
-                                      cubit.getAllInspectorOrders();
-                                      navigateTo(context, const InspectorOrdersSettings());
+                                      cubit.getAllCollectorOrders();
+                                      navigateTo(context, const CollectorOrdersSettings());
                                     }
                                 ),
                               ],

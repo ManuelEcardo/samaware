@@ -2,18 +2,18 @@ import 'dart:async';
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
-import 'package:samaware_flutter/modules/Inspector/InspectorPrepareOrder/InspectorPrepareOrder.dart';
+import 'package:samaware_flutter/modules/Scanner/ScannerPrepareOrder/ScannerPrepareOrder.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 import 'package:string_extensions/string_extensions.dart';
 
-class InspectorHome extends StatefulWidget {
-  const InspectorHome({super.key});
+class ScannerHome extends StatefulWidget {
+  const ScannerHome({super.key});
 
   @override
-  State<InspectorHome> createState() => _InspectorHomeState();
+  State<ScannerHome> createState() => _ScannerHomeState();
 }
 
-class _InspectorHomeState extends State<InspectorHome> {
+class _ScannerHomeState extends State<ScannerHome> {
 
   Timer? _timer;
 
@@ -41,7 +41,7 @@ class _InspectorHomeState extends State<InspectorHome> {
       builder: (context,state)
       {
         var cubit=AppCubit.get(context);
-        var orders = cubit.inspectorWaitingOrders;
+        var orders = cubit.scannerWaitingOrders;
         return Directionality(
           textDirection: appDirectionality(),
           child: OrientationBuilder(
@@ -57,7 +57,7 @@ class _InspectorHomeState extends State<InspectorHome> {
                   child: RefreshIndicator(
                     onRefresh: ()async
                     {
-                      cubit.getWaitingOrdersInspector();
+                      cubit.getWaitingOrdersScanner();
                       defaultToast(msg: Localization.translate('getting_waiting_orders_toast'));
                     },
                     child: Padding(
@@ -147,7 +147,7 @@ class _InspectorHomeState extends State<InspectorHome> {
                                           {
                                             cubit.setInWorkingOrder(orders.orders?[index]);
 
-                                            navigateTo(context, InspectorPrepareOrder(orderId:  orders.orders![index].orderId!,));
+                                            navigateTo(context, ScannerPrepareOrder(orderId:  orders.orders![index].orderId!,));
                                           },
                                           manualBorderColor: true,
                                           borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor
@@ -184,7 +184,7 @@ class _InspectorHomeState extends State<InspectorHome> {
                   child: RefreshIndicator(
                     onRefresh: ()async
                     {
-                      cubit.getWaitingOrdersInspector();
+                      cubit.getWaitingOrdersScanner();
                       defaultToast(msg: Localization.translate('getting_waiting_orders_toast'));
                     },
 
@@ -277,7 +277,7 @@ class _InspectorHomeState extends State<InspectorHome> {
                                             cubit.setInWorkingOrder(orders.orders?[index]);
 
 
-                                            navigateTo(context, InspectorPrepareOrder(orderId:  orders.orders![index].orderId!,));
+                                            navigateTo(context, ScannerPrepareOrder(orderId:  orders.orders![index].orderId!,));
                                           },
                                           manualBorderColor: true,
                                           borderColor: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor
@@ -335,7 +335,7 @@ class _InspectorHomeState extends State<InspectorHome> {
         Align(
           alignment: AlignmentDirectional.topEnd,
           child: Text(
-            order.scannedDate !=null? timePassedSinceByString(order.scannedDate!) : 'Scan Date is Null',
+            order.collectedDate !=null? timePassedSinceByString(order.collectedDate!) : 'Price Date is Null',
             style: headlineTextStyleBuilder(fontSize: 20),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,

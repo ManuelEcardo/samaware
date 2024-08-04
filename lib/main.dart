@@ -26,7 +26,7 @@ void main() async {
     FlutterError.dumpErrorToConsole(details);
   };
 
-  HttpOverrides.global=CustomHTTP(); //Creating HTTP Client
+  if(kIsWeb == false) HttpOverrides.global=CustomHTTP(); //Creating HTTP Client
 
   Bloc.observer = MyBlocObserver(); //Running Bloc Observer which prints change in states and errors etc...  in console
 

@@ -1,9 +1,9 @@
-import 'package:samaware_flutter/modules/Inspector/InspectorSettings/InspectorGeneralSettings/InspectorGeneralSettings.dart';
-import 'package:samaware_flutter/modules/Inspector/InspectorSettings/InspectorOrdersSettings/InspectorOrdersSettings.dart';
+import 'package:samaware_flutter/modules/Scanner/ScannerSettings/ScannerGeneralSettings/ScannerGeneralSettings.dart';
+import 'package:samaware_flutter/modules/Scanner/ScannerSettings/ScannerOrdersSettings/ScannerOrdersSettings.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 
-class InspectorSettings extends StatelessWidget {
-  const InspectorSettings({super.key});
+class ScannerSettings extends StatelessWidget {
+  const ScannerSettings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class InspectorSettings extends StatelessWidget {
                                   text: Localization.translate('general_settings_title'),
                                   onTap: ()
                                   {
-                                    navigateTo(context, const InspectorGeneralSettings());
+                                    navigateTo(context, const ScannerGeneralSettings());
                                   }
                               ),
 
@@ -58,7 +58,7 @@ class InspectorSettings extends StatelessWidget {
                                   onTap: ()
                                   {
                                     cubit.getAllInspectorOrders();
-                                    navigateTo(context, const InspectorOrdersSettings());
+                                    navigateTo(context, const ScannerOrdersSettings());
                                   }
                               ),
                             ],
@@ -164,7 +164,7 @@ class InspectorSettings extends StatelessWidget {
                                     text: Localization.translate('general_settings_title'),
                                     onTap: ()
                                     {
-                                      navigateTo(context, const InspectorGeneralSettings());
+                                      navigateTo(context, const ScannerGeneralSettings());
                                     }
                                 ),
 
@@ -178,8 +178,8 @@ class InspectorSettings extends StatelessWidget {
                                     text: Localization.translate('orders_settings_title'),
                                     onTap: ()
                                     {
-                                      cubit.getAllInspectorOrders();
-                                      navigateTo(context, const InspectorOrdersSettings());
+                                      cubit.getAllScannerOrders();
+                                      navigateTo(context, const ScannerOrdersSettings());
                                     }
                                 ),
                               ],

@@ -51,12 +51,12 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
 
     WidgetsBinding.instance.addPostFrameCallback((_)
     {
-      if (cu.inWorkingOrder!.status == OrderState.priced.name)
+      if (cu.inWorkingOrder!.status == OrderState.scanned.name)
       {
         _showDialog(context, cu.inWorkingOrder!);
       }
 
-      if(cu.inWorkingOrder!.beingPricedDate !=null)
+      if(cu.inWorkingOrder!.beingVerifiedDate !=null)
       {
         date = DateTime.now();
         setTimer(cubit: cu);

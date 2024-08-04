@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import '../end_points.dart';
 
@@ -22,7 +23,8 @@ class MainDioHelper
       ),
     );
 
-    dio?.httpClientAdapter = IOHttpClientAdapter(
+    if(kIsWeb ==false) {
+      dio?.httpClientAdapter = IOHttpClientAdapter(
       createHttpClient: () {
         final SecurityContext sContext = SecurityContext();
 
@@ -45,6 +47,7 @@ class MainDioHelper
         return client;
       },
     );
+    }
   }
 
   static void setBaseUrl(String url)

@@ -1,5 +1,3 @@
-
-
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerSearchOrders/ManageSearchOrderDetails.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';

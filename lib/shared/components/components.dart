@@ -374,6 +374,44 @@ Widget defaultAlertDialog(
 
 //------------------------------------------------------------------------------------------\\
 
+
+Widget defaultSimpleDialog(
+    {
+      required BuildContext context,
+      required String title,
+      required List<Widget> content,
+    })
+{
+  return SimpleDialog(
+    title: Text(
+      title,
+      textAlign: TextAlign.center,
+    ),
+
+    elevation: 50,
+
+    titleTextStyle: TextStyle(
+      fontSize: 24,
+      color:  AppCubit.get(context).isDarkTheme? Colors.white: Colors.black,
+      fontWeight: FontWeight.w800,
+      fontFamily: AppCubit.language =='ar'? 'Cairo' :'Poppins',
+    ),
+
+    backgroundColor: AppCubit.get(context).isDarkTheme? defaultAlertDarkColor: defaultHomeColor,
+
+    shape: Dialogs.dialogShape,
+
+    children: content,
+
+
+  );
+}
+
+
+
+
+//------------------------------------------------------------------------------------------\\
+
 ///Default AppBar
 
 PreferredSizeWidget defaultAppBar({
