@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:samaware_flutter/layout/cubit/cubit.dart';
 import 'package:samaware_flutter/layout/cubit/states.dart';
+import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerGeneralSettings/ManagerAddNewClientsSettings.dart';
+import 'package:samaware_flutter/modules/Manager/ManagerSettings/Settings/ManagerGeneralSettings/ManagerAddNewItemsSettings.dart';
 import 'package:samaware_flutter/shared/components/Localization/Localization.dart';
 import 'package:samaware_flutter/shared/components/components.dart';
 import 'package:samaware_flutter/shared/network/local/cache_helper.dart';
@@ -169,6 +171,86 @@ class _ManagerGeneralSettingsState extends State<ManagerGeneralSettings>
                               activeColor: cubit.isDarkTheme? defaultDarkColor : defaultColor,
                               inactiveTrackColor: cubit.isDarkTheme? Colors.white: null,
                               activeTrackColor: cubit.isDarkTheme? defaultDarkColor.withOpacity(0.5) : defaultColor.withOpacity(0.5),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 20,),
+
+                        Row(
+                          children:
+                          [
+                            const Icon(
+                              Icons.person_2_outlined,
+                              size: 22,
+                            ),
+
+                            const SizedBox(width: 10,),
+
+                            Text(
+                              Localization.translate('add_new_clients_title'),
+
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500
+                              ),
+                            ),
+
+                            const Spacer(),
+
+                            TextButton(
+                              onPressed: ()
+                              {
+                                navigateTo(context, const ManagerAddNewClientsSettings() );
+                              },
+                              child: Text(
+                                Localization.translate('add_new_clients_button'),
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: cubit.isDarkTheme? defaultThirdDarkColor : defaultThirdColor,
+                                    fontWeight: FontWeight.w500
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 20,),
+
+                        Row(
+                          children:
+                          [
+                            const Icon(
+                              Icons.line_style_outlined,
+                              size: 22,
+                            ),
+
+                            const SizedBox(width: 10,),
+
+                            Text(
+                              Localization.translate('add_new_items_title'),
+
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500
+                              ),
+                            ),
+
+                            const Spacer(),
+
+                            TextButton(
+                              onPressed: ()
+                              {
+                                navigateTo(context, const ManagerAddNewItemsSettings());
+                              },
+                              child: Text(
+                                Localization.translate('add_new_items_button'),
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: cubit.isDarkTheme? defaultThirdDarkColor : defaultThirdColor,
+                                    fontWeight: FontWeight.w500
+                                ),
+                              ),
                             ),
                           ],
                         ),

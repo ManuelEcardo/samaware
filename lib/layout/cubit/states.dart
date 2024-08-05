@@ -55,6 +55,18 @@ class AppSetChosenWorkerState extends AppStates{}
 
 //------------------------------------
 
+//GET NEW CLIENTS FROM EXCEL FILE
+
+class AppSetExcelClientsFileState extends AppStates{}
+
+class AppExtractExcelClientsFileLoadingState extends AppStates{}
+
+class AppExtractExcelClientsFileSuccessState extends AppStates{}
+
+class AppExtractExcelClientsFileErrorState extends AppStates{}
+
+//------------------------------------
+
 // ADD TO PREPARATION TEAM
 
 class AppAddToPreparationTeamState extends AppStates{}

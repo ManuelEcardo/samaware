@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_excel/excel.dart';
 import 'package:samaware_flutter/models/CollectorDetailsModel/CollectorDetailsModel.dart';
 import 'package:samaware_flutter/models/InspectorsDetailsModel/InspectorsDetailsModel.dart';
+import 'package:samaware_flutter/models/NewClientsModel/NewClientsModel.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/models/PriceSettersDetailsModel/PriceSettersDetailsModel.dart';
 import 'package:samaware_flutter/models/ScannerDetailsModel/ScannerDetailsModel.dart';
@@ -2112,6 +2113,100 @@ class AppCubit extends Cubit<AppStates>
       emit(AppAddToPreparationTeamState());
     }
   }
+
+
+
+  //--------------------------------------------------------\\
+
+  //GET CLIENTS FOR EXCEL FILE : MANAGER
+
+  PlatformFile? excelClientsFile;
+  List<NewClientsModel?> newClients=[];
+
+  ///Set the picked file for the excelClientsFile
+  void setClientsExcelFile(PlatformFile file)
+  {
+    excelClientsFile=file;
+
+    emit(AppSetExcelClientsFileState());
+  }
+
+  ///Reading the excel file and serializing it to objects of clients...
+  void readClientsFileAndExtractData(PlatformFile file)
+  {
+    try {
+
+      emit(AppExtractExcelClientsFileLoadingState());
+
+      var bytes = getFilePathOrBytes(file);
+
+      var excel = Excel.decodeBytes(bytes);
+
+      for (var table in excel.tables.keys)
+      {
+
+        if (excel.tables[table] != null)
+        {
+          //ToDo: Loop through sheets?
+          final sheet = excel.tables[table]!;
+
+          int id=0;
+
+          // Extracting the first row for order information
+          final firstRow = sheet.row(0);
+
+          //Get Items
+          for (var rowIndex = 4; rowIndex < sheet.maxRows; rowIndex++) {
+            final row = sheet.row(rowIndex);
+
+            final id = row[0];
+            final details = row[1];
+            final area = row[2];
+
+            if (id != null && details != null && area != null)
+            {
+              final client = NewClientsModel(
+                clientNumber: id.value,
+                salesmanId: '', //From Sheet Name
+                location: area.value,
+                details: details.value,
+                storeName: details.value, //Manipulate the details value
+              );
+
+              bool isFound=false;
+              //If any redundant client was found => just change the quantity
+              for(var i in newClients)
+              {
+                if(client.clientNumber == i?.clientNumber && client.details == i?.details)
+                {
+                  isFound=true;
+                  break;
+                }
+              }
+              if(!isFound)
+              {
+                newClients.add(client);
+              }
+            }
+          }
+
+
+          //ToDo: Create Client Type and store values in it
+          emit(AppExtractExcelClientsFileSuccessState());
+        }
+
+
+      }
+    }
+    catch (e, stackTrace)
+    {
+      print("Error while manipulating the client's excel file, $e");
+      print(stackTrace.toString());
+
+      emit(AppExtractExcelClientsFileErrorState());
+    }
+  }
+
 
 
   // // TO BE DELETED , add total items

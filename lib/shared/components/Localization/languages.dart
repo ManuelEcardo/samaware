@@ -220,6 +220,18 @@ const Map<String,String> ar={
 
   'search_orders_settings_title':'البحث في الطلبيات',
 
+  'add_new_clients_title':'اضف زبائن',
+
+  'add_new_clients_button':'أضف الآن',
+
+  'add_new_items_title':'أضف بطاقات',
+
+  'import_new_items_title':'استيراد مواد جديدة',
+
+  'import_new_clients_title':'استيراد عملاء جدد',
+
+  'add_new_items_button':'أضف الآن',
+
   //Settings Manager: Workers
 
   'workers_details_settings_title':'العمال وتفاصيلهم: ',
@@ -627,6 +639,18 @@ const Map<String,String> en={
   'inspectors_settings_title':'Inspectors',
 
   'search_orders_settings_title':'Orders Search',
+
+  'add_new_clients_title':'Add Clients',
+
+  'add_new_clients_button':'Add Now!',
+
+  'add_new_items_title':'Add Items',
+
+  'import_new_items_title':'Import New Items',
+
+  'import_new_clients_title':'Import New Clients',
+
+  'add_new_items_button':'Add Now!',
 
   //Settings Manager: Workers
 
