@@ -5,6 +5,7 @@ class ManagerAddNewItemsSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //Todo AddNewItems Screens
     return const Placeholder();
   }
 }

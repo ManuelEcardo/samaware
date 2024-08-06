@@ -149,7 +149,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
               {
                 if(orientation == Orientation.portrait)
                 {
-                  if(order?.status == 'waiting_to_be_prepared')
+                  if(order?.status == OrderState.waiting_to_be_prepared.name)
                   {
 
                     return Stack(
@@ -171,6 +171,18 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                               myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
 
                               const SizedBox(height: 30,),
+
+                              if(order?.preparationTeam?.length != 0)
+                              textBuilder(title: 'chosen_preparation_team', value: '', style: textStyleBuilder(), customWidget:Align(
+                                alignment: AlignmentDirectional.topEnd,
+                                child: TextButton(
+                                  child: Text(Localization.translate('show_preparation_members'),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: textStyleBuilder(),),
+                                  onPressed: (){_showPreparationTeamDialog(context, order!.preparationTeam!);},),)),
+
+                              const SizedBox(height: 15,),
 
                               Expanded(
                                 child: Scrollbar(
@@ -306,6 +318,18 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
                           const SizedBox(height: 30,),
 
+                          if(order?.preparationTeam?.length != 0)
+                            textBuilder(title: 'chosen_preparation_team', value: '', style: textStyleBuilder(), customWidget:Align(
+                              alignment: AlignmentDirectional.topEnd,
+                              child: TextButton(
+                                child: Text(Localization.translate('show_preparation_members'),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: textStyleBuilder(),),
+                                onPressed: (){_showPreparationTeamDialog(context, order!.preparationTeam!);},),)),
+
+                          const SizedBox(height: 15,),
+
                           Expanded(
                             child: Scrollbar(
                               controller: scrollController,
@@ -412,7 +436,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
                 else
                 {
-                  if(order?.status == 'waiting_to_be_prepared')
+                  if(order?.status == OrderState.waiting_to_be_prepared.name)
                   {
                     return Stack(
 
@@ -433,6 +457,18 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                               myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
 
                               const SizedBox(height: 30,),
+
+                              if(order?.preparationTeam?.length != 0)
+                                textBuilder(title: 'chosen_preparation_team', value: '', style: textStyleBuilder(), customWidget:Align(
+                                  alignment: AlignmentDirectional.topEnd,
+                                  child: TextButton(
+                                    child: Text(Localization.translate('show_preparation_members'),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: textStyleBuilder(),),
+                                    onPressed: (){_showPreparationTeamDialog(context, order!.preparationTeam!);},),)),
+
+                              const SizedBox(height: 15,),
 
                               Expanded(
                                 child: Scrollbar(
@@ -567,6 +603,18 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                           myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
 
                           const SizedBox(height: 30,),
+
+                          if(order?.preparationTeam?.length != 0)
+                            textBuilder(title: 'chosen_preparation_team', value: '', style: textStyleBuilder(), customWidget:Align(
+                              alignment: AlignmentDirectional.topEnd,
+                              child: TextButton(
+                                child: Text(Localization.translate('show_preparation_members'),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: textStyleBuilder(),),
+                                onPressed: (){_showPreparationTeamDialog(context, order!.preparationTeam!);},),)),
+
+                          const SizedBox(height: 15,),
 
                           Expanded(
                             child: Scrollbar(
@@ -736,7 +784,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
   }
 
   ///Build the information items
-  Widget textBuilder({required String title, required var value, TextStyle? style})
+  Widget textBuilder({required String title, required var value, TextStyle? style, Widget? customWidget})
   {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -750,6 +798,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
           ),
         ),
 
+        customWidget??
         Align(
           alignment: AlignmentDirectional.topEnd,
           child: Text(
@@ -961,6 +1010,68 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
           ),
         ],
       ),
+    );
+  }
+
+
+  ///Shows the preparationTeam
+  void _showPreparationTeamDialog(BuildContext context, List<String> members)
+  {
+    showDialog(
+      context: context,
+      builder: (dialogContext)
+      {
+        return defaultSimpleDialog(
+          context: dialogContext,
+          title: Localization.translate('show_preparation_members'),
+          content:
+          [
+            Directionality(
+              textDirection: appDirectionality(),
+              child: SingleChildScrollView(
+                child: SizedBox(
+                  width: double.maxFinite,
+                  child: ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context,index)
+                      {
+                        return Padding(
+                          padding: const EdgeInsetsDirectional.symmetric(horizontal: 8.0),
+                          child: Text(
+                            members[index],
+                            style: textStyleBuilder(
+                              fontSize: 16,
+                              color:  AppCubit.get(context).isDarkTheme? Colors.white: Colors.black,
+                              fontFamily: AppCubit.language =='ar'? 'Cairo' :'Railway',
+                              fontWeight: FontWeight.w400,),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context,index)
+                      {
+                        return Column(
+                          children:
+                          [
+                            const SizedBox(height: 10,),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                              child: myDivider(),
+                            ),
+
+                            const SizedBox(height: 10,),
+                          ],
+                        );
+                      },
+                      itemCount: members.length
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

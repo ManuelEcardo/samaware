@@ -65,6 +65,8 @@ class AppExtractExcelClientsFileSuccessState extends AppStates{}
 
 class AppExtractExcelClientsFileErrorState extends AppStates{}
 
+class AppAlterClientState extends AppStates{}
+
 //------------------------------------
 
 // ADD TO PREPARATION TEAM
@@ -488,3 +490,18 @@ class AppSearchOrdersLoadingState extends AppStates{}
 class AppSearchOrdersErrorState extends AppStates{}
 
 class AppSearchOrdersSuccessState extends AppStates{}
+
+//------------------------------------
+
+//GET SALESMAN: MANAGER
+
+class AppGetSalesmenLoadingState extends AppStates{}
+
+class AppGetSalesmenSuccessState extends AppStates{}
+
+class AppGetSalesmenErrorState extends AppStates{}
+
+//------------------------------------
+
+
+

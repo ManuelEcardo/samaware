@@ -71,6 +71,11 @@ const getAwaitingOrdersScanner = 'orders/scanner/waiting_me';
 
 const allScanners='scanners/all';
 
+
+//SALESMEN ENDPOINTS
+
+const allSalesmen='salesman/all';
+
 //ORDER ENDPOINTS
 
 const createAnOrder= 'orders/create';

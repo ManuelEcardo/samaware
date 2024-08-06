@@ -37,7 +37,7 @@ void main() async {
 
   //LOAD LANGUAGE
   AppCubit.language= CacheHelper.getData(key: 'language');
-  AppCubit.language ??= 'en';
+  AppCubit.language ??= 'ar';
   await Localization.load(Locale(AppCubit.language!)); // Set the initial locale
 
   bool? isDark = CacheHelper.getData(key: 'isDarkTheme'); //Getting the last Cached ThemeMode

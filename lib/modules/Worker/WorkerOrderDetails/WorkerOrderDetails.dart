@@ -24,6 +24,15 @@ class _WorkerOrderDetailsState extends State<WorkerOrderDetails> {
     items.add(MOD(title: 'order_reg_dialog', value: widget.order.registrationDate));
     items.add(MOD(title: 'order_ship_dialog', value: widget.order.shippingDate));
 
+    (widget.order.preparationTeam?.length != 0)? items.add(MOD(title: 'chosen_preparation_team', value: '', customWidget:Align(
+      alignment: AlignmentDirectional.topEnd,
+      child: TextButton(
+        child: Text(Localization.translate('show_preparation_members'),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: textStyleBuilder(),),
+        onPressed: (){_showDialog(context, widget.order.preparationTeam!);},),),) ) : null;
+
   }
 
 
@@ -43,13 +52,12 @@ class _WorkerOrderDetailsState extends State<WorkerOrderDetails> {
         {
           var cubit=AppCubit.get(context);
 
-          return Scaffold(
-            appBar: AppBar(),
+          return Directionality(
+            textDirection: appDirectionality(),
+            child: Scaffold(
+              appBar: AppBar(),
 
-            body: Directionality(
-              textDirection: appDirectionality(),
-
-              child: OrientationBuilder(
+              body: OrientationBuilder(
                 builder: (context,orientation)
                 {
                   if(orientation == Orientation.portrait)
@@ -64,7 +72,7 @@ class _WorkerOrderDetailsState extends State<WorkerOrderDetails> {
                             child: ListView.separated(
                                 itemBuilder: (context,index)
                                 {
-                                  return itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style);
+                                  return itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style, customWidget: items[index].customWidget);
                                 },
 
                                 separatorBuilder: (context,index)
@@ -171,7 +179,7 @@ class _WorkerOrderDetailsState extends State<WorkerOrderDetails> {
   }
 
   ///Build the information items
-  Widget itemBuilder({required String title, required var value, TextStyle? style})
+  Widget itemBuilder({required String title, required var value, TextStyle? style, Widget? customWidget})
   {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -185,6 +193,7 @@ class _WorkerOrderDetailsState extends State<WorkerOrderDetails> {
           ),
         ),
 
+        customWidget??
         Align(
           alignment: AlignmentDirectional.topEnd,
           child: Text(
@@ -195,6 +204,67 @@ class _WorkerOrderDetailsState extends State<WorkerOrderDetails> {
           ),
         ),
       ],
+    );
+  }
+
+  ///Shows the preparationTeam
+  void _showDialog(BuildContext context, List<String> members)
+  {
+    showDialog(
+      context: context,
+      builder: (dialogContext)
+      {
+        return defaultSimpleDialog(
+          context: dialogContext,
+          title: Localization.translate('show_preparation_members'),
+          content:
+          [
+            Directionality(
+              textDirection: appDirectionality(),
+              child: SingleChildScrollView(
+                child: SizedBox(
+                  width: double.maxFinite,
+                  child: ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context,index)
+                      {
+                        return Padding(
+                          padding: const EdgeInsetsDirectional.symmetric(horizontal: 8.0),
+                          child: Text(
+                            members[index],
+                            style: textStyleBuilder(
+                              fontSize: 16,
+                              color:  AppCubit.get(context).isDarkTheme? Colors.white: Colors.black,
+                              fontFamily: AppCubit.language =='ar'? 'Cairo' :'Railway',
+                              fontWeight: FontWeight.w400,),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context,index)
+                      {
+                        return Column(
+                          children:
+                          [
+                            const SizedBox(height: 10,),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                              child: myDivider(),
+                            ),
+
+                            const SizedBox(height: 10,),
+                          ],
+                        );
+                      },
+                      itemCount: members.length
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

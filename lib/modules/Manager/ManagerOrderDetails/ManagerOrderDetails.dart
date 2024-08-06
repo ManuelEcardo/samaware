@@ -37,7 +37,7 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
     items.add(MOD(title: 'order_number', value: widget.order.orderId, style: headlineTextStyleBuilder()));
     items.add(MOD(title: 'chosen_worker', value: '${widget.order.worker?.name} ${widget.order.worker?.lastName}'));
 
-    (widget.order.preparationTeam!.isNotEmpty)? items.add(MOD(title: 'chosen_preparation_team', value: '', customWidget:Align(
+    (widget.order.preparationTeam?.length != 0)? items.add(MOD(title: 'chosen_preparation_team', value: '', customWidget:Align(
       alignment: AlignmentDirectional.topEnd,
       child: TextButton(
         child: Text(Localization.translate('show_preparation_members'),
@@ -218,7 +218,7 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
                                 itemCount: items.length
                             ),
 
-                            datesBuilder(widget.order),
+                            //datesBuilder(widget.order),
 
                             const SizedBox(height: 25,),
 
@@ -419,7 +419,7 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
     Navigator.of(context).pop();
   }
 
-
+  ///Shows the preparationTeam
   void _showDialog(BuildContext context, List<String> members)
   {
     showDialog(

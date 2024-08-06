@@ -8,6 +8,7 @@ import 'package:samaware_flutter/models/InspectorsDetailsModel/InspectorsDetails
 import 'package:samaware_flutter/models/NewClientsModel/NewClientsModel.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/models/PriceSettersDetailsModel/PriceSettersDetailsModel.dart';
+import 'package:samaware_flutter/models/SalesmenModel/SalesmenModel.dart';
 import 'package:samaware_flutter/models/ScannerDetailsModel/ScannerDetailsModel.dart';
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/models/WorkerDetailsModel/WorkerDetailsModel.dart';
@@ -347,6 +348,7 @@ class AppCubit extends Cubit<AppStates>
           getWorkers();
           getPriceSetters();
           getInspectors();
+          getSalesmen();
 
           getNonReadyOrders();
           if(getAll) getAllOrders();
@@ -604,6 +606,34 @@ class AppCubit extends Cubit<AppStates>
         emit(AppGetScannersErrorState());
       });
 
+    }
+  }
+
+  SalesmenModel? salesmen;
+  ///Gets salesmen for manager
+  void getSalesmen()
+  {
+    if(token!='')
+    {
+      print('In getSalesmen...');
+      emit(AppGetSalesmenLoadingState());
+
+      MainDioHelper.getData(
+        url:allSalesmen,
+        token:token,
+      ).then((value)
+      {
+        print('Got Salesmen data...');
+
+        salesmen=SalesmenModel.fromJson(value.data);
+
+        emit(AppGetSalesmenSuccessState());
+      }).catchError((error, stackTrace)
+      {
+        print('ERROR WHILE GETTING SALESMEN, ${error.toString()}');
+        print(stackTrace);
+        emit(AppGetSalesmenErrorState());
+      });
     }
   }
 
@@ -2135,66 +2165,62 @@ class AppCubit extends Cubit<AppStates>
   void readClientsFileAndExtractData(PlatformFile file)
   {
     try {
-
       emit(AppExtractExcelClientsFileLoadingState());
 
       var bytes = getFilePathOrBytes(file);
-
       var excel = Excel.decodeBytes(bytes);
 
-      for (var table in excel.tables.keys)
-      {
-
-        if (excel.tables[table] != null)
-        {
-          //ToDo: Loop through sheets?
+      for (var table in excel.tables.keys) {
+        if (excel.tables[table] != null) {
           final sheet = excel.tables[table]!;
 
-          int id=0;
+          //Get SalesmanId from the sheetName as it is the same as his name, then match it.
+          String salesmanId = findSalesmanIdByName(table)?? '';
 
-          // Extracting the first row for order information
-          final firstRow = sheet.row(0);
-
-          //Get Items
-          for (var rowIndex = 4; rowIndex < sheet.maxRows; rowIndex++) {
+          //Extract client's data from the second row onwards
+          for (var rowIndex = 1; rowIndex < sheet.maxRows; rowIndex++) {
             final row = sheet.row(rowIndex);
 
-            final id = row[0];
-            final details = row[1];
-            final area = row[2];
+            final clientNumber = row[0]?.value;
+            final details = row[1]?.value;
+            final location = row[2]?.value;
 
-            if (id != null && details != null && area != null)
+            if (clientNumber != null && details != null && location != null)
             {
+
+              // Extract ClientName, StoreName, and additionalDetails from details
+              final detailsParts = details.split('/');
+              final clientName = detailsParts.length > 0 ? detailsParts[0].trim() : '';
+              final storeName = detailsParts.length > 1 ? detailsParts[1].trim() : '';
+              final additionalDetails = details.contains('/') ? details.substring(details.indexOf('/') + 1).trim() : '';
+
               final client = NewClientsModel(
-                clientNumber: id.value,
-                salesmanId: '', //From Sheet Name
-                location: area.value,
-                details: details.value,
-                storeName: details.value, //Manipulate the details value
+                clientNumber: clientNumber.toString(),
+                salesmanId: salesmanId,
+                location: location.toString(),
+                clientName: clientName,
+                storeName: storeName,
+                details: additionalDetails,
               );
 
-              bool isFound=false;
-              //If any redundant client was found => just change the quantity
-              for(var i in newClients)
-              {
-                if(client.clientNumber == i?.clientNumber && client.details == i?.details)
-                {
-                  isFound=true;
+              //Debugging print debugPrint(client.toString());
+
+              // Check for redundancy
+              bool isFound = false;
+              for (var i in newClients) {
+                if (client.clientNumber == i?.clientNumber && client.details == i?.details) {
+                  isFound = true;
                   break;
                 }
               }
-              if(!isFound)
-              {
+
+              if (!isFound) {
                 newClients.add(client);
               }
             }
           }
-
-
-          //ToDo: Create Client Type and store values in it
           emit(AppExtractExcelClientsFileSuccessState());
         }
-
 
       }
     }
@@ -2207,6 +2233,55 @@ class AppCubit extends Cubit<AppStates>
     }
   }
 
+  ///Find a Salesman Id by his name, for clients insertion
+  String? findSalesmanIdByName(String name)
+  {
+    if(salesmen?.salesmen?.length != 0)
+    {
+      for(SalesmanModel? salesman in salesmen!.salesmen!)
+      {
+        if(salesman?.name == name)
+        {
+          return salesman?.salesmanId;
+        }
+      }
+      return null;
+    }
+    return null;
+  }
+
+  ///Finds a salesman by his salesmanId
+  SalesmanModel? findSalesmanById(String id)
+  {
+    if(salesmen?.salesmen?.length != 0)
+    {
+      for(SalesmanModel? salesman in salesmen!.salesmen!)
+      {
+        if(salesman?.salesmanId == id)
+        {
+          return salesman;
+        }
+      }
+      return null;
+    }
+    return null;
+  }
+
+  void alterClient(int index, String clientNumber, String clientName, String details, String location, String storeName, String salesmanId)
+  {
+    newClients[index]?.set(
+        clientNumber,
+        clientName,
+        details,
+        location,
+        storeName,
+        salesmanId
+    );
+
+    emit(AppAlterClientState());
+
+    defaultToast(msg: Localization.translate('login_successfully_toast'));
+  }
 
 
   // // TO BE DELETED , add total items

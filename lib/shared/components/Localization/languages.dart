@@ -226,11 +226,39 @@ const Map<String,String> ar={
 
   'add_new_items_title':'أضف بطاقات',
 
+
   'import_new_items_title':'استيراد مواد جديدة',
 
   'import_new_clients_title':'استيراد عملاء جدد',
 
+  'new_clients_added_title':'العملاء المراد إضافتهم',
+
   'add_new_items_button':'أضف الآن',
+
+  //Settings Manager: Import New Clients
+
+  'salesman_secondary':'المندوب: ',
+
+  'location_secondary':'الموقع:  ',
+
+
+  //Settings Manager: AlterNewClientsSettings
+
+  'alter_clients_appBar':'تعديل العميل',
+
+  'client_name_title':'اسم العميل: ',
+
+  'client_number_title':'رقم العميل: ',
+
+  'client_location_title':'موقع العميل: ',
+
+  'client_details_title':'تفاصيل العميل: ',
+
+  'client_salesman_title':'مندوب العميل: ',
+
+  'client_storeName_title':'اسم محل العميل: ',
+
+
 
   //Settings Manager: Workers
 
@@ -646,11 +674,37 @@ const Map<String,String> en={
 
   'add_new_items_title':'Add Items',
 
+
   'import_new_items_title':'Import New Items',
 
   'import_new_clients_title':'Import New Clients',
 
+  'new_clients_added_title':'Clients to Be Added',
+
   'add_new_items_button':'Add Now!',
+
+  //Settings Manager: Import New Clients
+
+  'salesman_secondary':'Salesman:',
+
+  'location_secondary':'Location: ',
+
+
+  //Settings Manager: AlterNewClientsSettings
+
+  'alter_clients_appBar':'Alter a Client',
+
+  'client_name_title':'Client\'s Name: ',
+
+  'client_number_title':'Client\'s Number: ',
+
+  'client_location_title':'Client\'s Location: ',
+
+  'client_details_title':'Client\'s Details: ',
+
+  'client_salesman_title':'Client\'s Salesman: ',
+
+  'client_storeName_title':'Client\'s Store Name: ',
 
   //Settings Manager: Workers
 
