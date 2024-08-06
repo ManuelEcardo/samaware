@@ -1,3 +1,4 @@
+import 'package:samaware_flutter/models/ClientModel/ClientModel.dart';
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/models/UserDataModel/UserData.dart';
 
@@ -73,7 +74,7 @@ class OrderModel
 
   String? orderId;
   UserData? worker;
-  String? clientId;
+  ClientModel? clientId;
   List<String>? preparationTeam=[];
 
   UserData? priceSetter;
@@ -136,7 +137,7 @@ class OrderModel
 
     if(json['order']['scannerId']!=null) this.scanner = isScannerPassed? scanner : UserData.fromJson(json['order']['scannerId']);
 
-    clientId=json['order']['clientId'];
+    if(json['clientId'] !=null) clientId=ClientModel.fromJson(json['clientId']);
 
     status=json['order']['status'];
 

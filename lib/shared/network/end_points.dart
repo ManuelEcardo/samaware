@@ -76,6 +76,12 @@ const allScanners='scanners/all';
 
 const allSalesmen='salesman/all';
 
+
+//CLIENTS ENDPOINTS
+
+const uploadMultipleClients='clients/addMultiple';
+
+
 //ORDER ENDPOINTS
 
 const createAnOrder= 'orders/create';

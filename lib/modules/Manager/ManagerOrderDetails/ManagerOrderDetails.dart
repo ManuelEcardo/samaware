@@ -1,6 +1,8 @@
 import 'package:intl/intl.dart';
+import 'package:samaware_flutter/models/ClientModel/ClientModel.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerOrderDetails/ManagerOrderItemsDetails.dart';
+import 'package:samaware_flutter/modules/Manager/ManagerSalesmanDetails/ManagerSalesmanDetails.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
 
 class MOD
@@ -35,7 +37,18 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
     //debugPrint(widget.order.toString(), wrapWidth: 1024);
 
     items.add(MOD(title: 'order_number', value: widget.order.orderId, style: headlineTextStyleBuilder()));
+
     items.add(MOD(title: 'chosen_worker', value: '${widget.order.worker?.name} ${widget.order.worker?.lastName}'));
+
+    (widget.order.clientId !=null)? items.add(MOD(title: 'chosen_client', value: 'value', customWidget:Align(
+      alignment: AlignmentDirectional.topEnd,
+      child: TextButton(
+        child: Text(
+          widget.order.clientId!.name!,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: textStyleBuilder(color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultThirdColor),),
+        onPressed: (){_showClientDialog(context, widget.order.clientId!);},),))) : null;
 
     (widget.order.preparationTeam?.length != 0)? items.add(MOD(title: 'chosen_preparation_team', value: '', customWidget:Align(
       alignment: AlignmentDirectional.topEnd,
@@ -43,10 +56,10 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
         child: Text(Localization.translate('show_preparation_members'),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: textStyleBuilder(),),
-        onPressed: (){_showDialog(context, widget.order.preparationTeam!);},),),) ) : null;
+          style: textStyleBuilder(color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultThirdColor),),
+        onPressed: (){_showPreparationTeamDialog(context, widget.order.preparationTeam!);},),),) ) : null;
 
-    (widget.order.priceSetter?.name !=null && widget.order.priceSetter?.name !=null)? items.add(MOD(title: 'chosen_preparation_team', value: '${widget.order.priceSetter?.name} ${widget.order.priceSetter?.lastName}')) : null;
+    (widget.order.priceSetter?.name !=null && widget.order.priceSetter?.name !=null)? items.add(MOD(title: 'chosen_priceSetter', value: '${widget.order.priceSetter?.name} ${widget.order.priceSetter?.lastName}')) : null;
 
     (widget.order.collector?.name !=null && widget.order.collector?.name !=null)? items.add(MOD(title:'chosen_collector', value:'${widget.order.collector?.name} ${widget.order.collector?.lastName}')) : null;
 
@@ -420,7 +433,7 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
   }
 
   ///Shows the preparationTeam
-  void _showDialog(BuildContext context, List<String> members)
+  void _showPreparationTeamDialog(BuildContext context, List<String> members)
   {
     showDialog(
       context: context,
@@ -475,6 +488,75 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
                 ),
               ),
             ],
+        );
+      },
+    );
+  }
+
+  ///Shows the Client Details
+  void _showClientDialog(BuildContext context, ClientModel client)
+  {
+    TextStyle defaultTextStyle = textStyleBuilder(fontSize: 18, color:  AppCubit.get(context).isDarkTheme? Colors.white: Colors.black, fontFamily: AppCubit.language =='ar'? 'Cairo' :'Railway', fontWeight: FontWeight.w400,);
+
+    showDialog(
+      context: context,
+      builder: (dialogContext)
+      {
+        return defaultSimpleDialog(
+          context: dialogContext,
+          title: Localization.translate('chosen_client'),
+          content:
+          [
+            Directionality(
+              textDirection: appDirectionality(),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: SizedBox(
+                    width: double.maxFinite,
+                    child: Column(
+                      children:
+                      [
+                        itemBuilder(title: 'الاسم', value: client.name, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        itemBuilder(title: 'رقم العميل', value: client.clientId, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        itemBuilder(title: 'اسم المندوب', value:'', style: defaultTextStyle, customWidget: Align(
+                          alignment: AlignmentDirectional.topEnd,
+                          child: TextButton(
+                            child: Text(
+                              client.salesman!.name!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: textStyleBuilder(fontSize: 18, color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultThirdColor),),
+                            onPressed: (){navigateTo(context, ManagerSalesmanDetails(salesman: client.salesman!));},),)),
+
+                        const SizedBox(height: 25,),
+
+                        itemBuilder(title: 'اسم المحل', value: client.storeName, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        itemBuilder(title: 'العنوان', value: client.location, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        itemBuilder(title: 'التفاصيل', value: client.details, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         );
       },
     );

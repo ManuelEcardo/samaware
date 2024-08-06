@@ -504,4 +504,10 @@ class AppGetSalesmenErrorState extends AppStates{}
 //------------------------------------
 
 
+//UPLOAD CLIENTS
 
+class AppUploadClientsLoadingState extends AppStates{}
+
+class AppUploadClientsSuccessState extends AppStates{}
+
+class AppUploadClientsErrorState extends AppStates{}

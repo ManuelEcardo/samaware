@@ -969,9 +969,11 @@ class AppCubit extends Cubit<AppStates>
         allWorkerOrders= OrdersModel.fromJson(value.data);
 
         emit(AppGetAllOrdersWorkerSuccessState());
-      }).catchError((error)
+      }).catchError((error, stackTrace)
       {
         print('ERROR WHILE GETTING ALL ORDERS OF A WORKER, ${error.toString()}');
+
+        print(stackTrace);
         emit(AppGetAllOrdersWorkerErrorState());
       });
     }
@@ -1856,10 +1858,10 @@ class AppCubit extends Cubit<AppStates>
       searchOrders = OrdersModel.fromJson(value.data);
 
       emit(AppSearchOrdersSuccessState());
-    }).catchError((error)
+    }).catchError((error, stackTrace)
     {
       print('ERROR WHILE SEARCHING FOR ORDERS, ${error.toString()}');
-
+      print(stackTrace);
       emit(AppSearchOrdersErrorState());
     });
   }
@@ -2284,6 +2286,52 @@ class AppCubit extends Cubit<AppStates>
   }
 
 
+  List<Map<String, dynamic>> newClientsMap=[];
+  ///Upload a batch of clients
+  void uploadNewClients()
+  {
+    if(token!='')
+    {
+      print('In uploadNewClients...');
+
+      //Initialize map
+      newClientsMap=[];
+      for(NewClientsModel? client in newClients)
+      {
+        newClientsMap.add(
+            {
+              'name':client?.clientName,
+              'clientId':client?.clientNumber,
+              'details':client?.details,
+              'location':client?.location,
+              'storeName':client?.storeName,
+              'salesmanId':client?.salesmanId
+            });
+      }
+
+      emit(AppUploadClientsLoadingState());
+
+      MainDioHelper.postData(
+        url: uploadMultipleClients,
+        data: {
+          'data':newClientsMap,
+        },
+        token:token
+      ).then((value)
+      {
+        print('Got uploadNewClients Data...');
+
+        emit(AppUploadClientsSuccessState());
+      }).catchError((error, stackTrace)
+      {
+        print("ERROR WHILE UPLOADING NEW CLIENTS..., ${error.toString()}");
+        print(stackTrace);
+        emit(AppUploadClientsErrorState());
+      });
+    }
+  }
+
+
   // // TO BE DELETED , add total items
   //
   // List<Map<String, dynamic>> map=[];
@@ -2300,7 +2348,7 @@ class AppCubit extends Cubit<AppStates>
   //   }
   //
   //   MainDioHelper.postData(
-  //     url: 'items/addItem',
+  //     url: 'items/addMultiple',
   //     data: {
   //       'data':map,
   //       token:token,

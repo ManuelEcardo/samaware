@@ -147,9 +147,11 @@ const Map<String,String> ar={
 
   'chosen_inspector':'المدقّق:',
 
-  'chosen_collector':'المُجمّع',
+  'chosen_collector':'المُجمّع: ',
 
-  'chosen_scanner':'القاطع',
+  'chosen_scanner':'القاطع: ',
+
+  'chosen_client':'العميل: ',
 
   'chosen_preparation_team':'العمال: ',
 
@@ -258,6 +260,15 @@ const Map<String,String> ar={
 
   'client_storeName_title':'اسم محل العميل: ',
 
+  'salesman_details_title':'تفاصيل المندوب',
+
+  'salesman_name_title':'اسم المندوب: ',
+
+  'salesman_id_title':'رقم المندوب: ',
+
+  'salesman_clients_title':'عملاء المندوب: ',
+
+  'salesman_show_clients':'إظهار العملاء',
 
 
   //Settings Manager: Workers
@@ -598,6 +609,8 @@ const Map<String,String> en={
 
   'chosen_scanner':'Scanner: ',
 
+  'chosen_client':'Client: ',
+
   'chosen_preparation_team':'Chosen Members: ',
 
   'view_items_details':'View Items',
@@ -705,6 +718,16 @@ const Map<String,String> en={
   'client_salesman_title':'Client\'s Salesman: ',
 
   'client_storeName_title':'Client\'s Store Name: ',
+
+  'salesman_details_title':'Salesman\'s Details: ',
+
+  'salesman_name_title':'Salesman Name: ',
+
+  'salesman_id_title':'Salesman Id: ',
+
+  'salesman_clients_title':'Salesman Clients: ',
+
+  'salesman_show_clients':'Show Clients',
 
   //Settings Manager: Workers
 

@@ -30,7 +30,7 @@ class _WorkerOrderDetailsState extends State<WorkerOrderDetails> {
         child: Text(Localization.translate('show_preparation_members'),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: textStyleBuilder(),),
+          style: textStyleBuilder(color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultThirdColor),),
         onPressed: (){_showDialog(context, widget.order.preparationTeam!);},),),) ) : null;
 
   }

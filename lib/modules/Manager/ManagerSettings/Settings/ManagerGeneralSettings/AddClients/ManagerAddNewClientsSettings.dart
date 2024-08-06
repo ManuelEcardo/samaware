@@ -75,11 +75,7 @@ class ManagerAddNewClientsSettings extends StatelessWidget {
                                   textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
                                   onTap: ()
                                   {
-                                    //ToDo perform submit
-                                    //This was written for if the user didn't choose a worker=> it will stay the number one but it won't be set at the orderFromExcel since it wasn't created yet
-                                    // cubit.setChosenWorker(w:cubit.chosenWorker);
-                                    //
-                                    // cubit.createOrder(cubit.orderFromExcel, context);
+                                    cubit.uploadNewClients();
                                   },
                                 ),
                               ),
