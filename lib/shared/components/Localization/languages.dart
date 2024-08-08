@@ -197,6 +197,8 @@ const Map<String,String> ar={
 
   'show_preparation_members':'عرض العمال',
 
+  'show_details':'عرض التفاصيل',
+
 
   //Settings Manager
 
@@ -652,6 +654,8 @@ const Map<String,String> en={
   'to_storage_button':'Store',
 
   'show_preparation_members':'Show Members',
+
+  'show_details':'Show Details',
 
   'verifying_time':'Verifying Time',
 

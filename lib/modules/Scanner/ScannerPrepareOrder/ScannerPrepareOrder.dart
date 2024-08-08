@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:samaware_flutter/models/ClientModel/ClientModel.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
-
+//ToDO: Timing not showing and blur issues???
 class ScannerPrepareOrder extends StatefulWidget {
   String orderId;
   ScannerPrepareOrder({super.key, required this.orderId});
@@ -172,6 +173,24 @@ class _ScannerPrepareOrderState extends State<ScannerPrepareOrder>
 
                               const SizedBox(height: 15,),
 
+                              textBuilder(title: 'client_name_title', value: order?.clientId?.name),
+
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'client_location_title', value: order?.clientId?.location),
+
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'client_details_title', value: '', customWidget: Align(
+                          alignment: AlignmentDirectional.topEnd,
+                          child: TextButton(
+                            child: Text(
+                              Localization.translate('show_details'),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: textStyleBuilder(fontSize: 18, color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultThirdColor),),
+                            onPressed: (){_showClientDialog(context, order!.clientId!);},),)),
+
                               myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
 
                               const SizedBox(height: 30,),
@@ -307,6 +326,24 @@ class _ScannerPrepareOrderState extends State<ScannerPrepareOrder>
 
                           const SizedBox(height: 15,),
 
+                          textBuilder(title: 'client_name_title', value: order?.clientId?.name),
+
+                          const SizedBox(height: 15,),
+
+                          textBuilder(title: 'client_location_title', value: order?.clientId?.location),
+
+                          const SizedBox(height: 15,),
+
+                          textBuilder(title: 'client_details_title', value: '', customWidget: Align(
+                          alignment: AlignmentDirectional.topEnd,
+                          child: TextButton(
+                            child: Text(
+                              Localization.translate('show_details'),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: textStyleBuilder(fontSize: 18, color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultThirdColor),),
+                            onPressed: (){_showClientDialog(context, order!.clientId!);},),)),
+
                           myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
 
                           const SizedBox(height: 30,),
@@ -435,6 +472,24 @@ class _ScannerPrepareOrderState extends State<ScannerPrepareOrder>
                               textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder()),
 
                               const SizedBox(height: 15,),
+
+                              textBuilder(title: 'client_name_title', value: order?.clientId?.name),
+
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'client_location_title', value: order?.clientId?.location),
+
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'client_details_title', value: '', customWidget: Align(
+                          alignment: AlignmentDirectional.topEnd,
+                          child: TextButton(
+                            child: Text(
+                              Localization.translate('show_details'),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: textStyleBuilder(fontSize: 18, color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultThirdColor),),
+                            onPressed: (){_showClientDialog(context, order!.clientId!);},),)),
 
                               myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
 
@@ -570,6 +625,24 @@ class _ScannerPrepareOrderState extends State<ScannerPrepareOrder>
                           textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder()),
 
                           const SizedBox(height: 15,),
+
+                          textBuilder(title: 'client_name_title', value: order?.clientId?.name),
+
+                          const SizedBox(height: 15,),
+
+                          textBuilder(title: 'client_location_title', value: order?.clientId?.location),
+
+                          const SizedBox(height: 15,),
+
+                          textBuilder(title: 'client_details_title', value: '', customWidget: Align(
+                          alignment: AlignmentDirectional.topEnd,
+                          child: TextButton(
+                            child: Text(
+                              'عرض التفاصيل',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: textStyleBuilder(fontSize: 18, color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultThirdColor),),
+                            onPressed: (){_showClientDialog(context, order!.clientId!);},),)),
 
                           myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
 
@@ -745,7 +818,7 @@ class _ScannerPrepareOrderState extends State<ScannerPrepareOrder>
   }
 
   ///Build the information items
-  Widget textBuilder({required String title, required var value, TextStyle? style})
+  Widget textBuilder({required String title, required var value, TextStyle? style, Widget? customWidget})
   {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -759,6 +832,7 @@ class _ScannerPrepareOrderState extends State<ScannerPrepareOrder>
           ),
         ),
 
+        customWidget??
         Align(
           alignment: AlignmentDirectional.topEnd,
           child: Text(
@@ -967,6 +1041,67 @@ class _ScannerPrepareOrderState extends State<ScannerPrepareOrder>
           ),
         ],
       ),
+    );
+  }
+
+  ///Shows the Client Details
+  void _showClientDialog(BuildContext context, ClientModel client)
+  {
+    TextStyle defaultTextStyle = textStyleBuilder(fontSize: 18, color:  AppCubit.get(context).isDarkTheme? Colors.white: Colors.black, fontFamily: AppCubit.language =='ar'? 'Cairo' :'Railway', fontWeight: FontWeight.w400,);
+
+    showDialog(
+      context: context,
+      builder: (dialogContext)
+      {
+        return defaultSimpleDialog(
+          context: dialogContext,
+          title: Localization.translate('chosen_client'),
+          content:
+          [
+            Directionality(
+              textDirection: appDirectionality(),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: SizedBox(
+                    width: double.maxFinite,
+                    child: Column(
+                      children:
+                      [
+                        textBuilder(title: 'الاسم', value: client.name, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        textBuilder(title: 'رقم العميل', value: client.clientId, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        textBuilder(title: 'اسم المندوب', value:client.salesman?.name, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        textBuilder(title: 'اسم المحل', value: client.storeName, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        textBuilder(title: 'العنوان', value: client.location, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        textBuilder(title: 'التفاصيل', value: client.details, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
