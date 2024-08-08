@@ -18,6 +18,27 @@ class ManagerAddNewClientsSettings extends StatelessWidget {
         var clients= cubit.newClients;
 
         return PopScope(
+          canPop: false,
+
+          onPopInvoked: (pop) async
+          {
+            if(cubit.newClients.isEmpty)
+            {
+              Future.microtask((){
+                Navigator.of(context).pop(true);
+                return;
+              });
+            }
+
+            if(!pop)
+            {
+              Future.microtask(() {
+                _showDialog(context, cubit);
+                return;
+              });
+            }
+          },
+
           child: Directionality(
               textDirection: appDirectionality(),
               child: Scaffold(
@@ -106,8 +127,6 @@ class ManagerAddNewClientsSettings extends StatelessWidget {
                                       {
                                         if(value!=null)
                                         {
-                                          //ToDo Import excel file then get Clients
-
                                           cubit.setClientsExcelFile(value);
                                           cubit.readClientsFileAndExtractData(value);
                                         }
@@ -137,21 +156,108 @@ class ManagerAddNewClientsSettings extends StatelessWidget {
 
                       else
                       {
-                        //Todo Do The landscape for addNewClients
-                        return Column();
+                        return ConditionalBuilder(
+                          condition: cubit.excelClientsFile !=null,
+
+                          builder: (context)=>Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisSize: MainAxisSize.min,
+                            children:
+                            [
+                              Align(
+                                alignment: AlignmentDirectional.topStart,
+                                child: Text(
+                                  Localization.translate('new_clients_added_title'),
+
+                                  style: headlineTextStyleBuilder(),
+                                ),
+                              ),
+                              const SizedBox(height: 25,),
+                              myDivider(color: cubit.isDarkTheme? defaultThirdDarkColor : defaultThirdColor),
+
+                              const SizedBox(height: 25,),
+
+                              Expanded(
+                                  child: ListView.separated(
+                                    physics: const AlwaysScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, context: context, client: clients[index], clientIndex: index),
+                                    separatorBuilder: (context,index)=>const SizedBox(height: 20,),
+                                    itemCount: clients.length,
+                                  )
+                              ),
+
+                              const SizedBox(height: 20,),
+
+                              Center(
+                                child: defaultButton(
+                                  title: Localization.translate('submit_button'),
+                                  color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                                  textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                                  onTap: ()
+                                  {
+                                    cubit.uploadNewClients();
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          fallback: (context)=> SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisSize: MainAxisSize.min,
+                              children:
+                              [
+                                Text(
+                                  Localization.translate('import_new_clients_title'),
+
+                                  style: headlineTextStyleBuilder(),
+                                ),
+
+                                const SizedBox(height: 25,),
+
+                                Align(
+                                  alignment: AlignmentDirectional.center,
+                                  child: TextButton(
+                                    onPressed: ()
+                                    {
+                                      pickFile().then((value)
+                                      {
+                                        if(value!=null)
+                                        {
+                                          cubit.setClientsExcelFile(value);
+                                          cubit.readClientsFileAndExtractData(value);
+                                        }
+
+                                      }).catchError((error, stackTrace)
+                                      {
+                                        print('${Localization.translate('error_importing_file')}, ${error.toString()}');
+                                        print(stackTrace);
+                                      });
+                                    },
+                                    child: Text(
+                                      Localization.translate('import_excel'),
+
+                                      style: textStyleBuilder(
+                                        color: cubit.isDarkTheme? defaultDarkColor : defaultColor,
+                                        fontSize: 22,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
                       }
                     },
                   ),
                 ),
               ),
           ),
-
-          onPopInvoked: (pop)
-          {
-            //Todo remove commenting
-            // cubit.excelClientsFile=null;
-            // cubit.newClients=[];
-          },
         );
       },
     );
@@ -214,6 +320,58 @@ class ManagerAddNewClientsSettings extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  ///Dialog to represents the exit
+  Future<void> _showDialog(BuildContext context, AppCubit cubit)
+  async {
+     return await showDialog(
+        context: context,
+        builder: (dialogContext)
+        {
+          return defaultAlertDialog(
+            context: dialogContext,
+            title: Localization.translate('remove_clients_title'),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children:
+                [
+                  Text(Localization.translate('remove_clients_secondary')),
+
+                  const SizedBox(height: 5,),
+
+                  Row(
+                    children:
+                    [
+                      TextButton(
+                          onPressed: ()
+                          {
+                            cubit.excelClientsFile=null;
+                            cubit.newClients=[];
+                            Navigator.of(dialogContext).pop(true);
+                            Navigator.of(context).pop(true);
+
+                          }, //Navigator.of(context).pop(true),
+                          child: Text(Localization.translate('exit_app_yes'))
+                      ),
+
+                      const Spacer(),
+
+                      TextButton(
+                        onPressed: ()=> Navigator.of(dialogContext).pop(false),
+                        child: Text(Localization.translate('exit_app_no')),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
     );
   }
 }

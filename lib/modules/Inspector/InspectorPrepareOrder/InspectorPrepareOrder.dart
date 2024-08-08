@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:samaware_flutter/models/ClientModel/ClientModel.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
@@ -18,6 +21,12 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
 
   late ScrollController scrollController;
   List<bool> checkBoxValues=[];
+
+  TextEditingController fatouraController = TextEditingController();
+
+  String location=orderDestination[0];
+
+  var formKey=GlobalKey<FormState>();
 
   //blur the screen if no yes is pressed
   bool isBlurred=true;
@@ -37,6 +46,8 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
     scrollController= ScrollController();
 
     var cu = AppCubit.get(context);
+
+    fatouraController.text= cu.inWorkingOrder!=null ?  '' : '';
 
     //initialize the checkboxes with false values
     if (cu.inWorkingOrder !=null && cu.inWorkingOrder!.items != null)
@@ -153,7 +164,7 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
               {
                 if(orientation == Orientation.portrait)
                 {
-                  if(order?.status == OrderState.priced.name)
+                  if(order?.status == OrderState.scanned.name)
                   {
 
                     return Stack(
@@ -164,11 +175,32 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
                           child: Column(
                             children:
                             [
-                              textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder()),
+                              textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
 
                               const SizedBox(height: 15,),
 
-                              textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder()),
+                              textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'client_name_title', value: order?.clientId?.name),
+
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'client_location_title', value: order?.clientId?.location),
+
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'client_details_title', value: '', customWidget: Align(
+                          alignment: AlignmentDirectional.topStart,
+                          child: GestureDetector(
+                            onTap: (){_showClientDialog(context, order!.clientId!);},
+                            child: Text(
+                                      'عرض التفاصيل',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: textStyleBuilder(fontSize: 18, color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultThirdColor),),
+                          ),)),
 
                               const SizedBox(height: 15,),
 
@@ -215,62 +247,64 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
                               defaultButton(
                                   color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
                                   textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
-                                  title: Localization.translate('finish_prepare_title'),
+                                  title: Localization.translate('to_fatoura_button'),
                                   onTap: ()
                                   {
-                                    showDialog(
-                                        context: context,
-                                        builder: (dialogContext)
-                                        {
-                                          return defaultAlertDialog(
-                                            context: dialogContext,
-                                            title: Localization.translate('finish_prepare_dialog_title'),
-                                            content: SingleChildScrollView(
-                                                child: Column(
-                                                  children:
-                                                  [
-                                                    Text(
-                                                      Localization.translate('finish_prepare_dialog_secondary_title'),
-                                                      style: textStyleBuilder(),
-                                                    ),
+                                    _showFurtherDetailsDialog(context, cubit, order);
 
-                                                    const SizedBox(height: 5,),
-
-                                                    Row(
-                                                      children:
-                                                      [
-                                                        TextButton(
-                                                            onPressed: ()
-                                                            {
-                                                              setState(()
-                                                              {
-                                                                cubit.patchOrder(orderId: order.objectId!, status: OrderState.verified, date: defaultDateFormatter.format(DateTime.now()),
-                                                                    dateType: OrderDate.verified_date, isInspectorWaitingOrders: true, getDoneOrdersInspector: true);
-
-                                                                Navigator.of(dialogContext).pop();
-                                                                Navigator.of(context).pop();
-                                                              });
-                                                            },
-                                                            child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
-                                                        ),
-
-                                                        const Spacer(),
-
-                                                        TextButton(
-                                                          onPressed: ()
-                                                          {
-                                                            Navigator.of(dialogContext).pop(false);
-                                                          },
-                                                          child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                )
-                                            ),
-                                          );
-                                        }
-                                    );
+                                    // showDialog(
+                                    //     context: context,
+                                    //     builder: (dialogContext)
+                                    //     {
+                                    //       return defaultAlertDialog(
+                                    //         context: dialogContext,
+                                    //         title: Localization.translate('finish_prepare_dialog_title'),
+                                    //         content: SingleChildScrollView(
+                                    //             child: Column(
+                                    //               children:
+                                    //               [
+                                    //                 Text(
+                                    //                   Localization.translate('finish_prepare_dialog_secondary_title'),
+                                    //                   style: textStyleBuilder(),
+                                    //                 ),
+                                    //
+                                    //                 const SizedBox(height: 5,),
+                                    //
+                                    //                 Row(
+                                    //                   children:
+                                    //                   [
+                                    //                     TextButton(
+                                    //                         onPressed: ()
+                                    //                         {
+                                    //                           setState(()
+                                    //                           {
+                                    //                             cubit.patchOrder(orderId: order.objectId!, status: OrderState.verified, date: defaultDateFormatter.format(DateTime.now()),
+                                    //                                 dateType: OrderDate.verified_date, isInspectorWaitingOrders: true, getDoneOrdersInspector: true);
+                                    //
+                                    //                             Navigator.of(dialogContext).pop();
+                                    //                             Navigator.of(context).pop();
+                                    //                           });
+                                    //                         },
+                                    //                         child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                    //                     ),
+                                    //
+                                    //                     const Spacer(),
+                                    //
+                                    //                     TextButton(
+                                    //                       onPressed: ()
+                                    //                       {
+                                    //                         Navigator.of(dialogContext).pop(false);
+                                    //                       },
+                                    //                       child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                    //                     ),
+                                    //                   ],
+                                    //                 ),
+                                    //               ],
+                                    //             )
+                                    //         ),
+                                    //       );
+                                    //     }
+                                    // );
                                   }
                               ),
                             ],
@@ -299,11 +333,32 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
                       child: Column(
                         children:
                         [
-                          textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder()),
+                          textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
 
                           const SizedBox(height: 15,),
 
-                          textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder()),
+                          textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                          const SizedBox(height: 15,),
+
+                          textBuilder(title: 'client_name_title', value: order?.clientId?.name),
+
+                          const SizedBox(height: 15,),
+
+                          textBuilder(title: 'client_location_title', value: order?.clientId?.location),
+
+                          const SizedBox(height: 15,),
+
+                          textBuilder(title: 'client_details_title', value: '', customWidget: Align(
+                      alignment: AlignmentDirectional.topStart,
+                      child: GestureDetector(
+                        onTap: (){_showClientDialog(context, order!.clientId!);},
+                        child: Text(
+                                  'عرض التفاصيل',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: textStyleBuilder(fontSize: 18, color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultThirdColor),),
+                      ),)),
 
                           const SizedBox(height: 15,),
 
@@ -350,63 +405,10 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
                           defaultButton(
                               color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
                               textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
-                              title: Localization.translate('finish_prepare_title'),
+                              title: Localization.translate('to_fatoura_button'),
                               onTap: ()
                               {
-                                showDialog(
-                                    context: context,
-                                    builder: (dialogContext)
-                                    {
-                                      return defaultAlertDialog(
-                                        context: dialogContext,
-                                        title: Localization.translate('finish_prepare_dialog_title'),
-                                        content: SingleChildScrollView(
-                                            child: Column(
-                                              children:
-                                              [
-                                                Text(
-                                                  Localization.translate('finish_prepare_dialog_secondary_title'),
-                                                  style: textStyleBuilder(),
-                                                ),
-
-                                                const SizedBox(height: 5,),
-
-                                                Row(
-                                                  children:
-                                                  [
-                                                    TextButton(
-                                                        onPressed: ()
-                                                        {
-                                                          setState(()
-                                                          {
-                                                            cubit.patchOrder(orderId: order.objectId!, status: OrderState.verified, date: defaultDateFormatter.format(DateTime.now()),
-                                                                dateType: OrderDate.verified_date, isInspectorWaitingOrders: true, getDoneOrdersInspector: true);
-
-                                                            Navigator.of(dialogContext).pop();
-                                                            Navigator.of(context).pop();
-                                                          });
-                                                        },
-                                                        child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
-                                                    ),
-
-                                                    const Spacer(),
-
-                                                    TextButton(
-                                                      onPressed: ()
-                                                      {
-                                                        Navigator.of(dialogContext).pop(false);
-                                                      },
-                                                      child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            )
-                                        ),
-                                      );
-                                    }
-                                );
-
+                                _showFurtherDetailsDialog(context, cubit, order);
                               }
                           ),
                         ],
@@ -418,21 +420,350 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
 
                 else
                 {
-                  if(order?.status == OrderState.priced.name)
+                  if(kIsWeb)
                   {
-                    return Stack(
+                    if(order?.status == OrderState.priced.name)
+                    {
+                      return Stack(
 
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(24.0),
-                          child: Column(
-                            children:
-                            [
-                              textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder()),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Column(
+                              children:
+                              [
+                                textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                                const SizedBox(height: 15,),
+
+                                textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                                const SizedBox(height: 15,),
+
+                                textBuilder(title: 'client_name_title', value: order?.clientId?.name),
 
                               const SizedBox(height: 15,),
 
-                              textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder()),
+                              textBuilder(title: 'client_location_title', value: order?.clientId?.location),
+
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'client_details_title', value: '', customWidget: Align(
+                          alignment: AlignmentDirectional.topStart,
+                          child: GestureDetector(
+                            onTap: (){_showClientDialog(context, order!.clientId!);},
+                            child: Text(
+                                      'عرض التفاصيل',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: textStyleBuilder(fontSize: 18, color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultThirdColor),),
+                          ),)),
+
+                              const SizedBox(height: 15,),
+
+                                myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
+
+                                const SizedBox(height: 30,),
+
+                                Expanded(
+                                  child: Scrollbar(
+                                    controller: scrollController,
+                                    thumbVisibility: true,
+                                    scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
+
+                                    child: ListView.separated(
+                                        controller: scrollController,
+                                        scrollDirection: Axis.vertical,
+                                        shrinkWrap: true,
+                                        //physics: const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
+                                        separatorBuilder: (context, index)
+                                        {
+                                          return Column(
+                                            children: [
+
+                                              const SizedBox(height: 20,),
+
+                                              Padding(
+                                                padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
+                                                child: myDivider(
+                                                    color: cubit.isDarkTheme? defaultDarkColor : defaultColor
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 20,),
+                                            ],
+                                          );
+                                        },
+                                        itemCount: order!.items!.length
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 30,),
+
+                                defaultButton(
+                                    color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                                    textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                                    title: Localization.translate('to_fatoura_button'),
+                                    onTap: ()
+                                    {
+                                      _showFurtherDetailsDialog(context, cubit, order);
+                                    }
+                                ),
+                              ],
+
+                            ),
+                          ),
+
+                          if(isBlurred)
+                            Positioned.fill(
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                                child: Container(
+                                  //color: Colors.black.withOpacity(0.1),
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    }
+
+                    else
+                    {
+                      return Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          children:
+                          [
+                            textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                            const SizedBox(height: 15,),
+
+                            textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                            const SizedBox(height: 15,),
+
+                            textBuilder(title: 'client_name_title', value: order?.clientId?.name),
+
+                            const SizedBox(height: 15,),
+
+                            textBuilder(title: 'client_location_title', value: order?.clientId?.location),
+
+                            const SizedBox(height: 15,),
+
+                            textBuilder(title: 'client_details_title', value: '', customWidget: Align(
+                        alignment: AlignmentDirectional.topStart,
+                        child: GestureDetector(
+                          onTap: (){_showClientDialog(context, order!.clientId!);},
+                          child: Text(
+                                    'عرض التفاصيل',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: textStyleBuilder(fontSize: 18, color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultThirdColor),),
+                        ),)),
+
+                            const SizedBox(height: 15,),
+
+                            myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
+
+                            const SizedBox(height: 30,),
+
+                            Expanded(
+                              child: Scrollbar(
+                                controller: scrollController,
+                                thumbVisibility: true,
+                                scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
+
+                                child: ListView.separated(
+                                    controller: scrollController,
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    //physics: const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
+                                    separatorBuilder: (context, index)
+                                    {
+                                      return Column(
+                                        children: [
+
+                                          const SizedBox(height: 20,),
+
+                                          Padding(
+                                            padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
+                                            child: myDivider(
+                                                color: cubit.isDarkTheme? defaultDarkColor : defaultColor
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 20,),
+                                        ],
+                                      );
+                                    },
+                                    itemCount: order!.items!.length
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 20,),
+
+                            defaultButton(
+                                color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                                textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                                title: Localization.translate('to_fatoura_button'),
+                                onTap: ()
+                                {
+                                  _showFurtherDetailsDialog(context, cubit, order);
+                                }
+                            ),
+                          ],
+
+                        ),
+                      );
+                    }
+                  }
+                  else
+                  {
+                    if(order?.status == OrderState.priced.name)
+                    {
+                      return Stack(
+
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children:
+                                [
+                                  textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                                  const SizedBox(height: 15,),
+
+                                  textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                                  const SizedBox(height: 15,),
+
+                                                                textBuilder(title: 'client_name_title', value: order?.clientId?.name),
+
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'client_location_title', value: order?.clientId?.location),
+
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'client_details_title', value: '', customWidget: Align(
+                          alignment: AlignmentDirectional.topStart,
+                          child: GestureDetector(
+                            onTap: (){_showClientDialog(context, order!.clientId!);},
+                            child: Text(
+                                      'عرض التفاصيل',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: textStyleBuilder(fontSize: 18, color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultThirdColor),),
+                          ),)),
+
+                              const SizedBox(height: 15,),
+
+                                  myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
+
+                                  const SizedBox(height: 30,),
+
+                                  Scrollbar(
+                                    controller: scrollController,
+                                    thumbVisibility: true,
+                                    scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
+
+                                    child: ListView.separated(
+                                        controller: scrollController,
+                                        scrollDirection: Axis.vertical,
+                                        shrinkWrap: true,
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
+                                        separatorBuilder: (context, index)
+                                        {
+                                          return Column(
+                                            children: [
+
+                                              const SizedBox(height: 20,),
+
+                                              Padding(
+                                                padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
+                                                child: myDivider(
+                                                    color: cubit.isDarkTheme? defaultDarkColor : defaultColor
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 20,),
+                                            ],
+                                          );
+                                        },
+                                        itemCount: order!.items!.length
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 30,),
+
+                                  defaultButton(
+                                      color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                                      textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                                      title: Localization.translate('to_fatoura_button'),
+                                      onTap: ()
+                                      {
+                                        _showFurtherDetailsDialog(context, cubit, order);
+                                      }
+                                  ),
+                                ],
+
+                              ),
+                            ),
+                          ),
+
+                          if(isBlurred)
+                            Positioned.fill(
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                                child: Container(
+                                  //color: Colors.black.withOpacity(0.1),
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    }
+
+                    else
+                    {
+                      return Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children:
+                            [
+                              textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'client_name_title', value: order?.clientId?.name),
+
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'client_location_title', value: order?.clientId?.location),
+
+                              const SizedBox(height: 15,),
+
+                              textBuilder(title: 'client_details_title', value: '', customWidget: Align(
+                          alignment: AlignmentDirectional.topStart,
+                          child: GestureDetector(
+                            onTap: (){_showClientDialog(context, order!.clientId!);},
+                            child: Text(
+                                      'عرض التفاصيل',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: textStyleBuilder(fontSize: 18, color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultThirdColor),),
+                          ),)),
 
                               const SizedBox(height: 15,),
 
@@ -440,244 +771,59 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
 
                               const SizedBox(height: 30,),
 
-                              Expanded(
-                                child: Scrollbar(
-                                  controller: scrollController,
-                                  thumbVisibility: true,
-                                  scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
+                              Scrollbar(
+                                controller: scrollController,
+                                thumbVisibility: true,
+                                scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
 
-                                  child: ListView.separated(
-                                      controller: scrollController,
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      //physics: const NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
-                                      separatorBuilder: (context, index)
-                                      {
-                                        return Column(
-                                          children: [
+                                child: ListView.separated(
+                                    controller: scrollController,
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
+                                    separatorBuilder: (context, index)
+                                    {
+                                      return Column(
+                                        children: [
 
-                                            const SizedBox(height: 20,),
+                                          const SizedBox(height: 20,),
 
-                                            Padding(
-                                              padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
-                                              child: myDivider(
-                                                  color: cubit.isDarkTheme? defaultDarkColor : defaultColor
-                                              ),
+                                          Padding(
+                                            padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
+                                            child: myDivider(
+                                                color: cubit.isDarkTheme? defaultDarkColor : defaultColor
                                             ),
+                                          ),
 
-                                            const SizedBox(height: 20,),
-                                          ],
-                                        );
-                                      },
-                                      itemCount: order!.items!.length
-                                  ),
+                                          const SizedBox(height: 20,),
+                                        ],
+                                      );
+                                    },
+                                    itemCount: order!.items!.length
                                 ),
                               ),
 
-                              const SizedBox(height: 30,),
+                              const SizedBox(height: 20,),
 
                               defaultButton(
                                   color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
                                   textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
-                                  title: Localization.translate('finish_prepare_title'),
+                                  title: Localization.translate('to_fatoura_button'),
                                   onTap: ()
                                   {
-                                    showDialog(
-                                        context: context,
-                                        builder: (dialogContext)
-                                        {
-                                          return defaultAlertDialog(
-                                            context: dialogContext,
-                                            title: Localization.translate('finish_prepare_dialog_title'),
-                                            content: SingleChildScrollView(
-                                                child: Column(
-                                                  children:
-                                                  [
-                                                    Text(
-                                                      Localization.translate('finish_prepare_dialog_secondary_title'),
-                                                      style: textStyleBuilder(),
-                                                    ),
-
-                                                    const SizedBox(height: 5,),
-
-                                                    Row(
-                                                      children:
-                                                      [
-                                                        TextButton(
-                                                            onPressed: ()
-                                                            {
-                                                              setState(()
-                                                              {
-                                                                cubit.patchOrder(orderId: order.objectId!, status: OrderState.verified, date: defaultDateFormatter.format(DateTime.now()),
-                                                                    dateType: OrderDate.verified_date, isInspectorWaitingOrders: true, getDoneOrdersInspector: true);
-
-                                                                Navigator.of(dialogContext).pop();
-                                                                Navigator.of(context).pop();
-                                                              });
-                                                            },
-                                                            child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
-                                                        ),
-
-                                                        const Spacer(),
-
-                                                        TextButton(
-                                                          onPressed: ()
-                                                          {
-                                                            Navigator.of(dialogContext).pop(false);
-                                                          },
-                                                          child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                )
-                                            ),
-                                          );
-                                        }
-                                    );
+                                    _showFurtherDetailsDialog(context, cubit, order);
                                   }
                               ),
                             ],
 
                           ),
                         ),
-
-                        if(isBlurred)
-                          Positioned.fill(
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-                              child: Container(
-                                //color: Colors.black.withOpacity(0.1),
-                              ),
-                            ),
-                          ),
-                      ],
-                    );
+                      );
+                    }
                   }
 
-                  else
-                  {
-                    return Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        children:
-                        [
-                          textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder()),
 
-                          const SizedBox(height: 15,),
-
-                          textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder()),
-
-                          const SizedBox(height: 15,),
-
-                          myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
-
-                          const SizedBox(height: 30,),
-
-                          Expanded(
-                            child: Scrollbar(
-                              controller: scrollController,
-                              thumbVisibility: true,
-                              scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
-
-                              child: ListView.separated(
-                                  controller: scrollController,
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  //physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
-                                  separatorBuilder: (context, index)
-                                  {
-                                    return Column(
-                                      children: [
-
-                                        const SizedBox(height: 20,),
-
-                                        Padding(
-                                          padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
-                                          child: myDivider(
-                                              color: cubit.isDarkTheme? defaultDarkColor : defaultColor
-                                          ),
-                                        ),
-
-                                        const SizedBox(height: 20,),
-                                      ],
-                                    );
-                                  },
-                                  itemCount: order!.items!.length
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 20,),
-
-                          defaultButton(
-                              color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
-                              textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
-                              title: Localization.translate('finish_prepare_title'),
-                              onTap: ()
-                              {
-                                showDialog(
-                                    context: context,
-                                    builder: (dialogContext)
-                                    {
-                                      return defaultAlertDialog(
-                                        context: dialogContext,
-                                        title: Localization.translate('finish_prepare_dialog_title'),
-                                        content: SingleChildScrollView(
-                                            child: Column(
-                                              children:
-                                              [
-                                                Text(
-                                                  Localization.translate('finish_prepare_dialog_secondary_title'),
-                                                  style: textStyleBuilder(),
-                                                ),
-
-                                                const SizedBox(height: 5,),
-
-                                                Row(
-                                                  children:
-                                                  [
-                                                    TextButton(
-                                                        onPressed: ()
-                                                        {
-                                                          setState(()
-                                                          {
-                                                            cubit.patchOrder(orderId: order.objectId!, status: OrderState.verified, date: defaultDateFormatter.format(DateTime.now()),
-                                                                dateType: OrderDate.verified_date, isInspectorWaitingOrders: true, getDoneOrdersInspector: true);
-
-                                                            Navigator.of(dialogContext).pop();
-                                                            Navigator.of(context).pop();
-                                                          });
-                                                        },
-                                                        child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
-                                                    ),
-
-                                                    const Spacer(),
-
-                                                    TextButton(
-                                                      onPressed: ()
-                                                      {
-                                                        Navigator.of(dialogContext).pop(false);
-                                                      },
-                                                      child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            )
-                                        ),
-                                      );
-                                    }
-                                );
-                              }
-                          ),
-                        ],
-
-                      ),
-                    );
-                  }
                 }
               },
             ),
@@ -745,7 +891,7 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
   }
 
   ///Build the information items
-  Widget textBuilder({required String title, required var value, TextStyle? style})
+  Widget textBuilder({required String title, required var value, TextStyle? style, Widget? customWidget, AlignmentGeometry alignment=AlignmentDirectional.topStart})
   {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -759,19 +905,21 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
           ),
         ),
 
-        Align(
-          alignment: AlignmentDirectional.topEnd,
-          child: Text(
-            '$value',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: style?? textStyleBuilder(),
-          ),
+        Flexible(
+          child: customWidget??
+              Align(
+                alignment: alignment,
+                child: Text(
+                  '$value',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: style?? textStyleBuilder(),
+                ),
+              ),
         ),
       ],
     );
   }
-
   ///Build the item in the order
   Widget itemBuilder({required AppCubit cubit, required OrderItem item, required int itemIndex})
   {
@@ -973,4 +1121,198 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
       ),
     );
   }
+
+  ///Shows the Client Details
+  void _showClientDialog(BuildContext context, ClientModel client)
+  {
+    TextStyle defaultTextStyle = textStyleBuilder(fontSize: 18, color:  AppCubit.get(context).isDarkTheme? Colors.white: Colors.black, fontFamily: AppCubit.language =='ar'? 'Cairo' :'Railway', fontWeight: FontWeight.w400,);
+
+    showDialog(
+      context: context,
+      builder: (dialogContext)
+      {
+        return defaultSimpleDialog(
+          context: dialogContext,
+          title: Localization.translate('chosen_client'),
+          content:
+          [
+            Directionality(
+              textDirection: appDirectionality(),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: SizedBox(
+                    width: double.maxFinite,
+                    child: Column(
+                      children:
+                      [
+                        textBuilder(title: 'الاسم', value: client.name, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        textBuilder(title: 'رقم العميل', value: client.clientId, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        textBuilder(title: 'اسم المندوب', value:client.salesman?.name, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        textBuilder(title: 'اسم المحل', value: client.storeName, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        textBuilder(title: 'العنوان', value: client.location, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        textBuilder(title: 'التفاصيل', value: client.details, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  ///Builds the Fatoura ID entry and location
+  void _showFurtherDetailsDialog(BuildContext context, AppCubit cubit, OrderModel order)
+  {
+    showDialog(
+      context: context,
+      builder: (dialogContext)
+      {
+        return Directionality(
+          textDirection: appDirectionality(),
+          child: defaultAlertDialog(
+            context: dialogContext,
+            title: Localization.translate('fatoura_details_title'),
+
+            content: SingleChildScrollView(
+              child: SizedBox(
+                width: double.maxFinite,
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children:
+                    [
+                      Text(
+                        Localization.translate('enter_fatoura_details_title'),
+                        style: textStyleBuilder(),
+                      ),
+
+                      const SizedBox(height: 25,),
+
+                      defaultFormField(
+                        controller: fatouraController,
+                        keyboard: TextInputType.number,
+                        label: Localization.translate('enter_fatoura_id_title'),
+                        prefix: Icons.numbers_outlined ,
+                        validate: (value)
+                        {
+                          if(value!.isEmpty)
+                          {
+                            return Localization.translate('fatoura_id_error');
+                          }
+
+                          return null;
+                        },
+                        contentPadding: 15
+
+                      ),
+
+                      const SizedBox(height: 25,),
+
+                      Text(
+                        Localization.translate('enter_location_title'),
+                        style: textStyleBuilder(),
+                      ),
+
+                      const SizedBox(height: 25,),
+
+                      FormField<String>(
+                        builder: (FormFieldState<String> state) {
+                          return InputDecorator(
+                            decoration: const InputDecoration(
+                              focusedBorder: InputBorder.none,
+                              errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                            ),
+
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                style: TextStyle(
+                                    color: AppCubit.get(context).isDarkTheme? defaultDarkColor : defaultColor,
+                                    fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'Railway'
+                                ),
+                                value: location,
+                                dropdownColor: cubit.isDarkTheme? defaultCanvasDarkColor : defaultCanvasColor,
+
+                                isDense: true,
+                                onChanged: (newValue) {
+
+                                  setState(() {
+                                    location = newValue!;
+                                    state.didChange(newValue);
+                                  });
+                                },
+                                items: orderDestination.map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          value,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+
+                      const SizedBox(height: 25,),
+
+                      Center(
+                        child: defaultButton(
+                            color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                            textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                            title: Localization.translate('finish_prepare_title'),
+                            onTap: ()
+                            {
+                              if(formKey.currentState!.validate())
+                              {
+                                cubit.patchOrder(orderId: order.objectId!, status: OrderState.verified, date: defaultDateFormatter.format(DateTime.now()),
+                                    dateType: OrderDate.verified_date, isInspectorWaitingOrders: true, getDoneOrdersInspector: true);
+
+                                Navigator.of(dialogContext).pop();
+                                Navigator.of(context).pop();
+                              }
+                            }
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+    );
+  }
+
 }

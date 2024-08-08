@@ -1633,13 +1633,14 @@ class AppCubit extends Cubit<AppStates>
 
     MainDioHelper.postData(
       url: createAnOrder,
+      //Todo: fix clientId and import it from ExcelFile
       data:
       {
         'orderId':order?.orderId,
         'registration_date':order?.registrationDate,
         'shipping_date':order?.shippingDate,
         'workerId':order?.workerId,
-        'clientId':order?.clientId,
+        'clientId':'1610101038005', //order?.clientId,
         'waiting_to_be_prepared_date': defaultDateFormatter.format(DateTime.now()),
 
         'items':orderItems,
@@ -1767,6 +1768,7 @@ class AppCubit extends Cubit<AppStates>
     bool? designatePriceSetter, bool? designateInspector,
     bool? designateCollector, bool? designateScanner,
     String? userId, String? failureReason,
+    String? fatouraId, String? destination,
     required String orderId, required OrderState status,
     OrderDate? dateType, String? date,
 
@@ -1777,6 +1779,7 @@ class AppCubit extends Cubit<AppStates>
       emit(AppPatchOrderLoadingState());
       print('in patching order with id: $orderId');
 
+      //Todo check the fatouraID and destination in backend....
       MainDioHelper.patchData(
         url: patchAnOrder,
         data:
@@ -1791,6 +1794,9 @@ class AppCubit extends Cubit<AppStates>
           if(designateScanner !=null && userId !=null) "scannerId":userId,
 
           if(failureReason !=null) "failure_reason":failureReason,
+
+          if(fatouraId!=null) "fatouraId":fatouraId,
+          if(destination!=null) "destination":destination,
         },
         token: token,
       ).then((value)

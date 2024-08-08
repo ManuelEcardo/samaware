@@ -40,6 +40,8 @@ const Map<String,String> ar={
 
   'inspector':'مدقق',
 
+  'priceSetter':'مسعر',
+
   'collector':'مُجمّع',
 
   'scanner':'قاطع الطلبات',
@@ -331,6 +333,11 @@ const Map<String,String> ar={
   'no_available_results':'لم يتم إيجاد أية نتائج...',
 
 
+  //SETTINGS MANAGER: ADD NEW CLIENTS
+
+  'remove_clients_title':'هل تريد العودة حقاً؟',
+
+  'remove_clients_secondary':'هذا سيؤدي إلى زوال البيانات',
 
   //WORKER ORDER FAILURE REASONS: FOR CONSTANT ARRAY TYPES
 
@@ -408,6 +415,21 @@ const Map<String,String> ar={
   'logout_secondary_title':'هل تريد تسجيل الخروج؟',
 
   'logout_successfully_toast':'تم تسجيل الخروج بنجاح',
+
+
+  //INSPECTOR PREPARE ORDER
+
+  'fatoura_details_title':'التفاصيل',
+
+  'enter_fatoura_details_title':'ادخل التفاصيل',
+
+  'enter_fatoura_id_title':'ادخل رقم الفاتورة: ',
+
+  'enter_location_title':'اختار وجهة الطلب',
+
+  'fatoura_id_error':'رقم الفوترة فارغ',
+
+  'to_fatoura_button':'انتقل للفوترة',
 
 
 
@@ -791,6 +813,11 @@ const Map<String,String> en={
   'no_available_results':'No Orders have been found!',
 
 
+  //SETTINGS MANAGER: ADD NEW CLIENTS
+
+  'remove_clients_title':'Do you want to leave?',
+
+  'remove_clients_secondary':'This will remove all the clients',
 
 
 
@@ -874,6 +901,20 @@ const Map<String,String> en={
   'logout_secondary_title':'Do you want to sign out?',
 
   'logout_successfully_toast':'Logged out successfully',
+
+
+  //INSPECTOR PREPARE ORDER
+
+  'fatoura_details_title':'Details',
+  'enter_fatoura_details_title':'Enter Details',
+
+  'enter_fatoura_id_title':'Enter Fatoura ID:',
+
+  'enter_location_title':'Choose Location: ',
+
+  'fatoura_id_error':'Fatoura Id is null',
+
+  'to_fatoura_button':'To Details',
 
 
 

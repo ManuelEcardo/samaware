@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:flutter/foundation.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/models/SubmitOrderModel/SubmitOrderModel.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
@@ -160,11 +161,11 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                           child: Column(
                             children:
                             [
-                              textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder()),
+                              textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
 
                               const SizedBox(height: 15,),
 
-                              textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder()),
+                              textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
 
                               const SizedBox(height: 15,),
 
@@ -306,11 +307,11 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
                       child: Column(
                         children:
                         [
-                          textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder()),
+                          textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
 
                           const SizedBox(height: 15,),
 
-                          textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder()),
+                          textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
 
                           const SizedBox(height: 15,),
 
@@ -436,21 +437,457 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
                 else
                 {
-                  if(order?.status == OrderState.waiting_to_be_prepared.name)
+                  if(kIsWeb)
                   {
-                    return Stack(
+                    if(order?.status == OrderState.waiting_to_be_prepared.name)
+                    {
+                      return Stack(
 
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(24.0),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Column(
+                              children:
+                              [
+                                textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                                const SizedBox(height: 15,),
+
+                                textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                                const SizedBox(height: 15,),
+
+                                myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
+
+                                const SizedBox(height: 30,),
+
+                                if(order?.preparationTeam?.length != 0)
+                                  textBuilder(title: 'chosen_preparation_team', value: '', style: textStyleBuilder(), customWidget:Align(
+                                    alignment: AlignmentDirectional.topEnd,
+                                    child: TextButton(
+                                      child: Text(Localization.translate('show_preparation_members'),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: textStyleBuilder(),),
+                                      onPressed: (){_showPreparationTeamDialog(context, order!.preparationTeam!);},),)),
+
+                                const SizedBox(height: 15,),
+
+                                Expanded(
+                                  child: Scrollbar(
+                                    controller: scrollController,
+                                    thumbVisibility: true,
+                                    scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
+
+                                    child: ListView.separated(
+                                        controller: scrollController,
+                                        scrollDirection: Axis.vertical,
+                                        shrinkWrap: true,
+                                        //physics: const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
+                                        separatorBuilder: (context, index)
+                                        {
+                                          return Column(
+                                            children: [
+
+                                              const SizedBox(height: 20,),
+
+                                              Padding(
+                                                padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
+                                                child: myDivider(
+                                                    color: cubit.isDarkTheme? defaultDarkColor : defaultColor
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 20,),
+                                            ],
+                                          );
+                                        },
+                                        itemCount: order!.items!.length
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 30,),
+
+                                defaultButton(
+                                    color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                                    textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                                    title: Localization.translate('finish_prepare_title'),
+                                    onTap: ()
+                                    {
+                                      showDialog(
+                                          context: context,
+                                          builder: (dialogContext)
+                                          {
+                                            return defaultAlertDialog(
+                                              context: dialogContext,
+                                              title: Localization.translate('finish_prepare_dialog_title'),
+                                              content: SingleChildScrollView(
+                                                  child: Column(
+                                                    children:
+                                                    [
+                                                      Text(
+                                                        Localization.translate('finish_prepare_dialog_secondary_title'),
+                                                        style: textStyleBuilder(),
+                                                      ),
+
+                                                      const SizedBox(height: 5,),
+
+                                                      Row(
+                                                        children:
+                                                        [
+                                                          TextButton(
+                                                              onPressed: ()
+                                                              {
+                                                                setState(()
+                                                                {
+                                                                  cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrdersWorker: true);
+
+                                                                  Navigator.of(dialogContext).pop();
+                                                                  Navigator.of(context).pop();
+                                                                });
+                                                              },
+                                                              child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                                          ),
+
+                                                          const Spacer(),
+
+                                                          TextButton(
+                                                            onPressed: ()
+                                                            {
+                                                              Navigator.of(dialogContext).pop(false);
+                                                            },
+                                                            child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  )
+                                              ),
+                                            );
+                                          }
+                                      );
+                                    }
+                                ),
+                              ],
+
+                            ),
+                          ),
+
+                          if(isBlurred)
+                            Positioned.fill(
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                                child: Container(
+                                  //color: Colors.black.withOpacity(0.1),
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    }
+
+                    else
+                    {
+                      return Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          children:
+                          [
+                            textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                            const SizedBox(height: 15,),
+
+                            textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                            const SizedBox(height: 15,),
+
+                            myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
+
+                            const SizedBox(height: 30,),
+
+                            if(order?.preparationTeam?.length != 0)
+                              textBuilder(title: 'chosen_preparation_team', value: '', style: textStyleBuilder(), customWidget:Align(
+                                alignment: AlignmentDirectional.topEnd,
+                                child: TextButton(
+                                  child: Text(Localization.translate('show_preparation_members'),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: textStyleBuilder(),),
+                                  onPressed: (){_showPreparationTeamDialog(context, order!.preparationTeam!);},),)),
+
+                            const SizedBox(height: 15,),
+
+                            Expanded(
+                              child: Scrollbar(
+                                controller: scrollController,
+                                thumbVisibility: true,
+                                scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
+
+                                child: ListView.separated(
+                                    controller: scrollController,
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    //physics: const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
+                                    separatorBuilder: (context, index)
+                                    {
+                                      return Column(
+                                        children: [
+
+                                          const SizedBox(height: 20,),
+
+                                          Padding(
+                                            padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
+                                            child: myDivider(
+                                                color: cubit.isDarkTheme? defaultDarkColor : defaultColor
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 20,),
+                                        ],
+                                      );
+                                    },
+                                    itemCount: order!.items!.length
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 20,),
+
+                            defaultButton(
+                                color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                                textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                                title: Localization.translate('finish_prepare_title'),
+                                onTap: ()
+                                {
+                                  showDialog(
+                                      context: context,
+                                      builder: (dialogContext)
+                                      {
+                                        return defaultAlertDialog(
+                                          context: dialogContext,
+                                          title: Localization.translate('finish_prepare_dialog_title'),
+                                          content: SingleChildScrollView(
+                                              child: Column(
+                                                children:
+                                                [
+                                                  Text(
+                                                    Localization.translate('finish_prepare_dialog_secondary_title'),
+                                                    style: textStyleBuilder(),
+                                                  ),
+
+                                                  const SizedBox(height: 5,),
+
+                                                  Row(
+                                                    children:
+                                                    [
+                                                      TextButton(
+                                                          onPressed: ()
+                                                          {
+                                                            setState(()
+                                                            {
+                                                              cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrdersWorker: true);
+
+                                                              Navigator.of(dialogContext).pop();
+                                                              Navigator.of(context).pop();
+                                                            });
+                                                          },
+                                                          child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                                      ),
+
+                                                      const Spacer(),
+
+                                                      TextButton(
+                                                        onPressed: ()
+                                                        {
+                                                          Navigator.of(dialogContext).pop(false);
+                                                        },
+                                                        child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              )
+                                          ),
+                                        );
+                                      }
+                                  );
+                                }
+                            ),
+                          ],
+
+                        ),
+                      );
+                    }
+
+                  }
+
+                  else
+                  {
+                    if(order?.status == OrderState.waiting_to_be_prepared.name)
+                    {
+                      return Stack(
+
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children:
+                                [
+                                  textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                                  const SizedBox(height: 15,),
+
+                                  textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
+
+                                  const SizedBox(height: 15,),
+
+                                  myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
+
+                                  const SizedBox(height: 30,),
+
+                                  if(order?.preparationTeam?.length != 0)
+                                    textBuilder(title: 'chosen_preparation_team', value: '', style: textStyleBuilder(), customWidget:Align(
+                                      alignment: AlignmentDirectional.topEnd,
+                                      child: TextButton(
+                                        child: Text(Localization.translate('show_preparation_members'),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: textStyleBuilder(),),
+                                        onPressed: (){_showPreparationTeamDialog(context, order!.preparationTeam!);},),)),
+
+                                  const SizedBox(height: 15,),
+
+                                  Scrollbar(
+                                    controller: scrollController,
+                                    thumbVisibility: true,
+                                    scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
+
+                                    child: ListView.separated(
+                                        controller: scrollController,
+                                        scrollDirection: Axis.vertical,
+                                        shrinkWrap: true,
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
+                                        separatorBuilder: (context, index)
+                                        {
+                                          return Column(
+                                            children: [
+
+                                              const SizedBox(height: 20,),
+
+                                              Padding(
+                                                padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
+                                                child: myDivider(
+                                                    color: cubit.isDarkTheme? defaultDarkColor : defaultColor
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 20,),
+                                            ],
+                                          );
+                                        },
+                                        itemCount: order!.items!.length
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 30,),
+
+                                  defaultButton(
+                                      color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                                      textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                                      title: Localization.translate('finish_prepare_title'),
+                                      onTap: ()
+                                      {
+                                        showDialog(
+                                            context: context,
+                                            builder: (dialogContext)
+                                            {
+                                              return defaultAlertDialog(
+                                                context: dialogContext,
+                                                title: Localization.translate('finish_prepare_dialog_title'),
+                                                content: SingleChildScrollView(
+                                                    child: Column(
+                                                      children:
+                                                      [
+                                                        Text(
+                                                          Localization.translate('finish_prepare_dialog_secondary_title'),
+                                                          style: textStyleBuilder(),
+                                                        ),
+
+                                                        const SizedBox(height: 5,),
+
+                                                        Row(
+                                                          children:
+                                                          [
+                                                            TextButton(
+                                                                onPressed: ()
+                                                                {
+                                                                  setState(()
+                                                                  {
+                                                                    cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrdersWorker: true);
+
+                                                                    Navigator.of(dialogContext).pop();
+                                                                    Navigator.of(context).pop();
+                                                                  });
+                                                                },
+                                                                child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
+                                                            ),
+
+                                                            const Spacer(),
+
+                                                            TextButton(
+                                                              onPressed: ()
+                                                              {
+                                                                Navigator.of(dialogContext).pop(false);
+                                                              },
+                                                              child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    )
+                                                ),
+                                              );
+                                            }
+                                        );
+                                      }
+                                  ),
+                                ],
+
+                              ),
+                            ),
+                          ),
+
+                          if(isBlurred)
+                            Positioned.fill(
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                                child: Container(
+                                  //color: Colors.black.withOpacity(0.1),
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    }
+
+                    else
+                    {
+                      return Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: SingleChildScrollView(
                           child: Column(
                             children:
                             [
-                              textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder()),
+                              textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
 
                               const SizedBox(height: 15,),
 
-                              textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder()),
+                              textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder(), alignment: AlignmentDirectional.topEnd),
 
                               const SizedBox(height: 15,),
 
@@ -470,42 +907,40 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
                               const SizedBox(height: 15,),
 
-                              Expanded(
-                                child: Scrollbar(
-                                  controller: scrollController,
-                                  thumbVisibility: true,
-                                  scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
+                              Scrollbar(
+                                controller: scrollController,
+                                thumbVisibility: true,
+                                scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
 
-                                  child: ListView.separated(
-                                      controller: scrollController,
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      //physics: const NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
-                                      separatorBuilder: (context, index)
-                                      {
-                                        return Column(
-                                          children: [
+                                child: ListView.separated(
+                                    controller: scrollController,
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
+                                    separatorBuilder: (context, index)
+                                    {
+                                      return Column(
+                                        children: [
 
-                                            const SizedBox(height: 20,),
+                                          const SizedBox(height: 20,),
 
-                                            Padding(
-                                              padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
-                                              child: myDivider(
-                                                  color: cubit.isDarkTheme? defaultDarkColor : defaultColor
-                                              ),
+                                          Padding(
+                                            padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
+                                            child: myDivider(
+                                                color: cubit.isDarkTheme? defaultDarkColor : defaultColor
                                             ),
+                                          ),
 
-                                            const SizedBox(height: 20,),
-                                          ],
-                                        );
-                                      },
-                                      itemCount: order!.items!.length
-                                  ),
+                                          const SizedBox(height: 20,),
+                                        ],
+                                      );
+                                    },
+                                    itemCount: order!.items!.length
                                 ),
                               ),
 
-                              const SizedBox(height: 30,),
+                              const SizedBox(height: 20,),
 
                               defaultButton(
                                   color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
@@ -571,153 +1006,11 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
 
                           ),
                         ),
+                      );
+                    }
 
-                        if(isBlurred)
-                          Positioned.fill(
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-                              child: Container(
-                                //color: Colors.black.withOpacity(0.1),
-                              ),
-                            ),
-                          ),
-                      ],
-                    );
                   }
 
-                  else
-                  {
-                    return Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        children:
-                        [
-                          textBuilder(title: 'order_number', value: order?.orderId, style: headlineTextStyleBuilder()),
-
-                          const SizedBox(height: 15,),
-
-                          textBuilder(title: 'passed_time', value: passedTime??'', style: headlineTextStyleBuilder()),
-
-                          const SizedBox(height: 15,),
-
-                          myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
-
-                          const SizedBox(height: 30,),
-
-                          if(order?.preparationTeam?.length != 0)
-                            textBuilder(title: 'chosen_preparation_team', value: '', style: textStyleBuilder(), customWidget:Align(
-                              alignment: AlignmentDirectional.topEnd,
-                              child: TextButton(
-                                child: Text(Localization.translate('show_preparation_members'),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: textStyleBuilder(),),
-                                onPressed: (){_showPreparationTeamDialog(context, order!.preparationTeam!);},),)),
-
-                          const SizedBox(height: 15,),
-
-                          Expanded(
-                            child: Scrollbar(
-                              controller: scrollController,
-                              thumbVisibility: true,
-                              scrollbarOrientation: AppCubit.language=='ar'? ScrollbarOrientation.right : ScrollbarOrientation.left,
-
-                              child: ListView.separated(
-                                  controller: scrollController,
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  //physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context,index)=>itemBuilder(cubit: cubit, item: order.items![index], itemIndex: index),
-                                  separatorBuilder: (context, index)
-                                  {
-                                    return Column(
-                                      children: [
-
-                                        const SizedBox(height: 20,),
-
-                                        Padding(
-                                          padding: const EdgeInsetsDirectional.symmetric(horizontal: 48.0),
-                                          child: myDivider(
-                                              color: cubit.isDarkTheme? defaultDarkColor : defaultColor
-                                          ),
-                                        ),
-
-                                        const SizedBox(height: 20,),
-                                      ],
-                                    );
-                                  },
-                                  itemCount: order!.items!.length
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 20,),
-
-                          defaultButton(
-                              color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
-                              textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
-                              title: Localization.translate('finish_prepare_title'),
-                              onTap: ()
-                              {
-                                showDialog(
-                                    context: context,
-                                    builder: (dialogContext)
-                                    {
-                                      return defaultAlertDialog(
-                                        context: dialogContext,
-                                        title: Localization.translate('finish_prepare_dialog_title'),
-                                        content: SingleChildScrollView(
-                                            child: Column(
-                                              children:
-                                              [
-                                                Text(
-                                                  Localization.translate('finish_prepare_dialog_secondary_title'),
-                                                  style: textStyleBuilder(),
-                                                ),
-
-                                                const SizedBox(height: 5,),
-
-                                                Row(
-                                                  children:
-                                                  [
-                                                    TextButton(
-                                                        onPressed: ()
-                                                        {
-                                                          setState(()
-                                                          {
-                                                            cubit.patchOrder(orderId: order.objectId!, status: OrderState.prepared, date: defaultDateFormatter.format(DateTime.now()), dateType: OrderDate.prepared_date, isWorkerWaitingOrders: true, getDoneOrdersWorker: true);
-
-                                                            Navigator.of(dialogContext).pop();
-                                                            Navigator.of(context).pop();
-                                                          });
-                                                        },
-                                                        child: Text(Localization.translate('exit_app_yes'), style: textStyleBuilder(),)
-                                                    ),
-
-                                                    const Spacer(),
-
-                                                    TextButton(
-                                                      onPressed: ()
-                                                      {
-                                                        Navigator.of(dialogContext).pop(false);
-                                                      },
-                                                      child: Text(Localization.translate('exit_app_no'), style: textStyleBuilder()),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            )
-                                        ),
-                                      );
-                                    }
-                                );
-                              }
-                          ),
-                        ],
-
-                      ),
-                    );
-                  }
                 }
               },
             ),
@@ -784,7 +1077,7 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
   }
 
   ///Build the information items
-  Widget textBuilder({required String title, required var value, TextStyle? style, Widget? customWidget})
+  Widget textBuilder({required String title, required var value, TextStyle? style, Widget? customWidget, AlignmentGeometry alignment=AlignmentDirectional.topStart})
   {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -798,15 +1091,17 @@ class _WorkerPrepareOrderState extends State<WorkerPrepareOrder> {
           ),
         ),
 
-        customWidget??
-        Align(
-          alignment: AlignmentDirectional.topEnd,
-          child: Text(
-            '$value',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: style?? textStyleBuilder(),
-          ),
+        Flexible(
+          child: customWidget??
+              Align(
+                alignment: alignment,
+                child: Text(
+                  '$value',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: style?? textStyleBuilder(),
+                ),
+              ),
         ),
       ],
     );

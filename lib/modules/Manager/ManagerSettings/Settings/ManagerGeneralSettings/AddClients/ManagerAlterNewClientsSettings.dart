@@ -63,194 +63,178 @@ class _ManagerAlterNewClientsSettingsState extends State<ManagerAlterNewClientsS
                 padding: const EdgeInsets.all(24.0),
                 child: Form(
 
-                  child: OrientationBuilder(
-                    builder: (context,orientation)
-                    {
-                      if(orientation == Orientation.portrait)
-                      {
-                        return SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children:
-                            [
-                              Text(Localization.translate('client_name_title'), style: textStyleBuilder(),),
-                          
-                              const SizedBox(height: 20,),
-                          
-                              defaultFormField(
-                                  controller: nameController,
-                                  keyboard: TextInputType.text,
-                                  label: Localization.translate('client_name_title'),
-                                  prefix: Icons.text_format_outlined,
-                                  contentPadding: 20,
-                                  validate: (value)
-                                  {
-                                    return null;
-                                  }
-                              ),
-                          
-                              const SizedBox(height: 20,),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children:
+                      [
+                        Text(Localization.translate('client_name_title'), style: textStyleBuilder(),),
 
-                              Text(Localization.translate('client_salesman_title'), style: textStyleBuilder(),),
+                        const SizedBox(height: 20,),
 
-                              const SizedBox(height: 20,),
+                        defaultFormField(
+                            controller: nameController,
+                            keyboard: TextInputType.text,
+                            label: Localization.translate('client_name_title'),
+                            prefix: Icons.text_format_outlined,
+                            contentPadding: 20,
+                            validate: (value)
+                            {
+                              return null;
+                            }
+                        ),
 
-                              FormField<String>(
-                                builder: (FormFieldState<String> state) {
-                                  return InputDecorator(
-                                    decoration: const InputDecoration(
-                                      focusedBorder: InputBorder.none,
-                                      errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
-                                    ),
+                        const SizedBox(height: 20,),
 
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton<String>(
-                                        style: TextStyle(
-                                            color: AppCubit.get(context).isDarkTheme? defaultDarkColor : defaultColor,
-                                            fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'Railway'
-                                        ),
-                                        value: salesmanId,
-                                        isDense: true,
-                                        onChanged: (newValue)
-                                        {
-                                          setState(() {
-                                            salesmanId=newValue!;
-                                          });
-                                        },
+                        Text(Localization.translate('client_salesman_title'), style: textStyleBuilder(),),
 
-                                        items: cubit.salesmen?.salesmen?.map((value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value?.salesmanId,
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  '${value?.name}',
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 1,
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }).toList(),
+                        const SizedBox(height: 20,),
 
-
-                                      ),
-                                    ),
-                                  );
-                                },
-
+                        FormField<String>(
+                          builder: (FormFieldState<String> state) {
+                            return InputDecorator(
+                              decoration: const InputDecoration(
+                                focusedBorder: InputBorder.none,
+                                errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
                               ),
 
-                              const SizedBox(height: 20,),
-
-                              Text(Localization.translate('client_number_title'), style: textStyleBuilder(),),
-                          
-                              const SizedBox(height: 20,),
-                          
-                              defaultFormField(
-                                  controller: numberController,
-                                  keyboard: TextInputType.number,
-                                  label: Localization.translate('client_number_title'),
-                                  prefix: Icons.numbers_outlined,
-                                  contentPadding: 20,
-                                  validate: (value)
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  style: TextStyle(
+                                      color: AppCubit.get(context).isDarkTheme? defaultDarkColor : defaultColor,
+                                      fontFamily: AppCubit.language == 'ar'? 'Cairo' : 'Railway'
+                                  ),
+                                  value: salesmanId,
+                                  isDense: true,
+                                  onChanged: (newValue)
                                   {
-                                    return null;
-                                  }
-                              ),
-                          
-                              const SizedBox(height: 20,),
-                          
-                              Text(Localization.translate('client_location_title'), style: textStyleBuilder(),),
-                          
-                              const SizedBox(height: 20,),
-                          
-                              defaultFormField(
-                                  controller: locationController,
-                                  keyboard: TextInputType.text,
-                                  label: Localization.translate('client_location_title'),
-                                  prefix: Icons.place_outlined,
-                                  contentPadding: 20,
-                                  validate: (value)
-                                  {
-                                    return null;
-                                  }
-                              ),
-                          
-                              const SizedBox(height: 20,),
-                          
-                              Text(Localization.translate('client_details_title'), style: textStyleBuilder(),),
-                          
-                              const SizedBox(height: 20,),
-                          
-                              defaultFormField(
-                                  controller: detailsController,
-                                  keyboard: TextInputType.text,
-                                  label: Localization.translate('client_details_title'),
-                                  prefix: Icons.list_alt_outlined,
-                                  contentPadding: 20,
-                                  validate: (value)
-                                  {
-                                    return null;
-                                  }
-                              ),
-                          
-                              const SizedBox(height: 20,),
-                          
-                              Text(Localization.translate('client_storeName_title'), style: textStyleBuilder(),),
-                          
-                              const SizedBox(height: 20,),
-                          
-                              defaultFormField(
-                                  controller: storeNameController,
-                                  keyboard: TextInputType.text,
-                                  label: Localization.translate('client_storeName_title'),
-                                  prefix: Icons.store_outlined,
-                                  contentPadding: 20,
-                                  validate: (value)
-                                  {
-                                    return null;
-                                  }
-                              ),
-                          
-                              const SizedBox(height: 20,),
-
-                              Center(
-                                child: defaultButton(
-                                  title: Localization.translate('submit_button'),
-                                  color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
-                                  textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
-                                  onTap: ()
-                                  {
-                                    cubit.alterClient(
-                                        widget.clientIndex,
-                                        numberController.value.text,
-                                        nameController.value.text,
-                                        detailsController.value.text,
-                                        locationController.value.text,
-                                        storeNameController.value.text,
-                                        salesmanId
-                                    );
-
-                                    Navigator.pop(context);
-
-                                    //ToDo: alter the details...
+                                    setState(() {
+                                      salesmanId=newValue!;
+                                    });
                                   },
+
+                                  items: cubit.salesmen?.salesmen?.map((value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value?.salesmanId,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            '${value?.name}',
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+
+
                                 ),
                               ),
-                          
-                            ],
-                          ),
-                        );
-                      }
+                            );
+                          },
 
-                      else
-                      {
-                        //ToDo: complete landscape mode
-                        return const Placeholder();
-                      }
-                    }
+                        ),
+
+                        const SizedBox(height: 20,),
+
+                        Text(Localization.translate('client_number_title'), style: textStyleBuilder(),),
+
+                        const SizedBox(height: 20,),
+
+                        defaultFormField(
+                            controller: numberController,
+                            keyboard: TextInputType.number,
+                            label: Localization.translate('client_number_title'),
+                            prefix: Icons.numbers_outlined,
+                            contentPadding: 20,
+                            validate: (value)
+                            {
+                              return null;
+                            }
+                        ),
+
+                        const SizedBox(height: 20,),
+
+                        Text(Localization.translate('client_location_title'), style: textStyleBuilder(),),
+
+                        const SizedBox(height: 20,),
+
+                        defaultFormField(
+                            controller: locationController,
+                            keyboard: TextInputType.text,
+                            label: Localization.translate('client_location_title'),
+                            prefix: Icons.place_outlined,
+                            contentPadding: 20,
+                            validate: (value)
+                            {
+                              return null;
+                            }
+                        ),
+
+                        const SizedBox(height: 20,),
+
+                        Text(Localization.translate('client_details_title'), style: textStyleBuilder(),),
+
+                        const SizedBox(height: 20,),
+
+                        defaultFormField(
+                            controller: detailsController,
+                            keyboard: TextInputType.text,
+                            label: Localization.translate('client_details_title'),
+                            prefix: Icons.list_alt_outlined,
+                            contentPadding: 20,
+                            validate: (value)
+                            {
+                              return null;
+                            }
+                        ),
+
+                        const SizedBox(height: 20,),
+
+                        Text(Localization.translate('client_storeName_title'), style: textStyleBuilder(),),
+
+                        const SizedBox(height: 20,),
+
+                        defaultFormField(
+                            controller: storeNameController,
+                            keyboard: TextInputType.text,
+                            label: Localization.translate('client_storeName_title'),
+                            prefix: Icons.store_outlined,
+                            contentPadding: 20,
+                            validate: (value)
+                            {
+                              return null;
+                            }
+                        ),
+
+                        const SizedBox(height: 20,),
+
+                        Center(
+                          child: defaultButton(
+                            title: Localization.translate('submit_button'),
+                            color: cubit.isDarkTheme? defaultBoxDarkColor : defaultBoxColor,
+                            textColor: cubit.isDarkTheme? defaultDarkFontColor : defaultFontColor,
+                            onTap: ()
+                            {
+                              cubit.alterClient(
+                                  widget.clientIndex,
+                                  numberController.value.text,
+                                  nameController.value.text,
+                                  detailsController.value.text,
+                                  locationController.value.text,
+                                  storeNameController.value.text,
+                                  salesmanId
+                              );
+
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+
+                      ],
+                    ),
                   ),
                 ),
               ),

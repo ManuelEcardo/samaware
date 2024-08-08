@@ -63,3 +63,6 @@ List<String> scannerOrderFailureReasons=['other_reason_failure'];
 
 ///Preparation Team
 List<String> preparationTeam=['صالح مشمش', 'شادي صارم', 'مهند عبد الكريم', 'علاء وهبة', 'محمد حمزة', 'علي فاعور', 'حسن زين', 'عمار سركل', 'بسام الصيادي', 'حسام الكردي', 'عبد القادر الحوت', 'مثقال عبد الخالق', 'امير شاهين', 'حسان الفرخ'];
+
+///Order Destination
+List<String> orderDestination=['مفرق - مدينة وريف','مراكز الشركة - محلات','جملة - حريقة','محافظات'];

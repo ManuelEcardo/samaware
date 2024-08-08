@@ -92,8 +92,36 @@ class _ManagerSalesmanDetailsState extends State<ManagerSalesmanDetails> {
 
                   else
                   {
-                    //ToDo: do the landscape mode
-                    return const Placeholder();
+                    return SingleChildScrollView(
+                      child: Column(
+                      
+                        children:
+                        [
+                          Center(
+                            child: Text(
+                              widget.salesman.name!,
+                              style: headlineTextStyleBuilder(),
+                            ),
+                          ),
+                      
+                          const SizedBox(height: 25,),
+                      
+                          myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
+                      
+                          const SizedBox(height: 25,),
+                      
+                          ListView.separated(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context,index)=>itemBuilder(title: items[index].title, value: items[index].value, customWidget: items[index].customWidget, style: items[index].style),
+                              separatorBuilder: (context,index)=>const SizedBox(height: 25,),
+                              itemCount: items.length
+                          ),
+                      
+                      
+                        ],
+                      ),
+                    );
                   }
                 },
               ),

@@ -164,7 +164,6 @@ class _ManagerSearchOrderState extends State<ManagerSearchOrder> {
                                               '${value.priceSetter?.name} ${value.priceSetter?.lastName}',
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 1,
-
                                             ),
                                           ],
                                         ),
