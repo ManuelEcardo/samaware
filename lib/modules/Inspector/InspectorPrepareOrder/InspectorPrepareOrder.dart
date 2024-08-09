@@ -1295,8 +1295,10 @@ class _InspectorPrepareOrderState extends State<InspectorPrepareOrder> {
                             {
                               if(formKey.currentState!.validate())
                               {
-                                cubit.patchOrder(orderId: order.objectId!, status: OrderState.verified, date: defaultDateFormatter.format(DateTime.now()),
-                                    dateType: OrderDate.verified_date, isInspectorWaitingOrders: true, getDoneOrdersInspector: true);
+                                cubit.patchOrder(
+                                    orderId: order.objectId!, status: OrderState.verified, date: defaultDateFormatter.format(DateTime.now()),
+                                    dateType: OrderDate.verified_date, isInspectorWaitingOrders: true, getDoneOrdersInspector: true,
+                                    fatouraId: fatouraController.text, destination: location);
 
                                 Navigator.of(dialogContext).pop();
                                 Navigator.of(context).pop();

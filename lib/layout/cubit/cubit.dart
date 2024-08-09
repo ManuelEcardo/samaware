@@ -1769,8 +1769,9 @@ class AppCubit extends Cubit<AppStates>
     bool? designateCollector, bool? designateScanner,
     String? userId, String? failureReason,
     String? fatouraId, String? destination,
-    required String orderId, required OrderState status,
+    required String orderId, OrderState? status,
     OrderDate? dateType, String? date,
+    String? orderObjectId,
 
   })
   {
@@ -1779,13 +1780,14 @@ class AppCubit extends Cubit<AppStates>
       emit(AppPatchOrderLoadingState());
       print('in patching order with id: $orderId');
 
-      //Todo check the fatouraID and destination in backend....
+      //OrderId is the ObjectID created by mongoose, while the orderObjectId is our created one
       MainDioHelper.patchData(
         url: patchAnOrder,
         data:
         {
           "id":orderId,
-          "status":status.name,
+          if(orderObjectId!=null) "orderId":orderObjectId,
+          if(status!=null) "status":status.name,
           if(dateType!=null) dateType.name:date,
           if(designatePriceSetter !=null && userId !=null) "priceSetterId":userId,
           if(designateInspector !=null && userId !=null) "inspectorId":userId,
@@ -1801,7 +1803,7 @@ class AppCubit extends Cubit<AppStates>
         token: token,
       ).then((value)
       {
-        print('Got patch order data....');
+        print('Got patch order data.... $value');
 
         isWorkerWaitingOrders!=null ? getWaitingOrders() : null;
         getDoneOrdersWorker !=null? getWorkerDoneOrders() : null;

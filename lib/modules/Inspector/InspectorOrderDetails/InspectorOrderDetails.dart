@@ -1,3 +1,4 @@
+import 'package:samaware_flutter/models/ClientModel/ClientModel.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
 import 'package:samaware_flutter/modules/Inspector/InspectorOrderDetails/InspectorOrderItemsDetails.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerOrderDetails/ManagerOrderDetails.dart';
@@ -20,9 +21,24 @@ class _InspectorOrderDetailsState extends State<InspectorOrderDetails> {
   {
     super.initState();
 
+
     items.add(MOD(title: 'order_number', value: widget.order.orderId, style: headlineTextStyleBuilder()));
+    (widget.order.fatouraId !=null)? items.add(MOD(title: 'order_fatoura_id', value: widget.order.fatouraId, style: headlineTextStyleBuilder() )) : null;
+
     items.add(MOD(title: 'order_reg_dialog', value: widget.order.registrationDate));
     items.add(MOD(title: 'order_ship_dialog', value: widget.order.shippingDate));
+
+    items.add(MOD(title: 'order_destination', value: widget.order.destination));
+
+    (widget.order.clientId !=null)? items.add(MOD(title: 'chosen_client', value: '', customWidget:Align(
+      alignment: AlignmentDirectional.topEnd,
+      child: TextButton(
+        child: Text(
+          widget.order.clientId!.name!,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: textStyleBuilder(color: AppCubit.get(context).isDarkTheme? defaultThirdDarkColor : defaultThirdColor),),
+        onPressed: (){_showClientDialog(context, widget.order.clientId!);},),))) : null;
 
   }
 
@@ -64,12 +80,14 @@ class _InspectorOrderDetailsState extends State<InspectorOrderDetails> {
                             child: ListView.separated(
                                 itemBuilder: (context,index)
                                 {
-                                  return itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style);
+                                  return itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style,customWidget: items[index].customWidget);
                                 },
 
                                 separatorBuilder: (context,index)
                                 {
-                                  return index!=0? const SizedBox(height: 25,) : Column(
+                                  return index!=(widget.order.fatouraId !=null? 1 : 0)
+                                      ? const SizedBox(height: 25,)
+                                      : Column(
                                     children:
                                     [
                                       const SizedBox(height: 30,),
@@ -85,7 +103,7 @@ class _InspectorOrderDetailsState extends State<InspectorOrderDetails> {
                             ),
                           ),
 
-                          const Spacer(),
+                          //const Spacer(),
 
                           itemBuilder(title: 'order_state_title', value: translateWord(widget.order.status), style: headlineTextStyleBuilder(fontSize: 22)),
 
@@ -121,12 +139,14 @@ class _InspectorOrderDetailsState extends State<InspectorOrderDetails> {
 
                                 itemBuilder: (context,index)
                                 {
-                                  return itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style);
+                                  return itemBuilder(title: items[index].title, value: items[index].value, style: items[index].style, customWidget: items[index].customWidget);
                                 },
 
                                 separatorBuilder: (context,index)
                                 {
-                                  return index!=0? const SizedBox(height: 50,) : Column(
+                                  return index!=(widget.order.fatouraId !=null? 1 : 0)
+                                      ? const SizedBox(height: 50,)
+                                      : Column(
                                     children:
                                     [
                                       const SizedBox(height: 35,),
@@ -171,7 +191,7 @@ class _InspectorOrderDetailsState extends State<InspectorOrderDetails> {
   }
 
   ///Build the information items
-  Widget itemBuilder({required String title, required var value, TextStyle? style})
+  Widget itemBuilder({required String title, required var value, TextStyle? style, Widget? customWidget})
   {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -185,16 +205,78 @@ class _InspectorOrderDetailsState extends State<InspectorOrderDetails> {
           ),
         ),
 
-        Align(
-          alignment: AlignmentDirectional.topEnd,
-          child: Text(
-            '$value',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: style?? textStyleBuilder(),
-          ),
-        ),
+        customWidget ??
+            Align(
+              alignment: AlignmentDirectional.topEnd,
+              child: Text(
+                '$value',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: style?? textStyleBuilder(),
+              ),
+            ),
       ],
+    );
+  }
+
+  ///Shows the Client Details
+  void _showClientDialog(BuildContext context, ClientModel client)
+  {
+    TextStyle defaultTextStyle = textStyleBuilder(fontSize: 18, color:  AppCubit.get(context).isDarkTheme? Colors.white: Colors.black, fontFamily: AppCubit.language =='ar'? 'Cairo' :'Railway', fontWeight: FontWeight.w400,);
+
+    showDialog(
+      context: context,
+      builder: (dialogContext)
+      {
+        return defaultSimpleDialog(
+          context: dialogContext,
+          title: Localization.translate('chosen_client'),
+          content:
+          [
+            Directionality(
+              textDirection: appDirectionality(),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: SizedBox(
+                    width: double.maxFinite,
+                    child: Column(
+                      children:
+                      [
+                        itemBuilder(title: 'الاسم', value: client.name, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        itemBuilder(title: 'رقم العميل', value: client.clientId, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        itemBuilder(title: 'اسم المندوب', value:client.salesman!.name!, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        itemBuilder(title: 'اسم المحل', value: client.storeName, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        itemBuilder(title: 'العنوان', value: client.location, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+                        itemBuilder(title: 'التفاصيل', value: client.details, style: defaultTextStyle),
+
+                        const SizedBox(height: 25,),
+
+
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

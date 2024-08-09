@@ -300,7 +300,7 @@ class _ManagerSearchOrderState extends State<ManagerSearchOrder> {
                                   {
                                     if(priceSetterId == null && workerId == null && inspectorId ==null && idController.value.text.isEmpty && status == null)
                                     {
-                                      defaultToast(msg: 'All Filters are empty');
+                                      defaultToast(msg: Localization.translate('filters_are_empty'));
                                     }
 
                                     else

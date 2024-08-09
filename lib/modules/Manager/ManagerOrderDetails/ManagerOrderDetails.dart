@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:samaware_flutter/models/ClientModel/ClientModel.dart';
 import 'package:samaware_flutter/models/OrderModel/OrderModel.dart';
+import 'package:samaware_flutter/modules/Manager/ManagerEditOrder/ManagerEditOrder.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerOrderDetails/ManagerOrderItemsDetails.dart';
 import 'package:samaware_flutter/modules/Manager/ManagerSalesmanDetails/ManagerSalesmanDetails.dart';
 import 'package:samaware_flutter/shared/components/Imports/default_imports.dart';
@@ -37,8 +38,10 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
     //debugPrint(widget.order.toString(), wrapWidth: 1024);
 
     items.add(MOD(title: 'order_number', value: widget.order.orderId, style: headlineTextStyleBuilder()));
+    (widget.order.fatouraId !=null)? items.add(MOD(title: 'order_fatoura_id', value: widget.order.fatouraId, style: headlineTextStyleBuilder() )) : null;
 
     items.add(MOD(title: 'chosen_worker', value: '${widget.order.worker?.name} ${widget.order.worker?.lastName}'));
+    items.add(MOD(title: 'order_destination', value: widget.order.destination));
 
     (widget.order.clientId !=null)? items.add(MOD(title: 'chosen_client', value: 'value', customWidget:Align(
       alignment: AlignmentDirectional.topEnd,
@@ -95,6 +98,13 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
               appBar: AppBar(
                 actions:
                 [
+                  IconButton(
+                    onPressed: ()
+                    {
+                      navigateTo(context, ManagerEditOrder(order:widget.order ,));
+                    },
+                    icon: const Icon(Icons.edit_outlined),
+                  ),
                   if(widget.order.status == OrderState.verified.name)
                     IconButton(
                       onPressed: ()
@@ -139,15 +149,19 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
 
                               separatorBuilder: (context,index)
                               {
-                                return index!=0? const SizedBox(height: 25,) : Column(
-                                  children:
-                                  [
-                                    const SizedBox(height: 30,),
+                                //If fatoura id exists => put it and order Id next to each other then the divider, otherwise orderId and divider
+                                return index!=(widget.order.fatouraId !=null? 1 : 0)
+                                    ? const SizedBox(height: 25,)
+                                    : Column(
 
-                                    myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
+                                      children:
+                                      [
+                                        const SizedBox(height: 30,),
 
-                                    const SizedBox(height: 30,),
-                                  ],
+                                        myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
+
+                                        const SizedBox(height: 30,),
+                                      ],
                                 ) ;
 
                               },
@@ -216,15 +230,17 @@ class _ManagerOrderDetailsState extends State<ManagerOrderDetails>
 
                                 separatorBuilder: (context,index)
                                 {
-                                  return index!=0? const SizedBox(height: 50,) : Column(
-                                    children:
-                                    [
-                                      const SizedBox(height: 35,),
+                                  return index!=(widget.order.fatouraId !=null? 1 : 0)
+                                      ? const SizedBox(height: 50,)
+                                      : Column(
+                                        children:
+                                        [
+                                          const SizedBox(height: 35,),
 
-                                      myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
+                                          myDivider(color: cubit.isDarkTheme? defaultSecondaryDarkColor : defaultSecondaryColor),
 
-                                      const SizedBox(height: 35,),
-                                    ],
+                                          const SizedBox(height: 35,),
+                                        ],
                                   ) ;
 
                                 },

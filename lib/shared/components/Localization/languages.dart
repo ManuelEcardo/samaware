@@ -79,6 +79,10 @@ const Map<String,String> ar={
 
   'order_ship_dialog':'تاريخ شحن الطلبية (الاداري):',
 
+  'order_fatoura_id':'رقم الفوترة: ',
+
+  'order_destination':'وجهة الطلب: ',
+
   'remove_an_item_swap':'تم حذف العنصر بنجاح',
 
   'worker_assignment':'اختر عاملاً',
@@ -94,6 +98,28 @@ const Map<String,String> ar={
   'order_submit_done_toast':'تمت إضافة الطلب بنجاح',
 
   'order_submit_error_toast':'حدث خطأ أثناء تثبيت الطلب,  ',
+
+  //EDIT ORDER: MANAGER
+
+  'alter_order_appBar':'تعديل الطلب',
+
+  'alter_order_id':'رقم الطلب',
+
+  'alter_order_fatoura_id':'رقم الفوترة',
+
+  'alter_order_destination':'وجهة الطلب',
+
+  'alter_order_preparation_team':'فريق التحضير',
+
+  'order_id_null':'رقم الطلبية فارغ',
+
+  'fatoura_id_null':'رقم الفوترة فارغ',
+
+  'destination_null':'الوجهة فارغة',
+
+  'preparation_null':'فريق التحضير فارغ',
+
+  'fields_are_same':'لم يتم تغيير أية حقول',
 
   //ORDER STATES
 
@@ -332,6 +358,8 @@ const Map<String,String> ar={
 
   'no_available_results':'لم يتم إيجاد أية نتائج...',
 
+  'filters_are_empty':'الحقول فارغة',
+
 
   //SETTINGS MANAGER: ADD NEW CLIENTS
 
@@ -535,6 +563,10 @@ const Map<String,String> en={
 
   'order_ship_dialog':'Shipping Date: ',
 
+  'order_fatoura_id':'Fatoura ID: ',
+
+  'order_destination':'Order Destination: ',
+
   'remove_an_item_swap':'Removed Successfully',
 
   'worker_assignment':'Choose a Worker',
@@ -550,6 +582,28 @@ const Map<String,String> en={
   'order_submit_done_toast':'Order has been submitted successfully',
 
   'order_submit_error_toast':'Error while submitting order, ',
+
+  //EDIT ORDER: MANAGER
+
+  'alter_order_appBar':'Edit Order',
+
+  'alter_order_id':'Order ID',
+
+  'alter_order_fatoura_id':'Fatoura ID',
+
+  'alter_order_destination':'Order Destination',
+
+  'alter_order_preparation_team':'Preparation Team',
+
+  'order_id_null':'Order ID is null',
+
+  'fatoura_id_null':'Fatoura ID is null',
+
+  'destination_null':'Destination is null',
+
+  'preparation_null':'Preparation Team is null',
+
+  'fields_are_same':'No Fields have been changed...',
 
   //ORDER STATES
 
@@ -811,6 +865,8 @@ const Map<String,String> en={
   'search_results_title':'Search Results',
 
   'no_available_results':'No Orders have been found!',
+
+  'filters_are_empty':'Filters are empty...',
 
 
   //SETTINGS MANAGER: ADD NEW CLIENTS

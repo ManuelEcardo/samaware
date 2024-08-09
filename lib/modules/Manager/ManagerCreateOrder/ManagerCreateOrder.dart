@@ -973,6 +973,7 @@ class _ManagerCreateOrderState extends State<ManagerCreateOrder> {
     );
   }
 
+  ///Choose preparation team
   void _chooseDialog(BuildContext context, AppCubit cubit,)
   {
     showDialog(

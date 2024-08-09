@@ -73,6 +73,9 @@ class OrderModel
   String? objectId;
 
   String? orderId;
+  String? fatouraId;
+  String? destination;
+
   UserData? worker;
   ClientModel? clientId;
   List<String>? preparationTeam=[];
@@ -250,6 +253,16 @@ class OrderModel
       failureReason = json['order']['failure_reason'];
     }
 
+    if(json['order']['fatouraId'] !=null)
+    {
+      fatouraId=json['order']['fatouraId'];
+    }
+
+    if(json['order']['destination'] !=null)
+    {
+      destination=json['order']['destination'];
+    }
+
   }
 
 
@@ -259,6 +272,8 @@ class OrderModel
 OrderModel {
   objectId: $objectId,
   orderId: $orderId,
+  fatouraId: $fatouraId,
+  destination: $destination,
   worker: ${worker.toString()},
   clientId: $clientId,
   preparationTeam: ${preparationTeam?.join(', ')},
